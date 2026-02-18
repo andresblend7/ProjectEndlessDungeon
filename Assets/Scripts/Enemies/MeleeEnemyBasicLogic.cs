@@ -61,6 +61,12 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
 
         if (isMoving)
         {
+            if (IsPlayerInAttackRange())
+            {
+                isMoving = false;
+                targetPos = transform.position; // Stop exactly where it is
+                return;
+            }
             MoveStep();
             return;
         }
@@ -130,6 +136,8 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
         float dx = p.x - e.x;
         float dz = p.z - e.z;
 
+        if (IsPlayerInAttackRange()) return;
+        
         // Si ya está a 1 tile → no avanzar
         if (Mathf.Abs(dx) < 0.1f && Mathf.Abs(dz) <= attackRange) return;
         if (Mathf.Abs(dz) < 0.1f && Mathf.Abs(dx) <= attackRange) return;
@@ -241,25 +249,10 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
     /// <returns></returns>
     public bool IsPlayerInAttackRange()
     {
+        Vector3 p = new Vector3(player.position.x, 0, player.position.z);
+        Vector3 e = new Vector3(transform.position.x, 0, transform.position.z);
 
-
-        Vector3 p = player.position;
-        Vector3 e = transform.position;
-
-        // Ignoramos la altura (eje Y)
-        float dx = Mathf.Abs(p.x - e.x);
-        float dz = Mathf.Abs(p.z - e.z);
-
-        if (dx > 0.96 && dx<0.99999999)
-            dx = 1;
-
-
-        if (dz > 0.96 && dz < 0.99999999)
-            dz = 1;
-
-        bool esAdyacente = (dx == 1 && dz == 0) || (dx == 0 && dz == 1);
-
-        return esAdyacente;
+        return Vector3.Distance(p, e) <= attackRange;
     }
 
     #endregion
