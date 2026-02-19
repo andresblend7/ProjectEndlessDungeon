@@ -36,7 +36,7 @@ public class PlayerFreeMovement : MonoBehaviour
 
     private void MoveCharacter()
     {
-        // --- Rotación (Esto déjalo igual, está perfecto) ---
+        // --- Rotaciï¿½n (Esto dï¿½jalo igual, estï¿½ perfecto) ---
         if (moveVector != Vector2.zero)
         {
             Vector3 direction = new Vector3(moveVector.x, 0f, moveVector.y).normalized;
@@ -45,16 +45,16 @@ public class PlayerFreeMovement : MonoBehaviour
         }
 
         // --- Movimiento CORREGIDO ---
-        // En lugar de calcular posición, calculamos velocidad.
+        // En lugar de calcular posiciï¿½n, calculamos velocidad.
 
         // 1. Calculamos la velocidad deseada en X y Z
         Vector3 movement = new Vector3(moveVector.x, 0f, moveVector.y).normalized * moveSpeed;
 
         // 2. IMPORTANTE: Mantenemos la velocidad Y actual del Rigidbody (para la gravedad)
-        // Si no haces esto, el personaje flotará o caerá lento.
-        Vector3 finalVelocity = new Vector3(movement.x, rb.velocity.y, movement.z);
+        // Si no haces esto, el personaje flotarï¿½ o caerï¿½ lento.
+        Vector3 finalVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
 
         // 3. Aplicamos la velocidad
-        rb.velocity = finalVelocity;
+        rb.linearVelocity = finalVelocity;
     }
 }

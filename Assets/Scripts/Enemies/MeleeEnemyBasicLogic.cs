@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class MeleeEnemyBasicLogic : MonoBehaviour
 {
@@ -36,6 +37,11 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
 
     [SerializeField]
     private bool playerDetected = false;
+    private NavMeshAgent agent;
+
+    // Optimización para el navmesh:
+    private float repathTimer =0f;
+    public float repathRate = 0.2f;
 
     // ═══════════════════════════════════════════════════════════
     //  INSPECTOR — ATAQUE
@@ -81,6 +87,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
 
     void Awake()
     {
+        agent = GetComponent<NavMeshAgent>();
 
 
         // ── Estado inicial ─────────────────────────────────────
@@ -102,9 +109,13 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
 
         if (playerDetected)
         {
-            // Aquí va tu lógica cuando detecta al jugador
-            Debug.Log("¡Jugador detectado!");
-  
+            repathTimer -= Time.deltaTime;
+
+            if (repathTimer <= 0f)
+            {
+                agent.SetDestination(player.position);
+                repathTimer = repathRate;
+            }
         }
     }
 
