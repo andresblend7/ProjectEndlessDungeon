@@ -479,18 +479,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a49bbd2f4681438409a6bff09c375f8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laneSize: 1
   moveSpeed: 2.5
-  detectionRangeZ: 8
-  detectionRangeX: 3
+  chaseDelay: 0.5
+  eyeHeight: 0.9
+  detectionRange: 8
+  rememberPlayerPosition: 1
   attackRange: 1.01
   attackDuration: 0.3
-  collisionMeleeAttack: {fileID: 6385735631425729580}
-  health: 3
-  isMoving: 0
-  canMove: 1
-  enemyIsInrangedAttack: 1
-  touchedByRayCast: 0
+  attackCooldown: 1.2
+  attackHitbox: {fileID: 6385735631425729580}
+  maxHealth: 80
+  defense: 5
+  damage: 15
+  criticalChance: 0.1
+  coinDrop: 3
+  steeringRays: 12
+  steeringAngle: 240
+  steeringRayLength: 1.6
+  steeringWeight: 0.75
 --- !u!114 &1016324192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -503,8 +509,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 023fee5e71557384592e3c18fc362f7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isAttacking: 0
-  timeToStartAttack: 0.15
+  moveSpeed: 3.5
+  chaseDelay: 0.5
+  eyeHeight: 0.9
+  detectionRange: 8
+  rememberPlayerPosition: 1
+  attackRange: 1.2
+  attackDuration: 0.3
+  attackCooldown: 1.2
+  attackHitbox: {fileID: 0}
+  maxHealth: 80
+  defense: 5
+  damage: 15
+  criticalChance: 0.1
+  coinDrop: 3
+  steeringRays: 12
+  steeringAngle: 240
+  steeringRayLength: 1.6
+  steeringWeight: 0.75
+  animator: {fileID: 0}
+  coinPrefab: {fileID: 0}
+  alertSound: {fileID: 0}
 --- !u!54 &7364967362412420245
 Rigidbody:
   m_ObjectHideFlags: 0

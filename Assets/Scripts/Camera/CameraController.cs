@@ -5,99 +5,135 @@ using UnityEngine.Events;
 
 public class CameraController : MonoBehaviour
 {
+    // ─────────────────────────────────────────
+    //  INSPECTOR PARAMS
+    // ─────────────────────────────────────────
 
-    [Header("Auto Scroll")]
-    [SerializeField] private float scrollSpeed = 5f;
+    [Header("Objetivo")]
+    [Tooltip("Transform del jugador (o cualquier objetivo a seguir)")]
+    public Transform target;
 
-    [Header("Player Tracking")]
-    [SerializeField] private Transform player;
-    [SerializeField] private float catchUpSpeed = 8f;
+    [Header("Posición")]
+    [Tooltip("Offset respecto al objetivo. Y = altura de la cámara sobre el suelo.")]
+    public Vector3 offset = new Vector3(0f, 12f, 0f);
 
-    [Header("Viewport Thresholds (0 = abajo, 1 = arriba en pantalla)")]
-    [SerializeField][Range(0f, 1f)] private float frontThreshold = 0.65f;
-    [SerializeField][Range(0f, 1f)] private float softZoneStart = 0.50f;  // zona donde empieza el ajuste suave
-    [SerializeField][Range(0f, 1f)] private float dangerThreshold = 0.15f;
+    [Tooltip("Rotar la cámara para mirar hacia abajo (top-down). Desactiva si ya la rotaste manualmente.")]
+    public bool lookDown = true;
 
-    [Header("Events")]
-    public UnityEvent onPlayerInDanger;   // jugador cerca del borde trasero
-    public UnityEvent onPlayerSafe;       // jugador volvió a zona segura
+    [Header("Suavizado (SmoothDamp)")]
+    [Tooltip("Tiempo para alcanzar el objetivo. Valores bajos = más pegado. Rango recomendado: 0.05 – 0.5")]
+    [Range(0.01f, 1f)]
+    public float smoothTime = 0.15f;
 
-    private Camera cam;
-    private bool isInDanger = false;
+    [Tooltip("Velocidad máxima de movimiento de la cámara. 0 = sin límite.")]
+    public float maxSpeed = 50f;
 
-    private void Awake()
+    [Header("Dead Zone (zona muerta)")]
+    [Tooltip("La cámara no se moverá mientras el jugador esté dentro de este radio.")]
+    public float deadZoneRadius = 0f;
+
+    [Header("Límites del Nivel")]
+    public bool useBounds = false;
+    public Vector2 minBounds = new Vector2(-50f, -50f); // X, Z
+    public Vector2 maxBounds = new Vector2(50f, 50f);   // X, Z
+
+    [Header("Look Ahead (anticipación)")]
+    [Tooltip("La cámara se adelanta en la dirección de movimiento del jugador.")]
+    public bool useLookAhead = false;
+    [Range(0f, 5f)]
+    public float lookAheadDistance = 2f;
+    [Range(0.01f, 1f)]
+    public float lookAheadSmoothTime = 0.3f;
+
+    // ─────────────────────────────────────────
+    //  PRIVATE STATE
+    // ─────────────────────────────────────────
+
+    private Vector3 _velocity = Vector3.zero;
+    private Vector3 _lookAheadOffset = Vector3.zero;
+    private Vector3 _lookAheadVelocity = Vector3.zero;
+    private Vector3 _previousTargetPos;
+
+    // ─────────────────────────────────────────
+    //  UNITY LIFECYCLE
+    // ─────────────────────────────────────────
+
+    void Start()
     {
-        cam = GetComponent<Camera>();
-    }
-
-    private void LateUpdate()
-    {
-        // 1 — Auto scroll constante en Z
-        transform.position += Vector3.forward * scrollSpeed * Time.deltaTime;
-
-        // 2 — Posición del jugador en viewport (Y = profundidad en top-down)
-        Vector3 viewportPos = cam.WorldToViewportPoint(player.position);
-
-        // 3 — Jugador llega al frente → ajuste suave y progresivo
-        if (viewportPos.y > softZoneStart)
+        if (target == null)
         {
-            // 0 cuando está en softZoneStart, 1 cuando llega a frontThreshold o más
-            float t = Mathf.InverseLerp(softZoneStart, frontThreshold, viewportPos.y);
-
-            // Suavizar la curva para que la entrada sea gradual
-            float smoothT = Mathf.SmoothStep(0f, 1f, t);
-
-            float worldHalfHeight = GetViewportWorldHalfHeight();
-            float targetZ = player.position.z - (frontThreshold * worldHalfHeight * 2f) + worldHalfHeight;
-
-            Vector3 pos = transform.position;
-            pos.z = Mathf.Lerp(pos.z, targetZ, smoothT * catchUpSpeed * Time.deltaTime);
-            transform.position = pos;
+            Debug.LogWarning("[TopDownCameraFollow] No se asignó un target. Asigna el Transform del jugador en el Inspector.");
+            return;
         }
 
-        // 4 — Jugador se queda atrás → danger
-        bool playerBehind = viewportPos.y < dangerThreshold;
+        // Snap inicial (sin suavizado) para evitar que la cámara "vuele" al inicio
+        transform.position = target.position + offset;
+        _previousTargetPos = target.position;
 
-        if (playerBehind && !isInDanger)
-        {
-            isInDanger = true;
-            onPlayerInDanger?.Invoke();
-        }
-        else if (!playerBehind && isInDanger)
-        {
-            isInDanger = false;
-            onPlayerSafe?.Invoke();
-        }
+        if (lookDown)
+            transform.rotation = Quaternion.Euler(90f, 0f, 0f);
     }
 
-    // Semialtura del frustum a la altura de la cámara (ortográfica o perspectiva)
-    private float GetViewportWorldHalfHeight()
+    void LateUpdate()
     {
-        if (cam.orthographic)
+        if (target == null) return;
+
+        Vector3 targetPos = target.position;
+
+        // ── Dead Zone ──────────────────────────────────
+        Vector3 delta = targetPos - (transform.position - offset);
+        if (delta.magnitude < deadZoneRadius) return;
+
+        // ── Look Ahead ────────────────────────────────
+        if (useLookAhead)
         {
-            return cam.orthographicSize;
+            Vector3 moveDir = (targetPos - _previousTargetPos) / Time.deltaTime;
+            moveDir.y = 0f; // ignoramos el eje vertical
+            Vector3 targetLookAhead = moveDir.normalized * Mathf.Min(moveDir.magnitude, lookAheadDistance);
+            _lookAheadOffset = Vector3.SmoothDamp(_lookAheadOffset, targetLookAhead, ref _lookAheadVelocity, lookAheadSmoothTime);
         }
-        else
+
+        // ── Desired Position ──────────────────────────
+        Vector3 desiredPos = targetPos + offset + _lookAheadOffset;
+
+        // ── Bounds ────────────────────────────────────
+        if (useBounds)
         {
-            float dist = Mathf.Abs(transform.position.y - player.position.y);
-            return dist * Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad);
+            desiredPos.x = Mathf.Clamp(desiredPos.x, minBounds.x, maxBounds.x);
+            desiredPos.z = Mathf.Clamp(desiredPos.z, minBounds.y, maxBounds.y);
+        }
+
+        // ── SmoothDamp ────────────────────────────────
+        float speed = maxSpeed > 0f ? maxSpeed : Mathf.Infinity;
+        transform.position = Vector3.SmoothDamp(transform.position, desiredPos, ref _velocity, smoothTime, speed);
+
+        _previousTargetPos = targetPos;
+    }
+
+    // ─────────────────────────────────────────
+    //  GIZMOS (visualización en Scene view)
+    // ─────────────────────────────────────────
+
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
+    {
+        if (target == null) return;
+
+        // Dead zone
+        if (deadZoneRadius > 0f)
+        {
+            Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
+            Gizmos.DrawWireSphere(target.position, deadZoneRadius);
+        }
+
+        // Bounds
+        if (useBounds)
+        {
+            Gizmos.color = new Color(0f, 1f, 0f, 0.4f);
+            Vector3 center = new Vector3((minBounds.x + maxBounds.x) / 2f, target.position.y, (minBounds.y + maxBounds.y) / 2f);
+            Vector3 size = new Vector3(maxBounds.x - minBounds.x, 0.1f, maxBounds.y - minBounds.y);
+            Gizmos.DrawWireCube(center, size);
         }
     }
-
-    private void OnDrawGizmos()
-    {
-        if (cam == null) cam = GetComponent<Camera>();
-
-        DrawThresholdLine(frontThreshold, Color.cyan);
-        DrawThresholdLine(softZoneStart, Color.yellow);  // zona de suavizado
-        DrawThresholdLine(dangerThreshold, Color.red);
-    }
-
-    private void DrawThresholdLine(float viewportY, Color color)
-    {
-        Vector3 left = cam.ViewportToWorldPoint(new Vector3(0f, viewportY, cam.nearClipPlane + 0.1f));
-        Vector3 right = cam.ViewportToWorldPoint(new Vector3(1f, viewportY, cam.nearClipPlane + 0.1f));
-        Gizmos.color = color;
-        Gizmos.DrawLine(left, right);
-    }
+#endif
 }
