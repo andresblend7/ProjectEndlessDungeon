@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.15f);
         attackCollider.SetActive(true);
-        yield return new WaitForSeconds(0.35f); // Duración del hitbox activo
+        yield return new WaitForSeconds(0.06f); // Duración del hitbox activo
         attackCollider.SetActive(false);
 
     }
