@@ -123,8 +123,8 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
                 // Add your custom logic here (e.g., trigger an animation, change state, etc.)
             }
 
-            if (playerDetected)
-            {
+            //if (playerDetected) // Este if se comenta porque el enemigo puede marcar como seguir siempre al jugador una vez lo ve por primera vez
+            //{
                 repathTimer -= Time.deltaTime;
 
                 if (repathTimer <= 0f)
@@ -132,7 +132,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
                     agent.SetDestination(player.position);
                     repathTimer = repathRate;
                 }
-            }
+            //}
         }
 
       
