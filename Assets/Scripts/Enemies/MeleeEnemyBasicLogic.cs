@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.GraphicsBuffer;
 
 public class MeleeEnemyBasicLogic : MonoBehaviour
@@ -69,6 +70,20 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
     public TMPro.TextMeshPro txtDamage;
     //public bool isPlayerReached = false;
 
+    // ----------------------------------------------  INSPECTOR — Effects ---------------------------------------------- 
+
+    [Header("── Effects  ──────────────────────────────────────")]
+    // Knockback
+    public bool canBeNockbacked = true;
+    public float knockbackForce = 6f;
+    private bool isKnockbackActive = false;
+    //Squash
+    public bool haveSquashEffect = true;
+    private Vector3 originalScale;
+
+
+
+
     // ----------------------------------------------  INSPECTOR — CONTEXT STEERING ---------------------------------
 
     protected float _currentHealth;
@@ -81,7 +96,10 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
     public event Action OnPlayerDetected;
     // Evento que indica si el jugador está dentro del rango de ataque, para que el hijo pueda decidir qué hacer (ej: activar hitbox de ataque)
     public event Action<bool> OnPlayerInAttackRange;
+    public event Action<int> OnReceibeDamage;
 
+
+    
 
     void Awake()
     {
@@ -99,10 +117,15 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
 
         if (attackHitbox != null)
             attackHitbox.SetActive(false);
+
+        // EFFECTS
+        originalScale = transform.localScale;
     }
 
     private void Update()
     {
+        if (isKnockbackActive)
+            return;
 
         playerDetected = CanSeePlayer();
 
@@ -204,6 +227,75 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
 
         return false;
     }
+
+    public void ApplyKnockback(Vector3 direction, float force, float duration)
+    {
+        if (isKnockbackActive) return;
+
+        StartCoroutine(KnockbackRoutine(direction, force, duration));
+    }
+
+    IEnumerator KnockbackRoutine(Vector3 direction, float force, float duration)
+    {
+        isKnockbackActive = true;
+
+        float timer = 0f;
+
+        direction.y = 0f;
+        direction.Normalize();
+
+        while (timer < duration)
+        {
+            float t = timer / duration;
+
+            // curva de desaceleración suave
+            float currentForce = Mathf.Lerp(force, 0f, t);
+
+            Vector3 move = direction * currentForce * Time.deltaTime;
+
+            agent.Move(move); // 🔥 clave aquí
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        isKnockbackActive = false;
+    }
+
+    public void PlaySquash(float intensity = 0.2f, float duration = 0.1f)
+    {
+        StartCoroutine(SquashRoutine(intensity, duration));
+    }
+    IEnumerator SquashRoutine(float intensity, float duration)
+    {
+        float timer = 0f;
+
+        Vector3 squashScale = new Vector3(
+            originalScale.x * (1f + intensity),
+            originalScale.y * (1f - intensity),
+            originalScale.z * (1f + intensity)
+        );
+
+        // squash
+        while (timer < duration)
+        {
+            transform.localScale = Vector3.Lerp(originalScale, squashScale, timer / duration);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        timer = 0f;
+
+        // volver a normal
+        while (timer < duration)
+        {
+            transform.localScale = Vector3.Lerp(squashScale, originalScale, timer / duration);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.localScale = originalScale;
+    }
     #endregion
 
     #region Métodos para que el hijo dispare métodos de este padre
@@ -242,7 +334,20 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
 
     private void TakeDamage()
     {
-        txtDamage.text = "1";
+        int damage = 1;
+        txtDamage.text = $"{damage}";
+        OnReceibeDamage.Invoke(damage);
+
+        if (canBeNockbacked)
+        {
+            Vector3 dir = transform.position - player.transform.position;
+            ApplyKnockback(dir, knockbackForce, 0.15f);
+        }
+
+        if (haveSquashEffect)
+        {
+            PlaySquash();
+        }
 
        _currentHealth --;
         if (_currentHealth <= 0)

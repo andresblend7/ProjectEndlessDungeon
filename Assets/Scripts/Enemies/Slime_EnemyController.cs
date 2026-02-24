@@ -18,6 +18,9 @@ public class Slime_EnemyController : MonoBehaviour
     [Tooltip("Duración en segundos del hitbox de ataque activo.")]
     public float attackDuration = 0.3f;
 
+    public EnemyFlashEffect flashEffect;
+
+
 
 
     void Awake()
@@ -31,7 +34,13 @@ public class Slime_EnemyController : MonoBehaviour
     {
         _logic.OnPlayerDetected += HandlePlayerDetected;
         _logic.OnPlayerInAttackRange += HandlePlayerInAttackRange;
+        _logic.OnReceibeDamage += HandleReceiveDamage;
 
+    }
+
+    private void HandleReceiveDamage(int obj)
+    {
+        flashEffect.Flash();
     }
 
     private void HandlePlayerInAttackRange(bool obj)

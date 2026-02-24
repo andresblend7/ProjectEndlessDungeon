@@ -622,6 +622,7 @@ MonoBehaviour:
   timeToStartAttack: 0.3
   timeToRecoveryAttack: 0.6
   attackDuration: 0.2
+  flashEffect: {fileID: 5061520801277738303}
 --- !u!1001 &6385735630463673413
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -717,8 +718,33 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1469041826028087561}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c028ee5dfbfdf0c458cc5970d3ecc005,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5061520801277738303}
   m_SourcePrefab: {fileID: 100100000, guid: c028ee5dfbfdf0c458cc5970d3ecc005, type: 3}
+--- !u!1 &6079817066688977172 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c028ee5dfbfdf0c458cc5970d3ecc005,
+    type: 3}
+  m_PrefabInstance: {fileID: 6385735630463673413}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5061520801277738303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6079817066688977172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6518fadceeb0d054d83bd3e02823043a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyFlashEffect
+  flashColor: {r: 1, g: 0.9858491, b: 0.9858491, a: 1}
+  flashDuration: 0.1
+  flashIntensity: 2
 --- !u!4 &6851111672533926830 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c028ee5dfbfdf0c458cc5970d3ecc005,
