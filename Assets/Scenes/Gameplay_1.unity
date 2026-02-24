@@ -7712,6 +7712,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1703070441}
   - component: {fileID: 1703070442}
+  - component: {fileID: 1703070443}
   m_Layer: 0
   m_Name: GameplayController
   m_TagString: Untagged
@@ -7752,6 +7753,18 @@ MonoBehaviour:
   dangerThreshold: 30
   pulseSpeed: 8
   pulseAmount: 0.16
+--- !u!114 &1703070443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1703070440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 118fe4ce48b19f547a215a755957bb73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BlockSaveManager
 --- !u!1001 &1726277323
 PrefabInstance:
   m_ObjectHideFlags: 0

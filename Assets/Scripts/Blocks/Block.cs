@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -54,9 +55,11 @@ public class Block : MonoBehaviour
     [Tooltip("Offset de posición final respecto al jugador")]
     [SerializeField] private Vector3 playerOffset = Vector3.zero;
 
+    private int uniqueID;
 
     void Awake()
     {
+        uniqueID = GenerateID();
     }
     private void Start()
     {
@@ -64,6 +67,31 @@ public class Block : MonoBehaviour
         initialScale = transform.localScale;
         currentHP = lifePoints;
 
+        //registrar el bloque en el BlockSaveManager para manejar su estado de minado
+        if (BlockSaveManager.Instance.IsMined(uniqueID))
+        {
+            gameObject.SetActive(false);
+        }
+
+    }
+
+    int GenerateID()
+    {
+        Vector3 pos = transform.position;
+
+        int x = Mathf.RoundToInt(pos.x);
+        int y = Mathf.RoundToInt(pos.y);
+        int z = Mathf.RoundToInt(pos.z);
+
+        // hash determinístico ultra simple
+        unchecked
+        {
+            int hash = 17;
+            hash = hash * 31 + x;
+            hash = hash * 31 + y;
+            hash = hash * 31 + z;
+            return hash;
+        }
     }
 
     private void Update()
@@ -169,6 +197,7 @@ public class Block : MonoBehaviour
         // Asegurar que llegue a la escala final
         transform.localScale = endScale;
 
+        BlockSaveManager.Instance.RegisterMined(uniqueID);
         // Destruir el objeto
         Destroy(gameObject);
     }
