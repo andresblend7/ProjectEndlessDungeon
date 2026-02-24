@@ -597,7 +597,7 @@ MonoBehaviour:
   attackRange: 1.01
   attackCooldown: 1.2
   attackHitbox: {fileID: 6385735631425729580}
-  maxHealth: 80
+  maxHealth: 4
   defense: 5
   damage: 15
   criticalChance: 0.1
@@ -605,6 +605,10 @@ MonoBehaviour:
   canChasePlayer: 0
   isChasingEnemy: 0
   txtDamage: {fileID: 2408346907339514223}
+  canBeNockbacked: 1
+  knockbackForce: 6
+  haveSquashEffect: 1
+  heightTextDamage: -1.4
 --- !u!114 &8569586959348347781
 MonoBehaviour:
   m_ObjectHideFlags: 0

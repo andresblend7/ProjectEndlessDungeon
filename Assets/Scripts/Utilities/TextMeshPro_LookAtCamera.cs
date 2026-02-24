@@ -13,7 +13,7 @@ public class TextMeshPro_LookAtCamera : MonoBehaviour
     {
         if (cam == null) return;
 
-        // Hace que mire a la cámara
+        // Hace que mire a la cámara activa.
         transform.forward = cam.transform.forward;
     }
 }

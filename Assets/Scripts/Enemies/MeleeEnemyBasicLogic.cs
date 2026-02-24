@@ -80,7 +80,8 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
     //Squash
     public bool haveSquashEffect = true;
     private Vector3 originalScale;
-
+    //text damage
+    public float heightTextDamage = 0.5f;
 
 
 
@@ -335,7 +336,14 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
     private void TakeDamage()
     {
         int damage = 1;
-        txtDamage.text = $"{damage}";
+
+        DamageNumberSpawner.Spawn(
+            transform.position + Vector3.up * heightTextDamage,
+            damage,
+            false,
+            false
+        );
+        //txtDamage.text = $"{damage}";
         OnReceibeDamage.Invoke(damage);
 
         if (canBeNockbacked)
@@ -348,6 +356,8 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
         {
             PlaySquash();
         }
+
+
 
        _currentHealth --;
         if (_currentHealth <= 0)
