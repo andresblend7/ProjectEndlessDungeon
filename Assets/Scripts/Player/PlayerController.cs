@@ -23,15 +23,19 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Duración del hitbox activo para acciones y ataques (en segundos)")]
     public float hitboxActiveDuration = 0.05f;
 
-    private ModelController modelController;
+    public ModelController modelController;
+
+    private void Awake()
+    {
+        playerUtilities = FindFirstObjectByType<PlayerUtilities>();
+        //modelController = playerModel.GetComponentInChildren<ModelController>();
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         //REFERERENCES
-        playerUtilities = FindFirstObjectByType<PlayerUtilities>();
-
-        modelController = playerModel.GetComponentInChildren<ModelController>();
+      
 
         // Suscribirse al evento de movimiento
         InputManager.OnMoveCommand += HandleMoveCommand;
@@ -52,6 +56,12 @@ public class PlayerController : MonoBehaviour
     /// <param name="actionType"></param>
     private void HandleActionSelectedCommand(EnumActionType actionType)
     {
+        if (playerUtilities == null)
+        {
+            Debug.LogWarning(actionType + " seleccionado pero playerUtilities es null, ignorando comando");
+            return;
+        }
+
         EnumActualToolSelected actualToolSelected = EnumActualToolSelected.None;
         switch (actionType)
         {
@@ -180,6 +190,11 @@ public class PlayerController : MonoBehaviour
         }
 
         isMoving = false;
+    }
+
+    void OnDestroy()
+    {
+        enabled = false;
     }
 
 }

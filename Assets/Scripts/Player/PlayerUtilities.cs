@@ -27,7 +27,7 @@ public class PlayerUtilities : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -39,9 +39,8 @@ public class PlayerUtilities : MonoBehaviour
     private void Start()
     {
         actualStats = SaveSystem.Load();
-        actualStats.MaxHealth = 20;
-        actualStats.ActualHealth = actualStats.MaxHealth;
-        actualStats.ActualToolDamage = 3;        
+       
+        this.SetStatsToInitRoom();
         //DEV
         SaveSystem.Save(actualStats); 
     }
@@ -66,6 +65,14 @@ public class PlayerUtilities : MonoBehaviour
     }
 
     #region PLAYER STATS
+
+    public void SetStatsToInitRoom()
+    {
+        actualStats.MaxHealth = 20;
+        actualStats.ActualHealth = actualStats.MaxHealth;
+        actualStats.ActualToolDamage = 3;
+    }
+
 
     public PlayerInGameData GetActualStats()
     {

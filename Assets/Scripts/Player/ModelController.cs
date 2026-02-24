@@ -13,9 +13,17 @@ public class ModelController : MonoBehaviour
     [Header("References")]
     private PlayerUtilities playerUtilities;
 
-    // Start is called before the first frame update
-    void Start() {         
+    private void Awake()
+    {
         playerUtilities = FindFirstObjectByType<PlayerUtilities>();
+
+    }
+
+    // Start is called before the first frame update
+    void Start() {
+   
+
+    
     }
     public void ChangeSelectTool(EnumActualToolSelected actualToolSelected)
     {
@@ -47,7 +55,6 @@ public class ModelController : MonoBehaviour
 
     public void ExecuteAnimation(PlayerAnimation animation)
     {
-        //Debug.Log("reproduciendo animación: " + animation.ToString());
 
         if (playerUtilities.GetActualToolSelected() == EnumActualToolSelected.Pickaxe)
             this.GetComponent<Animator>().SetTrigger("Pick");
