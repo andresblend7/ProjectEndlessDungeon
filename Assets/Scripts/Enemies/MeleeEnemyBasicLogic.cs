@@ -60,7 +60,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
     [Header("── Stats Base ──────────────────────────────────────")]
     public float maxHealth = 3f;
     public float defense = 5f;
-    public float damage = 15f;
+    public int damage = 15;
     [Range(0f, 1f)]
     public float criticalChance = 0.1f;
     public int coinDrop = 3;
@@ -321,7 +321,18 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
         transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
     }
 
-    #endregion
+    public void DetectAttackCollisionToPlayer()
+    {
+
+        DamageNumberSpawner.Spawn(
+            player.position + Vector3.up * heightTextDamage,
+            this.damage,
+            false,
+            false
+        );
+    }
+
+    #endregion ----------------------------------------------------------------------
 
     #region Collisiones
     void OnTriggerEnter(Collider other)
@@ -371,7 +382,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
       gameObject.SetActive(false);
     }
 
-    #endregion
+    #endregion ----------------------------------------------------------------------
 
     // Visualización en el editor (Gizmos)
     void OnDrawGizmosSelected()

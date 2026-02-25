@@ -23,4 +23,10 @@ public class InitialMenu_UIController : MonoBehaviour
         SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
     }
 
+    public void ResetPlayerPrefs()
+    {
+        PlayerPrefs.DeleteAll();
+        Debug.Log("PlayerPrefs have been reset.");
+    }
+
 }
