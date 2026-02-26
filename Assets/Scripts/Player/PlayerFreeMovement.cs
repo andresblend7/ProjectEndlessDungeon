@@ -9,6 +9,16 @@ public class PlayerFreeMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotationSpeed = 10f;
 
+    [Header("Dodge")]
+    [SerializeField] private float dodgeDistance = 4f;
+    [SerializeField] private float dodgeDuration = 0.2f;
+    [SerializeField] private float dodgeCooldown = 1f;
+    private bool isDodging = false;
+    private float dodgeTimer;
+    private float dodgeCooldownTimer;
+    private Vector3 dodgeDirection;
+
+
     private Vector2 moveVector;
     private bool isFirstMove = true;
     private Rigidbody rb;
@@ -32,6 +42,39 @@ public class PlayerFreeMovement : MonoBehaviour
     private void FixedUpdate()
     {
         MoveCharacter();
+
+        if (isDodging)
+        {
+            float dodgeSpeed = dodgeDistance / dodgeDuration;
+
+            Vector3 velocity = dodgeDirection * dodgeSpeed;
+            velocity.y = rb.linearVelocity.y; // mantener gravedad
+
+            rb.linearVelocity = velocity;
+
+            dodgeTimer -= Time.fixedDeltaTime;
+
+            if (dodgeTimer <= 0f)
+            {
+                isDodging = false;
+            }
+        }
+
+        if (dodgeCooldownTimer > 0f)
+            dodgeCooldownTimer -= Time.fixedDeltaTime;
+
+
+
+    }
+    private void Update()
+    {
+#if UNITY_EDITOR || UNITY_STANDALONE
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("Intentando esquivar...");
+            TryDodge();
+        }
+#endif
     }
 
     private void MoveCharacter()
@@ -57,4 +100,28 @@ public class PlayerFreeMovement : MonoBehaviour
         // 3. Aplicamos la velocidad
         rb.linearVelocity = finalVelocity;
     }
+
+    public void TryDodge()
+    {
+        if (isDodging) return;
+        if (dodgeCooldownTimer > 0f) return;
+
+        // Dirección basada en hacia donde está mirando
+        Vector3 forwardDirection = transform.forward;
+        forwardDirection.y = 0f; // evitar inclinaciones raras
+
+        if (forwardDirection.sqrMagnitude < 0.01f)
+            return;
+
+        dodgeDirection = forwardDirection.normalized;
+
+        isDodging = true;
+        dodgeTimer = dodgeDuration;
+        dodgeCooldownTimer = dodgeCooldown;
+
+        // Cancelar velocidad horizontal actual
+        rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+    }
+
+
 }

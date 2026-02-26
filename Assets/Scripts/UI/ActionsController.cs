@@ -33,9 +33,12 @@ public class ActionsController : MonoBehaviour, IPointerDownHandler, IPointerUpH
     [SerializeField]
     private bool isOnCooldown = false;
 
+    private PlayerFreeMovement playerMovementController;
+
     private void Start()
     {
         originalColorActionButton = actionImage.color;
+        playerMovementController = FindFirstObjectByType<PlayerFreeMovement>();
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -89,6 +92,9 @@ public class ActionsController : MonoBehaviour, IPointerDownHandler, IPointerUpH
                 ExecuteAction();
                 break;
 
+            case "dodge":
+                playerMovementController.TryDodge();
+                break;
             default:
                 Debug.LogError("Acción no reconocida: " + currentClickedObject);
                 return;
