@@ -70,7 +70,7 @@ public class PlayerUtilities : MonoBehaviour
     {
         actualStats.MaxHealth = 20;
         actualStats.ActualHealth = actualStats.MaxHealth;
-        actualStats.ActualToolDamage = 3;
+        actualStats.ActualToolDamage = 1;
     }
 
 
