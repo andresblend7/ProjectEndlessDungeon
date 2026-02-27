@@ -81,6 +81,9 @@ public class PlayerController : MonoBehaviour
             case EnumActionType.Ranged:
                 actualToolSelected = EnumActualToolSelected.Ranged;
                 break;
+            case EnumActionType.Dodge:
+                modelController.ExecuteAnimation(PlayerAnimation.Dodge);
+                break;
             default:
                 Debug.LogError("Tipo de acción no reconocido");
                 return;

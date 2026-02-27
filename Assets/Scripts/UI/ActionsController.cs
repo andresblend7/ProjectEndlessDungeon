@@ -93,7 +93,9 @@ public class ActionsController : MonoBehaviour, IPointerDownHandler, IPointerUpH
                 break;
 
             case "dodge":
+                actionSelected = EnumActionType.Dodge;
                 playerMovementController.TryDodge();
+                ExecuteAction();
                 break;
             default:
                 Debug.LogError("Acción no reconocida: " + currentClickedObject);
@@ -211,5 +213,6 @@ public enum EnumActionType
     Tool,
     Melee,
     Ranged,
-    Consumable
+    Consumable,
+    Dodge
 }

@@ -20,10 +20,11 @@ public class ModelController : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start() {
-   
+    void Start()
+    {
 
-    
+
+
     }
     public void ChangeSelectTool(EnumActualToolSelected actualToolSelected)
     {
@@ -55,12 +56,20 @@ public class ModelController : MonoBehaviour
 
     public void ExecuteAnimation(PlayerAnimation animation)
     {
+        if (animation == PlayerAnimation.Dodge)
+            this.GetComponent<Animator>().SetTrigger("Dodge");
+        else
+        {
 
-        if (playerUtilities.GetActualToolSelected() == EnumActualToolSelected.Pickaxe)
-            this.GetComponent<Animator>().SetTrigger("Pick");
 
-        if (playerUtilities.GetActualToolSelected() == EnumActualToolSelected.Melee)
-            this.GetComponent<Animator>().SetTrigger("Attack");
+            if (playerUtilities.GetActualToolSelected() == EnumActualToolSelected.Pickaxe)
+                this.GetComponent<Animator>().SetTrigger("Pick");
+
+            if (playerUtilities.GetActualToolSelected() == EnumActualToolSelected.Melee)
+                this.GetComponent<Animator>().SetTrigger("Attack");
+        }
+
+
     }
 
 }
@@ -70,6 +79,7 @@ public enum PlayerAnimation
     Action,
     TakeDamage,
     Die,
-    Idle
+    Idle,
+    Dodge
 }
 
