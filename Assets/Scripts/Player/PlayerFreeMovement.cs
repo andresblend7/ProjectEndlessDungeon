@@ -23,6 +23,8 @@ public class PlayerFreeMovement : MonoBehaviour
     private bool isFirstMove = true;
     private Rigidbody rb;
 
+    private Vector2 lookVector;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -39,8 +41,19 @@ public class PlayerFreeMovement : MonoBehaviour
         }
     }
 
+    public void InputLook(InputAction.CallbackContext _context)
+    {
+        lookVector = _context.ReadValue<Vector2>();
+
+        Debug.Log("Look: " + lookVector);
+
+        if (_context.canceled)
+            lookVector = Vector2.zero;
+    }
+
     private void FixedUpdate()
     {
+        HandleRotation();
         MoveCharacter();
 
         if (isDodging)
@@ -79,26 +92,35 @@ public class PlayerFreeMovement : MonoBehaviour
 
     private void MoveCharacter()
     {
-        // --- Rotaci�n (Esto d�jalo igual, est� perfecto) ---
-        if (moveVector != Vector2.zero)
-        {
-            Vector3 direction = new Vector3(moveVector.x, 0f, moveVector.y).normalized;
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
-        }
-
-        // --- Movimiento CORREGIDO ---
-        // En lugar de calcular posici�n, calculamos velocidad.
-
-        // 1. Calculamos la velocidad deseada en X y Z
+        // --- Movimiento ---
         Vector3 movement = new Vector3(moveVector.x, 0f, moveVector.y).normalized * moveSpeed;
 
-        // 2. IMPORTANTE: Mantenemos la velocidad Y actual del Rigidbody (para la gravedad)
-        // Si no haces esto, el personaje flotar� o caer� lento.
         Vector3 finalVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
 
-        // 3. Aplicamos la velocidad
-        rb.linearVelocity = finalVelocity;
+        if (!isDodging)
+            rb.linearVelocity = finalVelocity;
+    }
+
+    private void HandleRotation()
+    {
+        Vector2 rotationInput = lookVector;
+
+        // Fallback opcional: si no usa el stick derecho, usar movimiento
+        if (rotationInput.sqrMagnitude < 0.01f)
+            rotationInput = moveVector;
+
+        if (rotationInput.sqrMagnitude > 0.01f)
+        {
+            Vector3 direction = new Vector3(rotationInput.x, 0f, rotationInput.y);
+
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+            rb.rotation = Quaternion.Slerp(
+                rb.rotation,
+                targetRotation,
+                rotationSpeed * Time.fixedDeltaTime
+            );
+        }
     }
 
     public void TryDodge()

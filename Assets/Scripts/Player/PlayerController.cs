@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     public ColliderDirectionCheck left;
     public ColliderDirectionCheck right;
     public GameObject actionCollider;
-    public GameObject attackCollider;
+    public BoxCollider attackCollider;
     [Tooltip("Duración del hitbox activo para acciones y ataques (en segundos)")]
     public float hitboxActiveDuration = 0.05f;
 
@@ -104,11 +104,13 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator ActiveAttackHitBox()
     {
-        yield return new WaitForSeconds(0.15f);
-        attackCollider.SetActive(true);
-        yield return new WaitForSeconds(0.06f); // Duración del hitbox activo
-        attackCollider.SetActive(false);
 
+       yield return new WaitForSeconds(0.15f);
+        attackCollider.enabled = (true);
+        yield return new WaitForSeconds(0.06f); // Duración del hitbox activo
+        attackCollider.enabled = (false);
+
+        //yield return null;
     }
 
     // Update is called once per frame
