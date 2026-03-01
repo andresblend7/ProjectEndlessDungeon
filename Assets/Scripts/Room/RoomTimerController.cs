@@ -16,6 +16,9 @@ public class RoomTimerController : MonoBehaviour
     public float pulseSpeed = 6f;
     public float pulseAmount = 0.15f;
 
+    [Header("Portal Settings")]
+    private PortalController portalController;
+
     private float currentTime;
     private bool isRunning = true;
 
@@ -23,6 +26,14 @@ public class RoomTimerController : MonoBehaviour
     private Color dangerColor = Color.red;
 
     private Vector3 originalScale;
+
+    private bool portalSpawned = false;
+
+    private void Awake()
+    {
+        portalController = GetComponent<PortalController>();
+    }
+
 
     void Start()
     {
@@ -70,6 +81,13 @@ public class RoomTimerController : MonoBehaviour
             // Pulso suave
             float pulse = 1f + Mathf.Sin(Time.time * pulseSpeed) * pulseAmount * dangerPercent;
             timerText.transform.localScale = originalScale * pulse;
+
+            if (!portalSpawned)
+            {
+                // Aquí podrías llamar a un método para generar el portal
+                portalController.SpawnPortal();
+                portalSpawned = true;
+            }
         }
         else
         {

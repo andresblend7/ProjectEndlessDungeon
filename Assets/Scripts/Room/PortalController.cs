@@ -15,6 +15,7 @@ public class PortalController : MonoBehaviour
 
     [Header("Layers")]
     [SerializeField] private LayerMask floorLayer;
+    [Tooltip("Capas que el portal debe evitar al generar. Si un collider pertenece a una de estas capas, el portal no se generará allí.")]
     [SerializeField] private LayerMask collisionLayers;
 
     [Header("Ignore Tags")]
@@ -22,6 +23,7 @@ public class PortalController : MonoBehaviour
 
     public void SpawnPortal()
     {
+
         if (portalPrefab == null || player == null)
         {
             Debug.LogError("[PortalSpawner] Falta asignar portalPrefab o player.");
@@ -30,18 +32,25 @@ public class PortalController : MonoBehaviour
 
         for (int i = 0; i < maxAttempts; i++)
         {
+
+
             Vector3 randomPoint = GetRandomPointAroundPlayer();
 
             // Raycast hacia abajo
             if (Physics.Raycast(randomPoint, Vector3.down, out RaycastHit hit, raycastHeight * 2f, floorLayer))
             {
+                Debug.DrawLine(randomPoint, hit.point, Color.purple, 2f);
+
                 Vector3 spawnPosition = hit.point;
 
                 if (IsPositionValid(spawnPosition))
                 {
-                    Instantiate(portalPrefab, spawnPosition, Quaternion.identity);
+                    Instantiate(portalPrefab, new Vector3(spawnPosition.x, 0.1f, spawnPosition.z), Quaternion.identity);
                     Debug.Log("[PortalSpawner] Portal generado correctamente en intento #" + (i + 1));
                     return;
+                }else
+                    {
+                    Debug.Log("[PortalSpawner] Posición no válida para el portal en intento #" + spawnPosition);
                 }
             }
         }
