@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour
 {
@@ -18,10 +19,21 @@ public class PlayerController : MonoBehaviour
     public ColliderDirectionCheck back;
     public ColliderDirectionCheck left;
     public ColliderDirectionCheck right;
-    public GameObject actionCollider;
     public BoxCollider attackCollider;
     [Tooltip("Duración del hitbox activo para acciones y ataques (en segundos)")]
     public float hitboxActiveDuration = 0.05f;
+    [Header("RayCast para la colisión del hitbox de accion  (picar/accionar)")]
+    public GameObject actionCollider;
+    [SerializeField] private Transform origin;
+    [SerializeField] public float distanceMaxAction = 5f;
+    [SerializeField] public float offsetTomaxDistance = 0.2f;
+    [SerializeField] private LayerMask hitMask;
+    [SerializeField] private Transform hitboxAction; // El objeto que quieres posicionar
+    [Tooltip("Radio del SphereCast para detectar colisiones")]
+    [SerializeField] private float castRadius = 0.25f;
+    private RaycastHit debugHit;
+    private bool hasHit;
+
 
     public ModelController modelController;
 
@@ -43,10 +55,8 @@ public class PlayerController : MonoBehaviour
 
         PlayerMovement.OnMoveCommand += HandleMoveCommand;
 
-        #region Load Stats
- 
+      
 
-        #endregion
 
     }
 
@@ -116,7 +126,23 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector3 originPos = origin.position;
+        Vector3 direction = origin.forward;
 
+        hasHit = Physics.SphereCast(origin.position, castRadius, direction,
+                              out debugHit, distanceMaxAction, hitMask);
+
+        if (hasHit)
+        {
+            // Si golpea algo, colocamos el objeto justo en el punto de impacto
+            //hitboxAction.position = hit.point;
+            hitboxAction.position = debugHit.point + direction * offsetTomaxDistance;
+        }
+        else
+        {
+            // Si no golpea nada, lo colocamos a la distancia máxima + offset
+            hitboxAction.position = origin.position + direction * (distanceMaxAction + offsetTomaxDistance);
+        }
     }
 
     // Este método es llamado cuando se presiona una flecha
@@ -201,6 +227,36 @@ public class PlayerController : MonoBehaviour
     {
         enabled = false;
     }
+
+    #region GIZMOS
+    void OnDrawGizmos()
+    {
+        if (origin == null) return;
+
+        Vector3 direction = origin.forward;
+        Vector3 start = origin.position;
+        Vector3 end = start + direction * distanceMaxAction;
+
+        // Color base
+        Gizmos.color = Color.cyan;
+
+        // Esfera inicial
+        Gizmos.DrawWireSphere(start, castRadius);
+
+        // Esfera final
+        Gizmos.DrawWireSphere(end, castRadius);
+
+        // Línea central
+        Gizmos.DrawLine(start, end);
+
+        // Si hay impacto
+        if (hasHit)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(debugHit.point, castRadius);
+        }
+    }
+    #endregion
 
 }
 

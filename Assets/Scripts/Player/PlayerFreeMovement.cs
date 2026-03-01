@@ -45,7 +45,7 @@ public class PlayerFreeMovement : MonoBehaviour
     {
         lookVector = _context.ReadValue<Vector2>();
 
-        Debug.Log("Look: " + lookVector);
+        //Debug.Log("Look: " + lookVector);
 
         if (_context.canceled)
             lookVector = Vector2.zero;
@@ -79,26 +79,49 @@ public class PlayerFreeMovement : MonoBehaviour
 
 
     }
-    private void Update()
-    {
-#if UNITY_EDITOR || UNITY_STANDALONE
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("Intentando esquivar...");
-            TryDodge();
-        }
-#endif
-    }
 
     private void MoveCharacter()
     {
-        // --- Movimiento ---
-        Vector3 movement = new Vector3(moveVector.x, 0f, moveVector.y).normalized * moveSpeed;
+        if (isDodging) return;
 
-        Vector3 finalVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
+        Vector3 movementDir = new Vector3(moveVector.x, 0f, moveVector.y);
 
-        if (!isDodging)
-            rb.linearVelocity = finalVelocity;
+        if (movementDir.sqrMagnitude > 0.01f)
+        {
+            movementDir.Normalize();
+
+            // Dirección hacia donde mira el personaje
+            Vector3 forward = transform.forward;
+            forward.y = 0f;
+            forward.Normalize();
+
+            // Dot product (-1 a 1)
+            float dot = Vector3.Dot(forward, movementDir);
+
+            // Convertimos de (-1,1) a (0.4,1)
+            // 1   → 1 (velocidad completa)
+            // 0   → 0.7
+            // -1  → 0.4
+            float speedMultiplier = Mathf.Lerp(0.4f, 1f, (dot + 1f) / 2f);
+
+            float finalSpeed = moveSpeed * speedMultiplier;
+
+            Vector3 movement = movementDir * finalSpeed;
+
+            rb.linearVelocity = new Vector3(
+                movement.x,
+                rb.linearVelocity.y,
+                movement.z
+            );
+        }
+        else
+        {
+            rb.linearVelocity = new Vector3(
+                0f,
+                rb.linearVelocity.y,
+                0f
+            );
+        }
     }
 
     private void HandleRotation()

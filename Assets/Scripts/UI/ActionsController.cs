@@ -3,23 +3,23 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
 
-using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using System.Collections;
-
 public class ActionsController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    private const string ActionButtonName = "action";
+    private const string ToolButtonName = "tool";
+    private const string Weapon1ButtonName = "weapon_1";
+    private const string Weapon2ButtonName = "weapon_2";
+    private const string DodgeButtonName = "dodge";
+
     [Header("Configuración de Ataque Continuo")]
     [Tooltip("Velocidad de ataque (ataques por segundo)")]
     [SerializeField] private float attackSpeed = 1f; // 2 ataques por segundo por defecto
 
-    [Header("Referencias UI")]    
+    [Header("Referencias UI")]
     [SerializeField] private RawImage actionImage;
     [SerializeField] private Texture toolTexture;
     [SerializeField] private Texture meleeAttackTexture;
     [SerializeField] private Texture rangedAttackTexture;
-
 
     private Color originalColorActionButton;
 
@@ -41,81 +41,164 @@ public class ActionsController : MonoBehaviour, IPointerDownHandler, IPointerUpH
         playerMovementController = FindFirstObjectByType<PlayerFreeMovement>();
     }
 
+    private void Update()
+    {
+        HandleKeyboardInput();
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
-        currentClickedObject = eventData.pointerCurrentRaycast.gameObject.name;
-
-      
-        // Manejar diferentes tipos de botones
-        switch (currentClickedObject)
+        GameObject clickedObject = eventData.pointerCurrentRaycast.gameObject;
+        if (clickedObject == null)
         {
-            case "action":
-                // Comprobar el cooldown
-                if (IsOnCooldown())
-                    return;
-
-                // Configurar acción
-                actionSelected = EnumActionType.Action;
-
-                // Iniciar acción continua
-                isHoldingAction = true;
-
-                // Ejecutar inmediatamente la primera vez    
-                ExecuteActionWithCooldown();
-
-                // Iniciar la coroutine de ataque continuo
-                if (continuousActionCoroutine != null)
-                {
-                    StopCoroutine(continuousActionCoroutine);
-                }
-                continuousActionCoroutine = StartCoroutine(ContinuousAction());
-                break;
-
-            case "tool":
-                // Acción única - no continua
-                actionSelected = EnumActionType.Tool;
-                actionImage.texture = toolTexture;
-                ExecuteAction();
-                break;
-
-            case "weapon_1":
-                // Acción única - no continua
-                actionSelected = EnumActionType.Melee;
-                actionImage.texture = meleeAttackTexture;
-                ExecuteAction();
-                break;
-
-            case "weapon_2":
-                // Acción única - no continua
-                actionSelected = EnumActionType.Ranged;
-                actionImage.texture = rangedAttackTexture;
-                ExecuteAction();
-                break;
-
-            case "dodge":
-                actionSelected = EnumActionType.Dodge;
-                playerMovementController.TryDodge();
-                ExecuteAction();
-                break;
-            default:
-                Debug.LogError("Acción no reconocida: " + currentClickedObject);
-                return;
+            return;
         }
+
+        currentClickedObject = clickedObject.name;
+        HandleButtonDown(currentClickedObject);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         // Detener el ataque continuo solo para "action"
-        if (currentClickedObject == "action")
+        if (currentClickedObject == ActionButtonName)
         {
-            isHoldingAction = false;
-
-            if (continuousActionCoroutine != null)
-            {
-                StopCoroutine(continuousActionCoroutine);
-                continuousActionCoroutine = null;
-            }
+            HandleActionReleased();
         }
+
+        currentClickedObject = null;
+    }
+
+    private void HandleKeyboardInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            HandleActionPressed();
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            HandleActionReleased();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+        {
+            HandleToolAction();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+        {
+            HandleWeapon1Action();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
+        {
+            HandleWeapon2Action();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            HandleDodgeAction();
+        }
+    }
+
+    private void HandleButtonDown(string buttonName)
+    {
+        // Manejar diferentes tipos de botones
+        switch (buttonName)
+        {
+            case ActionButtonName:
+                HandleActionPressed();
+                break;
+
+            case ToolButtonName:
+                HandleToolAction();
+                break;
+
+            case Weapon1ButtonName:
+                HandleWeapon1Action();
+                break;
+
+            case Weapon2ButtonName:
+                HandleWeapon2Action();
+                break;
+
+            case DodgeButtonName:
+                HandleDodgeAction();
+                break;
+
+            default:
+                Debug.LogError("Acción no reconocida: " + buttonName);
+                break;
+        }
+    }
+
+    private void HandleActionPressed()
+    {
+        // Comprobar el cooldown
+        if (IsOnCooldown())
+            return;
+
+        // Configurar acción
+        actionSelected = EnumActionType.Action;
+
+        // Iniciar acción continua
+        isHoldingAction = true;
+
+        // Ejecutar inmediatamente la primera vez
+        ExecuteActionWithCooldown();
+
+        // Iniciar la coroutine de ataque continuo
+        if (continuousActionCoroutine != null)
+        {
+            StopCoroutine(continuousActionCoroutine);
+        }
+
+        continuousActionCoroutine = StartCoroutine(ContinuousAction());
+    }
+
+    private void HandleActionReleased()
+    {
+        isHoldingAction = false;
+
+        if (continuousActionCoroutine != null)
+        {
+            StopCoroutine(continuousActionCoroutine);
+            continuousActionCoroutine = null;
+        }
+    }
+
+    private void HandleToolAction()
+    {
+        actionSelected = EnumActionType.Tool;
+        actionImage.texture = toolTexture;
+        ExecuteAction();
+    }
+
+    private void HandleWeapon1Action()
+    {
+        actionSelected = EnumActionType.Melee;
+        actionImage.texture = meleeAttackTexture;
+        ExecuteAction();
+    }
+
+    private void HandleWeapon2Action()
+    {
+        actionSelected = EnumActionType.Ranged;
+        actionImage.texture = rangedAttackTexture;
+        ExecuteAction();
+    }
+
+    private void HandleDodgeAction()
+    {
+        actionSelected = EnumActionType.Dodge;
+
+        if (playerMovementController != null)
+        {
+            playerMovementController.TryDodge();
+        }
+
+        ExecuteAction();
     }
 
     private void ExecuteAction()
@@ -202,10 +285,12 @@ public class ActionsController : MonoBehaviour, IPointerDownHandler, IPointerUpH
             StopCoroutine(continuousActionCoroutine);
             continuousActionCoroutine = null;
         }
+
         isHoldingAction = false;
         isOnCooldown = false;
     }
 }
+
 public enum EnumActionType
 {
     None = 1,
