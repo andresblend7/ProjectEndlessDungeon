@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerFreeMovement : MonoBehaviour
 {
+
+    [Header("References")]
+    ActionsController actionsController;
+
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotationSpeed = 10f;
@@ -19,6 +24,15 @@ public class PlayerFreeMovement : MonoBehaviour
     private Vector3 dodgeDirection;
 
 
+
+    // Stick derecho para atacar y girar a la vez
+    [Header("Attack")]
+    [SerializeField] private float attackInterval = 0.4f;
+    [SerializeField] private bool isHoldingAttack;
+    private float attackTimer;
+
+
+
     private Vector2 moveVector;
     private bool isFirstMove = true;
     private Rigidbody rb;
@@ -28,6 +42,7 @@ public class PlayerFreeMovement : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        actionsController= FindFirstObjectByType<ActionsController>();
     }
 
     public void InputPlayer(InputAction.CallbackContext _context)
@@ -41,18 +56,62 @@ public class PlayerFreeMovement : MonoBehaviour
         }
     }
 
-    public void InputLook(InputAction.CallbackContext _context)
+    #region Action Joystick
+
+    public void InputLook(InputAction.CallbackContext context)
     {
-        lookVector = _context.ReadValue<Vector2>();
+        lookVector = context.ReadValue<Vector2>();
+        //var magnitude = lookVector.magnitude;
 
-        //Debug.Log("Look: " + lookVector);
+        //if (magnitude < 0.0001f)
+        //    return;
 
-        if (_context.canceled)
-            lookVector = Vector2.zero;
+
+        if (context.started)
+        {
+            isHoldingAttack = true;
+        }
+
+        if (context.canceled)
+        {
+            Debug.Log("InputLook Canceled");
+            isHoldingAttack = false;
+        }
     }
+    private void TryAttackImmediate()
+    {
+        if (attackTimer <= 0f)
+        {
+            Debug.Log("Attack!");
+            actionsController.HandleActionPressed(true);
+            attackTimer = attackInterval;
+        }
+    }
+
+    // --- NUEVO MÉTODO PARA DETECTAR EL TOQUE ---
+    public void InputLookTouch(InputAction.CallbackContext context)
+    {
+        //Debug.Log("InputLookTouched ");
+        if (context.started)
+        {
+
+            isHoldingAttack = true;
+        }
+
+        if (context.canceled)
+        {
+            Debug.Log("InputLookTouch Canceled");
+            isHoldingAttack = false;
+        }
+    }
+
+    #endregion
+
 
     private void FixedUpdate()
     {
+
+
         HandleRotation();
         MoveCharacter();
 
@@ -73,10 +132,24 @@ public class PlayerFreeMovement : MonoBehaviour
             }
         }
 
+
+        // -------------------------------------- GESTION DEL ACTION TIMER --------------------------------------
         if (dodgeCooldownTimer > 0f)
             dodgeCooldownTimer -= Time.fixedDeltaTime;
 
+        if (attackTimer > 0f)
+            attackTimer -= Time.deltaTime;
 
+        if (isHoldingAttack)
+        {
+            TryAttackImmediate();
+
+            if (attackTimer <= 0f)
+            {
+                attackTimer = attackInterval;
+                
+            }
+        }
 
     }
 
@@ -145,6 +218,7 @@ public class PlayerFreeMovement : MonoBehaviour
             );
         }
     }
+
 
     public void TryDodge()
     {

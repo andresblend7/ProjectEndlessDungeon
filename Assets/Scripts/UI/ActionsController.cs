@@ -48,6 +48,8 @@ public class ActionsController : MonoBehaviour, IPointerDownHandler, IPointerUpH
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        //Debug.Log("Pointer Down en: " + eventData.pointerCurrentRaycast.gameObject.name);
+
         GameObject clickedObject = eventData.pointerCurrentRaycast.gameObject;
         if (clickedObject == null)
         {
@@ -133,7 +135,7 @@ public class ActionsController : MonoBehaviour, IPointerDownHandler, IPointerUpH
         }
     }
 
-    private void HandleActionPressed()
+    public void HandleActionPressed(bool isFromJoystick = false)
     {
         // Comprobar el cooldown
         if (IsOnCooldown())
@@ -143,7 +145,8 @@ public class ActionsController : MonoBehaviour, IPointerDownHandler, IPointerUpH
         actionSelected = EnumActionType.Action;
 
         // Iniciar acción continua
-        isHoldingAction = true;
+        if (!isFromJoystick)
+            isHoldingAction = true;
 
         // Ejecutar inmediatamente la primera vez
         ExecuteActionWithCooldown();

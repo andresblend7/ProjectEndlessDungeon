@@ -17,12 +17,21 @@
                 },
                 {
                     "name": "InputLook",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "f91c2136-51ce-4205-bd10-7001fda36c8d",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "InputLookTouch",
+                    "type": "Button",
+                    "id": "96c4f312-e204-4341-a387-4deb90945651",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -45,6 +54,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "InputLook",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f7665c50-74c7-4f66-baf2-4a8dde456d72",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "InputLookTouch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

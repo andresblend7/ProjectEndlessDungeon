@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -12,13 +13,11 @@ public class PlayerController : MonoBehaviour
     private Vector3 targetPosition;
     [Header("GameObjects")]
     public GameObject playerModel;
+    public GameObject arrow;
+    public GameObject arrowSpawner;
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
     [Header("Colliders")]
-    public ColliderDirectionCheck front;
-    public ColliderDirectionCheck back;
-    public ColliderDirectionCheck left;
-    public ColliderDirectionCheck right;
     public BoxCollider attackCollider;
     [Tooltip("Duración del hitbox activo para acciones y ataques (en segundos)")]
     public float hitboxActiveDuration = 0.05f;
@@ -50,14 +49,7 @@ public class PlayerController : MonoBehaviour
       
 
         // Suscribirse al evento de movimiento
-        InputManager.OnMoveCommand += HandleMoveCommand;
         InputManager.OnActionSelectedCommand += HandleActionSelectedCommand;
-
-        PlayerMovement.OnMoveCommand += HandleMoveCommand;
-
-      
-
-
     }
 
     /// <summary>
@@ -81,6 +73,8 @@ public class PlayerController : MonoBehaviour
                     StartCoroutine(ActiveHitboxAction());
                 if (playerUtilities.GetActualToolSelected() == EnumActualToolSelected.Melee)
                     StartCoroutine(ActiveAttackHitBox());
+                if( playerUtilities.GetActualToolSelected() == EnumActualToolSelected.Ranged)
+                    StartCoroutine(ShootProjectile());
                 break;
             case EnumActionType.Tool:
                 actualToolSelected = EnumActualToolSelected.Pickaxe;
@@ -102,6 +96,12 @@ public class PlayerController : MonoBehaviour
             playerUtilities.SetActualToolSelected(actualToolSelected);
 
         modelController.ChangeSelectTool(actualToolSelected);
+    }
+
+    private IEnumerator ShootProjectile()
+    {
+        Instantiate(arrow, arrowSpawner.transform.position, transform.rotation);
+        yield return new WaitForSeconds(0.15f); // Espera antes de disparar para sincronizar con la animación
     }
 
     private IEnumerator ActiveHitboxAction()
@@ -145,51 +145,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Este método es llamado cuando se presiona una flecha
-    private void HandleMoveCommand(Vector3 targetPos, EnumMoveDirection direction)
-    {
-        if (isMoving)
-        {
-            //Debug.Log("Ya se está moviendo, ignoro nuevo comando");
-            return; // No aceptar nuevos comandos hasta terminar el actual
-        }
 
-        // Verificar si el camino está despejado
-        if (IsPathClear(targetPos, direction))
-        {
-            StartMovement(targetPos);
-        }
-        else
-        {
-            Debug.Log("Camino bloqueado!");
-            // Opcional: reproducir sonido de error
-        }
-        ChangeLookModel(targetPos);
-    }
 
     private void ChangeLookModel(Vector3 targetPos)
     {
         playerModel.transform.LookAt(targetPos);
     }
 
-    private bool IsPathClear(Vector3 targetPos, EnumMoveDirection direction)
-    {
-        //Debug.Log("Verificando colisiones para dirección: " + direction);
-
-        switch (direction)
-        {
-            case EnumMoveDirection.Up:
-                return !front.IsBlocked;
-            case EnumMoveDirection.Down:
-                return !back.IsBlocked;
-            case EnumMoveDirection.Left:
-                return !left.IsBlocked;
-            case EnumMoveDirection.Right:
-                return !right.IsBlocked;
-            default:
-                return false;
-        }
-    }
 
     private void StartMovement(Vector3 newPosition)
     {
