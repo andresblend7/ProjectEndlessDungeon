@@ -71,12 +71,21 @@ public class PlayerUtilities : MonoBehaviour
         actualStats.MaxHealth = 20;
         actualStats.ActualHealth = actualStats.MaxHealth;
         actualStats.ActualToolDamage = 1;
+        actualStats.ActualMeleeDamage = 4;
+        actualStats.ActualRangeDamage = 3;
     }
-
-
     public PlayerInGameData GetActualStats()
     {
         return actualStats;
+    }
+    public int GetActualMeleeDamage()
+    {
+        return actualStats.ActualMeleeDamage;
+    }   
+
+    public int GetActualRangeDamage()
+    {
+        return actualStats.ActualRangeDamage;
     }
     public int GetActualHealth()
     {
@@ -88,7 +97,7 @@ public class PlayerUtilities : MonoBehaviour
         return actualStats.ActualToolDamage;
     }
 
-    public void ApplyDamageToPlayer(int damage)
+    public void RegisterDamageToPlayer(int damage)
     {
         actualStats.ActualHealth -= damage;
         if (actualStats.ActualHealth < 0)
@@ -105,6 +114,7 @@ public class PlayerUtilities : MonoBehaviour
 public enum Direction { Forward, Backward, Left, Right }
 public enum EnumActualToolSelected { None, Pickaxe, Melee, Ranged }
 
+public enum TypeOfDamage { Melee, Range, Trap }
 public static class SaveSystem
 {
     private static string path = Application.persistentDataPath + "/savedata.json";

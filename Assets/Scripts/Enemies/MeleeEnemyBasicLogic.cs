@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.EventSystems.EventTrigger;
-using static UnityEngine.GraphicsBuffer;
 
-public class MeleeEnemyBasicLogic : MonoBehaviour
+public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
 {
     //  ----------------------------------------------  INSPECTOR — MOVIMIENTO ---------------------------------------------- 
 
@@ -36,6 +33,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
 
     [SerializeField]
     private bool playerDetected = false;
+    private bool wasDamagedByPlayer = false;
     private NavMeshAgent agent;
 
     // Optimización para el navmesh:
@@ -81,7 +79,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
     public bool haveSquashEffect = true;
     private Vector3 originalScale;
     //text damage
-    public float heightTextDamage = 0.5f;
+    public float heightTextDamage = 1f;
 
 
 
@@ -90,6 +88,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
     protected float _currentHealth;
     protected bool _canMove = true;
     private Transform player;
+    private PlayerController playerController;
 
 
     // ---------------------------------------------- EVENTS TO CHILDRENS -------------------------------------------
@@ -100,19 +99,22 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
     public event Action<int> OnReceibeDamage;
 
 
-    
+
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-
+       
 
         // ── Estado inicial ─────────────────────────────────────
         _currentHealth = maxHealth;
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
+        {
+            playerController = playerObj.GetComponent<PlayerController>();
             player = playerObj.transform;
+        }
         else
             Debug.LogWarning($"[{name}] No se encontró un GameObject con tag 'Player'.");
 
@@ -149,17 +151,17 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
 
             //if (playerDetected) // Este if se comenta porque el enemigo puede marcar como seguir siempre al jugador una vez lo ve por primera vez
             //{
-                repathTimer -= Time.deltaTime;
+            repathTimer -= Time.deltaTime;
 
-                if (repathTimer <= 0f)
-                {
-                    agent.SetDestination(player.position);
-                    repathTimer = repathRate;
-                }
+            if (repathTimer <= 0f)
+            {
+                agent.SetDestination(player.position);
+                repathTimer = repathRate;
+            }
             //}
         }
 
-      
+
 
     }
 
@@ -199,6 +201,9 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
     bool CanSeePlayer()
     {
         if (player == null) return false;
+
+        if(wasDamagedByPlayer)
+            return true;
 
         Vector3 directionToPlayer = player.position - transform.position;
         float distanceToPlayer = directionToPlayer.magnitude;
@@ -321,68 +326,13 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
         transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
     }
 
-    public void DetectAttackCollisionToPlayer()
+    // Método que se llama desde el hitbox de ataque cuando detecta que golpeó al jugador, para que el padre pueda decidir qué hacer (ej: mostrar daño, aplicar knockback, etc)
+    public void ApplyDamageToPlayer()
     {
-
-        DamageNumberSpawner.Spawn(
-            player.position + Vector3.up * heightTextDamage,
-            this.damage,
-            false,
-            false
-        );
+        playerController.ProcessDamageToPlayer(TypeOfDamage.Melee, damage);
     }
 
-    #endregion ----------------------------------------------------------------------
-
-    #region Collisiones
-    void OnTriggerEnter(Collider other)
-    {
-        // Opcional: Detectar por tag
-        if (other.CompareTag("AttackPlayer"))
-        {
-            this.TakeDamage();
-        }
-    }
-
-    private void TakeDamage()
-    {
-        int damage = 1;
-
-        DamageNumberSpawner.Spawn(
-            transform.position + Vector3.up * heightTextDamage,
-            damage,
-            false,
-            false
-        );
-        //txtDamage.text = $"{damage}";
-        OnReceibeDamage.Invoke(damage);
-
-        if (canBeNockbacked)
-        {
-            Vector3 dir = transform.position - player.transform.position;
-            ApplyKnockback(dir, knockbackForce, 0.15f);
-        }
-
-        if (haveSquashEffect)
-        {
-            PlaySquash();
-        }
-
-
-
-       _currentHealth --;
-        if (_currentHealth <= 0)
-        {
-            Die();
-        }
-    }
-
-    private void Die()
-    {
-      gameObject.SetActive(false);
-    }
-
-    #endregion ----------------------------------------------------------------------
+    #endregion
 
     // Visualización en el editor (Gizmos)
     void OnDrawGizmosSelected()
@@ -409,5 +359,46 @@ public class MeleeEnemyBasicLogic : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int amount)
+    {
+
+        //Si no ve al enemigo pero recibe daño lo marca como detectado para que empiece a perseguirlo
+        if (!playerDetected)
+            wasDamagedByPlayer = true;
+
+        int damage = amount;
+
+        DamageNumberSpawner.Spawn(
+            transform.position + Vector3.up * heightTextDamage,
+            damage,
+            false,
+            false
+        );
+        //txtDamage.text = $"{damage}";
+        OnReceibeDamage.Invoke(damage);
+
+        if (canBeNockbacked)
+        {
+            Vector3 dir = transform.position - player.transform.position;
+            ApplyKnockback(dir, knockbackForce, 0.15f);
+        }
+
+        if (haveSquashEffect)
+        {
+            PlaySquash();
+        }
+
+
+
+        _currentHealth -= damage;
+        if (_currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+    private void Die()
+    {
+        gameObject.SetActive(false);
+    }
 
 }

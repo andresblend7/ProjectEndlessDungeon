@@ -185,6 +185,20 @@ public class PlayerController : MonoBehaviour
         isMoving = false;
     }
 
+    public int ProcessDamageToPlayer(TypeOfDamage typeOfDamage, int damage)
+    {
+        DamageNumberSpawner.Spawn(
+            transform.position + Vector3.up * 1.2f,
+            damage,
+            false,
+            false
+        );
+
+        PlayerUtilities.Instance.RegisterDamageToPlayer(damage);
+        return damage;
+
+    }
+
     void OnDestroy()
     {
         enabled = false;

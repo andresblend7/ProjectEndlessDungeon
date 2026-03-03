@@ -14,6 +14,7 @@ public class BasicProjectileController : MonoBehaviour
 
     private bool hasCollided = false;
     private Rigidbody rb;
+    private int actualRangeDamage = 0;
 
     private void Awake()
     {
@@ -21,7 +22,7 @@ public class BasicProjectileController : MonoBehaviour
 
     private void Start()
     {
-       
+
 
         // Autodestrucción si no colisiona
         Destroy(gameObject, maxLifeTime);
@@ -29,31 +30,40 @@ public class BasicProjectileController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-
+        actualRangeDamage = PlayerUtilities.Instance.GetActualRangeDamage();
 
         if (hasCollided) return; // evita doble ejecución
         hasCollided = true;
+        // Intentar aplicar daño
+        IDamageable damageable = collision.collider.GetComponent<IDamageable>();
 
-        Debug.Log($"Projectile collided with {collision.gameObject.name} at {collision.contacts[0].point}");
-        // Instanciar efecto en punto de impacto
-        if (impactEffectPrefab != null)
+        if (damageable != null)
         {
-            ContactPoint contact = collision.contacts[0];
-            GameObject impact = Instantiate(
-                impactEffectPrefab,
-                contact.point,
-                Quaternion.LookRotation(contact.normal)
-            );
-
-            Destroy(impact, impactEffectLifeTime);
+            damageable.TakeDamage(actualRangeDamage);
         }
+
+        ShowImpactEffect(collision);
 
         // Destruir proyectil inmediatamente
         Destroy(gameObject);
     }
+
+    private void ShowImpactEffect(Collision collision)
+    {
+
+        ContactPoint contact = collision.contacts[0];
+        GameObject impact = Instantiate(
+            impactEffectPrefab,
+            contact.point,
+            Quaternion.LookRotation(contact.normal)
+        );
+
+        Destroy(impact, impactEffectLifeTime);
+    }
+
     private void Update()
     {
-        if(!hasCollided)
+        if (!hasCollided)
             transform.Translate(Vector3.forward * speed * Time.deltaTime);
         else
             rb.transform.Translate(Vector3.zero);

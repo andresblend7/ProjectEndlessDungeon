@@ -14,23 +14,16 @@ public class EnemyMeleeAttackHitBox : MonoBehaviour
     {
     }
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    Debug.Log("OnTriggerEnter: " + other.gameObject.name);
-    //    if (other.CompareTag("Player"))
-    //    {
-    //        _baseLogic.DetectAttackCollisionToPlayer();
-    //    }
-    //}
+
 
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log("OnTriggerEnter: " + other.gameObject.name);
+        //Debug.Log("OnTriggerEnter: " + other.gameObject.name);
 
         if (other.CompareTag("Player"))
         {
             if (!playerHitted)
-                _baseLogic.DetectAttackCollisionToPlayer();
+                _baseLogic.ApplyDamageToPlayer();
 
             playerHitted = true;
         }
@@ -48,23 +41,5 @@ public class EnemyMeleeAttackHitBox : MonoBehaviour
             playerHitted = false;
     }
 
-    //private void OnCollisionStay(Collision collision)
-    //{
-    //    Debug.Log("OnTriggerEnter: " + collision.gameObject.name);
-
-    //    if (collision.gameObject.CompareTag("Player"))
-    //    {
-    //        _baseLogic.DetectAttackCollisionToPlayer();
-    //    }
-    //}
-
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    Debug.Log("OnTriggerEnter: " + collision.gameObject.name);
-
-    //    if (collision.gameObject.CompareTag("Player"))
-    //    {
-    //        _baseLogic.DetectAttackCollisionToPlayer();
-    //    }
-    //}
+  
 }

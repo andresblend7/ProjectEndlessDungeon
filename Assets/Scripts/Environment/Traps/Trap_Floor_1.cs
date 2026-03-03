@@ -15,11 +15,60 @@ public class Trap_Floor_1 : MonoBehaviour
     [SerializeField] private float spikeUpDistance = 1f;
     [SerializeField] private float moveSpeed = 5f;
 
+
+    [Header("damage")]
+    public int damage = 10;
+    public float intervalToDoDamage = 0.5f;
+    private float damageTimer = 0f;
+
     private Vector3 hiddenPosition;
     private Vector3 activePosition;
 
     private bool isActivated = false;
     private bool isBusy = false;
+    private bool playerInside = false;
+
+    private void Update()
+    {
+        if (!isActivated)
+            return;
+
+        damageTimer += Time.deltaTime;
+
+        if (damageTimer >= intervalToDoDamage)
+        {
+            damageTimer = 0f;
+            DoDamage();
+        }
+    }
+
+    private void DoDamage()
+    {
+        Collider[] hitColliders = Physics.OverlapBox(
+            spikes.position,
+            spikes.localScale / 2,
+            Quaternion.identity
+        );
+
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.CompareTag("Enemy") || hitCollider.CompareTag("Player"))
+            {
+                IDamageable damageable = hitCollider.GetComponent<IDamageable>();
+
+                if (damageable != null)
+                {
+                    damageable.TakeDamage(10);
+                }
+                else if (hitCollider.CompareTag("Player"))
+                {
+                    hitCollider
+                        .GetComponent<PlayerController>()
+                        .ProcessDamageToPlayer(TypeOfDamage.Trap, damage);
+                }
+            }
+        }
+    }
 
     private void Start()
     {
@@ -29,9 +78,20 @@ public class Trap_Floor_1 : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && !isBusy)
+        if (other.CompareTag("Player"))
         {
-            StartCoroutine(TrapRoutine());
+            playerInside = true;
+
+            if (!isBusy)
+                StartCoroutine(TrapRoutine());
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInside = false;
         }
     }
 
@@ -39,19 +99,20 @@ public class Trap_Floor_1 : MonoBehaviour
     {
         isBusy = true;
 
-        yield return new WaitForSeconds(delayBeforeActivate);
+        while (playerInside)
+        {
+            yield return new WaitForSeconds(delayBeforeActivate);
 
-        yield return StartCoroutine(MoveSpikes(hiddenPosition, activePosition));
+            yield return StartCoroutine(MoveSpikes(hiddenPosition, activePosition));
+            isActivated = true;
 
-        isActivated = true;
+            yield return new WaitForSeconds(activeTime);
 
-        yield return new WaitForSeconds(activeTime);
+            yield return StartCoroutine(MoveSpikes(activePosition, hiddenPosition));
+            isActivated = false;
 
-        yield return StartCoroutine(MoveSpikes(activePosition, hiddenPosition));
-
-        isActivated = false;
-
-        yield return new WaitForSeconds(cooldownTime);
+            yield return new WaitForSeconds(cooldownTime);
+        }
 
         isBusy = false;
     }
