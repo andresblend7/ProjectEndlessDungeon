@@ -1,5 +1,5 @@
 
 public interface IDamageable
 {
-    void TakeDamage(int amount);
+    void TakeDamage(TypeOfDamage typeOfDamage, int amount);
 }

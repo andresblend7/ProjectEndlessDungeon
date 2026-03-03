@@ -47,11 +47,11 @@ public class CameraController : MonoBehaviour
 
 
     [Header("Shake Damge")]
-    public float shakeDuration = 0.3f;      
-    public float shakeMagnitude = 0.2f;     
+    public float shakeDuration = 0.3f;
+    public float shakeMagnitude = 0.2f;
 
-    private Vector3 originalPosition;       
-    private bool isShaking = false;         
+    private Vector3 originalPosition;
+    private bool isShaking = false;
 
     // ─────────────────────────────────────────
     //  PRIVATE STATE
@@ -65,6 +65,29 @@ public class CameraController : MonoBehaviour
     // ─────────────────────────────────────────
     //  UNITY LIFECYCLE
     // ─────────────────────────────────────────
+
+    private void Awake()
+    {
+
+    }
+
+    private void OnEnable()
+    {
+        PlayerUtilities.OnDamageToPlayerEvent += HandlePlayerDamaged;
+    }
+
+    private void HandlePlayerDamaged()
+    {
+        if (!isShaking && this != null)
+        {
+            StartCoroutine(ShakeCoroutine());
+        }
+    }
+
+    private void OnDisable()
+    {
+        PlayerUtilities.OnDamageToPlayerEvent -= HandlePlayerDamaged;
+    }
 
     void Start()
     {
@@ -81,20 +104,13 @@ public class CameraController : MonoBehaviour
         if (lookDown)
             transform.rotation = Quaternion.Euler(90f, 0f, 0f);
 
-        PlayerUtilities.OnDamageToPlayerEvent += () =>
-        {
-            if (!isShaking)
-            {
-                // Guardamos la posición inicial de la cámara
-                originalPosition = transform.localPosition;
-                // Efecto de cámara al recibir daño (ejemplo: shake)
-                StartCoroutine(ShakeCoroutine());
-            }
-        };
+
     }
 
     IEnumerator ShakeCoroutine()
     {
+        // Guardamos la posición inicial de la cámara
+        originalPosition = transform.localPosition;
         isShaking = true;
         float elapsedTime = 0f;
 

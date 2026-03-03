@@ -13,7 +13,7 @@ public class AttackCollisionController : MonoBehaviour
 
         if (damageable != null)
         {
-            damageable.TakeDamage(damage);
+            damageable.TakeDamage(TypeOfDamage.Melee, damage);
         }
     }
 

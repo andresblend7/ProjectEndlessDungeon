@@ -141,11 +141,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Trap_Floor_1
   spikes: {fileID: 7597838668446611370}
-  delayBeforeActivate: 0.3
-  activeTime: 2
+  delayBeforeActivate: 0.09
+  activeTime: 1.6
   cooldownTime: 1
   spikeUpDistance: 1.1
   moveSpeed: 7
+  damage: 10
+  intervalToDoDamage: 0.5
 --- !u!4 &7597838668446611370 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1335859321318366604, guid: 3302fddcae3adff4096fb456c814f3d4,

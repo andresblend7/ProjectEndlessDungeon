@@ -359,7 +359,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
         }
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(TypeOfDamage typeOfDamage, int amount)
     {
 
         //Si no ve al enemigo pero recibe daño lo marca como detectado para que empiece a perseguirlo

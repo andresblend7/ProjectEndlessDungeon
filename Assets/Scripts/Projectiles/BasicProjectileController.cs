@@ -39,7 +39,7 @@ public class BasicProjectileController : MonoBehaviour
 
         if (damageable != null)
         {
-            damageable.TakeDamage(actualRangeDamage);
+            damageable.TakeDamage( TypeOfDamage.Range, actualRangeDamage);
         }
 
         ShowImpactEffect(collision);

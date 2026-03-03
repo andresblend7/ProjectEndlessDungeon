@@ -58,7 +58,7 @@ public class Trap_Floor_1 : MonoBehaviour
 
                 if (damageable != null)
                 {
-                    damageable.TakeDamage(10);
+                    damageable.TakeDamage(TypeOfDamage.Trap, 10);
                 }
                 else if (hitCollider.CompareTag("Player"))
                 {
@@ -103,8 +103,8 @@ public class Trap_Floor_1 : MonoBehaviour
         {
             yield return new WaitForSeconds(delayBeforeActivate);
 
-            yield return StartCoroutine(MoveSpikes(hiddenPosition, activePosition));
             isActivated = true;
+            yield return StartCoroutine(MoveSpikes(hiddenPosition, activePosition));
 
             yield return new WaitForSeconds(activeTime);
 
