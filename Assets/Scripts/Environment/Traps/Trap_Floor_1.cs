@@ -19,7 +19,7 @@ public class Trap_Floor_1 : MonoBehaviour
     [Header("damage")]
     public int damage = 10;
     public float intervalToDoDamage = 0.5f;
-    private float damageTimer = 0f;
+    private float damageTimer = 0.5f;
 
     private Vector3 hiddenPosition;
     private Vector3 activePosition;
@@ -103,8 +103,9 @@ public class Trap_Floor_1 : MonoBehaviour
         {
             yield return new WaitForSeconds(delayBeforeActivate);
 
-            isActivated = true;
             yield return StartCoroutine(MoveSpikes(hiddenPosition, activePosition));
+            isActivated = true;
+            damageTimer = intervalToDoDamage; // Para que el daño se aplique inmediatamente al activarse
 
             yield return new WaitForSeconds(activeTime);
 

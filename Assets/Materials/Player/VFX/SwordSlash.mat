@@ -1,51 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!28 &-6706239064320214461
-Texture2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: z_ColorRampTexGradientTex{"mode":0,"colorKeys":[{"color":{"r":0.10030261427164078,"g":0.17297935485839845,"b":0.9245283007621765,"a":1.0},"time":0.0},{"color":{"r":0.2216981053352356,"g":1.0,"b":0.9710115790367127,"a":1.0},"time":0.6324254274368286},{"color":{"r":1.0,"g":1.0,"b":1.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 4
-  m_Width: 64
-  m_Height: 1
-  m_CompleteImageSize: 256
-  m_MipsStripped: 0
-  m_TextureFormat: 4
-  m_MipCount: 1
-  m_IsReadable: 1
-  m_IsPreProcessed: 0
-  m_IgnoreMipmapLimit: 0
-  m_MipmapLimitGroupName: 
-  m_StreamingMipmaps: 0
-  m_StreamingMipmapsPriority: 0
-  m_VTOnly: 0
-  m_AlphaIsTransparency: 0
-  m_ImageCount: 1
-  m_TextureDimension: 2
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_LightmapFormat: 0
-  m_ColorSpace: 0
-  m_PlatformBlob: 
-  image data: 256
-  _typelessdata: 1a2cecff1a31ecff1b37ecff1c3cedff1d41edff1d47edff1e4ceeff1f51eeff2056eeff215ceeff2161efff2266efff236cefff2471f0ff2476f0ff257cf0ff2681f1ff2786f1ff288bf1ff2891f1ff2996f2ff2a9bf2ff2ba1f2ff2ba6f3ff2cabf3ff2db0f3ff2eb6f3ff2fbbf4ff2fc0f4ff30c6f4ff31cbf5ff32d0f5ff32d5f5ff33dbf6ff34e0f6ff35e5f6ff36ebf6ff36f0f7ff37f5f7ff38fbf7ff3afff8ff42fff8ff4bfff8ff54fff9ff5cfff9ff65fff9ff6dfffaff76fffaff7efffaff87fffbff90fffbff98fffbffa1fffbffa9fffcffb2fffcffbafffcffc3fffdffccfffdffd4fffdffddfffeffe5fffeffeefffefff6ffffffffffffff
-  m_StreamData:
-    serializedVersion: 2
-    offset: 0
-    size: 0
-    path: 
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -53,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 18_Slash_Mesh
+  m_Name: SwordSlash
   m_Shader: {fileID: 4800000, guid: 6eb86e4931b506a408fd1477edec61ea, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -68,14 +22,15 @@ Material:
   - PREMULTIPLYCOLOR_ON
   - SHAPE1CONTRAST_ON
   - SHAPE1DISTORT_ON
+  - SHAPE2CONTRAST_ON
   - SHAPE2_ON
-  - SHAPE3_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 3000
-  stringTagMap: {}
+  stringTagMap:
+    RenderType: Transparent
   disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
@@ -86,7 +41,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ColorRampTexGradient:
-        m_Texture: {fileID: -6706239064320214461}
+        m_Texture: {fileID: -6706239064320214461, guid: ed87e3425005c704db92d496a24818ca,
+          type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DistNormalMap:
@@ -110,7 +66,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 576209e508e9fc14da237253859c8bd0, type: 3}
+        m_Texture: {fileID: 2800000, guid: cd1907686a03d1d41bee35fd0bc9581e, type: 3}
         m_Scale: {x: 1, y: 0.75}
         m_Offset: {x: 0, y: 0.15}
     - _MaskTex:
@@ -166,8 +122,8 @@ Material:
     - _CamDistProximityFade: 0
     - _ColorGradingMidPoint: 0.5
     - _ColorMask: 15
-    - _ColorRampBlend: 1
-    - _ColorRampLuminosity: 0
+    - _ColorRampBlend: 0
+    - _ColorRampLuminosity: -0.331
     - _CullingOption: 0
     - _DebugShape: 1
     - _DepthGlow: 0
@@ -192,7 +148,7 @@ Material:
     - _FadeTransition: 0.075
     - _FishEyeUvAmount: 0.35
     - _Glow: 0
-    - _GlowGlobal: 1.61
+    - _GlowGlobal: 6.15
     - _HandDrawnAmount: 10
     - _HandDrawnSpeed: 5
     - _HsvBright: 1
@@ -234,9 +190,9 @@ Material:
     - _ShakeUvY: 1
     - _Shape1MaskPow: 1
     - _Shape2AlphaWeight: 2
-    - _Shape2Brightness: 0
+    - _Shape2Brightness: -0.27
     - _Shape2ColorWeight: 2
-    - _Shape2Contrast: 1
+    - _Shape2Contrast: 0
     - _Shape2DistortAmount: 0.5
     - _Shape2DistortXSpeed: 0.1
     - _Shape2DistortYSpeed: 0.1
@@ -256,10 +212,10 @@ Material:
     - _Shape3XSpeed: 0.24
     - _Shape3YSpeed: 0
     - _ShapeAlphaWeight: 1
-    - _ShapeBrightness: 0
+    - _ShapeBrightness: -0.541
     - _ShapeColorWeight: 1
-    - _ShapeContrast: 1
-    - _ShapeDistortAmount: 1.29
+    - _ShapeContrast: 1.34
+    - _ShapeDistortAmount: 0.77
     - _ShapeDistortXSpeed: 0.1
     - _ShapeDistortYSpeed: 0.1
     - _ShapeRotationOffset: 0
@@ -286,22 +242,68 @@ Material:
     - _WaveX: 0
     - _WaveY: 0.5
     - _ZTestMode: 4
-    - _ZWrite: 0
+    - _ZWrite: 1
     - _ZoomAmount: 1.5
     m_Colors:
     - _BackFaceTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.990566, g: 0.53253615, b: 0, a: 1}
     - _ColorGradingDark: {r: 1, g: 1, b: 1, a: 1}
     - _ColorGradingLight: {r: 1, g: 1, b: 1, a: 1}
     - _ColorGradingMiddle: {r: 1, g: 1, b: 1, a: 1}
     - _DepthGlowColor: {r: 1, g: 1, b: 1, a: 1}
     - _FadeBurnColor: {r: 1, g: 1, b: 0, a: 1}
     - _FrontFaceTint: {r: 1, g: 1, b: 1, a: 1}
-    - _GlowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GlowColor: {r: 1, g: 0.37023264, b: 0, a: 1}
     - _LightColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Shape2Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Shape2Color: {r: 1, g: 0.44054037, b: 0, a: 1}
     - _Shape3Color: {r: 1, g: 1, b: 1, a: 1}
     - _ShapeColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
+--- !u!28 &2286527879133347456
+Texture2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: z_ColorRampTexGradientTex
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 4
+  m_Width: 64
+  m_Height: 1
+  m_CompleteImageSize: 256
+  m_MipsStripped: 0
+  m_TextureFormat: 4
+  m_MipCount: 1
+  m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMipmapLimit: 1
+  m_MipmapLimitGroupName: 
+  m_StreamingMipmaps: 0
+  m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
+  m_AlphaIsTransparency: 0
+  m_ImageCount: 1
+  m_TextureDimension: 2
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_LightmapFormat: 0
+  m_ColorSpace: 1
+  m_PlatformBlob: 
+  image data: 256
+  _typelessdata: cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 

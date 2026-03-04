@@ -580,6 +580,9 @@ MonoBehaviour:
   useFieldOfView: 0
   playerDetected: 0
   repathRate: 0.2
+  visionMask:
+    serializedVersion: 2
+    m_Bits: 1608
   attackRange: 1.01
   attackCooldown: 1.2
   attackHitbox: {fileID: 6385735631425729580}

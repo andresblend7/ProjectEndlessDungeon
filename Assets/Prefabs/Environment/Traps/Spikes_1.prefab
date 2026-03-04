@@ -86,7 +86,7 @@ PrefabInstance:
     - target: {fileID: 1335859321318366604, guid: 3302fddcae3adff4096fb456c814f3d4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.15
+      value: -0.52
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -126,8 +126,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.003702, y: 1.0839881, z: 2.0073628}
-  m_Center: {x: 0.00083243847, y: 0.51610786, z: 0.0010550022}
+  m_Size: {x: 1.6, y: 1.0839881, z: 1.6}
+  m_Center: {x: 0.027807713, y: 0.51610786, z: 0.051888466}
 --- !u!114 &8364575904933577002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,10 +141,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Trap_Floor_1
   spikes: {fileID: 7597838668446611370}
-  delayBeforeActivate: 0.09
+  delayBeforeActivate: 0.12
   activeTime: 1.6
   cooldownTime: 1
-  spikeUpDistance: 1.1
+  spikeUpDistance: 1.4
   moveSpeed: 7
   damage: 10
   intervalToDoDamage: 0.5

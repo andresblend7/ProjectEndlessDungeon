@@ -10,6 +10,8 @@ public class ModelController : MonoBehaviour
     public GameObject sword;
     public GameObject ranged;
 
+    public ParticleSystem slashEffect;
+
     [Header("References")]
     private PlayerUtilities playerUtilities;
 
@@ -66,7 +68,11 @@ public class ModelController : MonoBehaviour
                 this.GetComponent<Animator>().SetTrigger("Pick");
 
             if (playerUtilities.GetActualToolSelected() == EnumActualToolSelected.Melee)
+            {
                 this.GetComponent<Animator>().SetTrigger("Attack");
+                slashEffect.gameObject.SetActive(true);
+                slashEffect.Play();
+            }
         }
 
 

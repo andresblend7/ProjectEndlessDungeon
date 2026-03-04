@@ -43,6 +43,10 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
     // ----------------------------------------------  INSPECTOR — ATAQUE ---------------------------------------------- 
 
     [Header("── Ataque ──────────────────────────────────────────")]
+
+    [Tooltip("Layers que pueden bloquear la vista del enemigo")]
+    [SerializeField] public LayerMask visionMask;
+
     [Tooltip("Distancia XZ a la que puede golpear (ignora diferencia de altura).")]
     public float attackRange = 1f;
 
@@ -104,7 +108,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-       
+
 
         // ── Estado inicial ─────────────────────────────────────
         _currentHealth = maxHealth;
@@ -202,7 +206,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
     {
         if (player == null) return false;
 
-        if(wasDamagedByPlayer)
+        if (wasDamagedByPlayer)
             return true;
 
         Vector3 directionToPlayer = player.position - transform.position;
@@ -222,13 +226,18 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
 
         // 3. Raycast: verificar que no haya obstáculos en el camino
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, directionToPlayer.normalized, out hit, detectionRange))
+        if (Physics.Raycast(
+            transform.position,
+            directionToPlayer.normalized,
+            out hit,
+            detectionRange,
+            visionMask
+        ))
         {
-            if (hit.collider.CompareTag("Obstacle"))
-                return false; // Hay un obstáculo bloqueando la visión
-
             if (hit.collider.CompareTag("Player"))
-                return true; // El primer objeto golpeado es el jugador
+                return true;
+
+            return false;
         }
 
         return false;
