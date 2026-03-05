@@ -8,7 +8,7 @@ public class WormAcidShooter : MonoBehaviour
     public GameObject projectilePrefab;
 
     [Header("Detección")]
-    public float detectionRange = 12f;
+    public Vector3 detectionBox = new Vector3(8f, 3f, 10f); // ancho, alto, profundidad
 
     [Header("Trayectoria")]
     public float arcHeight = 3f;
@@ -22,14 +22,14 @@ public class WormAcidShooter : MonoBehaviour
 
     float cooldownTimer;
 
+
     void Update()
     {
         if (player == null) return;
 
-        float distance = Vector3.Distance(transform.position, player.position);
-
-        if (distance > detectionRange)
+        if (!IsPlayerInsideDetectionBox())
             return;
+    
 
         RotateTowardsPlayer();
 
@@ -41,6 +41,17 @@ public class WormAcidShooter : MonoBehaviour
             cooldownTimer = shootCooldown;
         }
     }
+
+    bool IsPlayerInsideDetectionBox()
+    {
+        Vector3 localPos = transform.InverseTransformPoint(player.position);
+
+        return
+            Mathf.Abs(localPos.x) <= detectionBox.x * 0.5f &&
+            Mathf.Abs(localPos.y) <= detectionBox.y * 0.5f &&
+            Mathf.Abs(localPos.z) <= detectionBox.z * 0.5f;
+    }
+
 
     void RotateTowardsPlayer()
     {
@@ -98,9 +109,21 @@ public class WormAcidShooter : MonoBehaviour
         return velocityXZ + velocityY;
     }
 
-    void OnDrawGizmosSelected()
+     void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
+        Gizmos.color = Color.green;
+
+        Matrix4x4 matrix = Matrix4x4.TRS(
+            transform.position,
+            transform.rotation,
+            Vector3.one
+        );
+
+        Gizmos.matrix = matrix;
+
+        Gizmos.DrawWireCube(
+            Vector3.zero,
+            detectionBox
+        );
     }
 }
