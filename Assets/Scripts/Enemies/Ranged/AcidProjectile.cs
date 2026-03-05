@@ -4,13 +4,18 @@ public class AcidProjectile : MonoBehaviour
 {
     [Header("Impacto")]
     public GameObject acidPoolPrefab;
-    public GameObject splashEffectPrefab;
+    private AcidSplash acidSplashScript;
 
     [Header("Configuración")]
     public LayerMask floorLayer;
     public float lifeTime = 10f;
 
     Rigidbody rb;
+
+    private void Awake()
+    {
+        acidSplashScript = acidPoolPrefab != null ? acidPoolPrefab.GetComponent<AcidSplash>() : null;
+    }
 
     void Start()
     {
@@ -40,16 +45,7 @@ public class AcidProjectile : MonoBehaviour
         if (((1 << collision.gameObject.layer) & floorLayer) != 0)
         {
             ContactPoint contact = collision.contacts[0];
-
-            if (splashEffectPrefab != null)
-            {
-                Instantiate(
-                    splashEffectPrefab,
-                    contact.point,
-                    Quaternion.LookRotation(contact.normal)
-                );
-            }
-
+        
             if (acidPoolPrefab != null)
             {
                 Quaternion randomY = Quaternion.Euler(
@@ -67,5 +63,21 @@ public class AcidProjectile : MonoBehaviour
 
             Destroy(gameObject);
         }
+
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            collision.gameObject.GetComponent<PlayerController>()
+                      .ProcessDamageToPlayer(new DamageToPlayer
+                      {
+                          typeOfDamage = TypeOfDamage.TickOverTime,
+                          baseDamageAmount = acidSplashScript.damagePerTick,
+                          tickInterval = acidSplashScript.tickInterval,
+                          duration = acidSplashScript.damageDuration,
+                          typeOfTickDamage = TypeOfTickDamage.Poison
+                      });
+
+            Destroy(gameObject);
+        }
+
     }
 }

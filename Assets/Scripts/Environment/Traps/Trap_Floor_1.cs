@@ -64,7 +64,11 @@ public class Trap_Floor_1 : MonoBehaviour
                 {
                     hitCollider
                         .GetComponent<PlayerController>()
-                        .ProcessDamageToPlayer(TypeOfDamage.Trap, damage);
+                        .ProcessDamageToPlayer(new DamageToPlayer
+                        {
+                            typeOfDamage = TypeOfDamage.Trap,
+                            baseDamageAmount = damage
+                        });
                 }
             }
         }

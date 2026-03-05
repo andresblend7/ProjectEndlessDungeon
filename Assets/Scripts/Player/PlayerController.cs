@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -11,16 +12,21 @@ public class PlayerController : MonoBehaviour
 
     private bool isMoving = false;
     private Vector3 targetPosition;
+  
     [Header("GameObjects")]
     public GameObject playerModel;
     public GameObject arrow;
     public GameObject arrowSpawner;
+   
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
+   
     [Header("Colliders")]
     public BoxCollider attackCollider;
+    
     [Tooltip("Duración del hitbox activo para acciones y ataques (en segundos)")]
     public float hitboxActiveDuration = 0.05f;
+   
     [Header("RayCast para la colisión del hitbox de accion  (picar/accionar)")]
     public GameObject actionCollider;
     [SerializeField] private Transform origin;
@@ -28,11 +34,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public float offsetTomaxDistance = 0.2f;
     [SerializeField] private LayerMask hitMask;
     [SerializeField] private Transform hitboxAction; // El objeto que quieres posicionar
+   
     [Tooltip("Radio del SphereCast para detectar colisiones")]
     [SerializeField] private float castRadius = 0.25f;
     private RaycastHit debugHit;
     private bool hasHit;
 
+    // Estados negativos
+    [Header("Negative Effects VFX")]
+    public GameObject PoisonVFX;
+    private List<TypeOfTickDamage> tickDamageActives = new List<TypeOfTickDamage>();
 
     public ModelController modelController;
 
@@ -185,7 +196,56 @@ public class PlayerController : MonoBehaviour
         isMoving = false;
     }
 
-    public int ProcessDamageToPlayer(TypeOfDamage typeOfDamage, int damage)
+    public int ProcessDamageToPlayer(DamageToPlayer damageToPlayer)
+    {
+        if (damageToPlayer.typeOfDamage == TypeOfDamage.TickOverTime)
+        {
+            // solo aplicar si no hay otro del mismo tipo de daño en el tiempo activo
+            if(!tickDamageActives.Contains(damageToPlayer.typeOfTickDamage))
+            {
+                 tickDamageActives.Add(damageToPlayer.typeOfTickDamage);
+                 StartCoroutine(ProcessDamagePerTick(damageToPlayer));
+            }
+
+        }
+        else
+        {
+            ApplyDamage(damageToPlayer.baseDamageAmount);
+        }
+        return damageToPlayer.baseDamageAmount;
+    }
+
+
+
+    private IEnumerator ProcessDamagePerTick(DamageToPlayer damageToPlayer)
+    {
+        this.EnableDisableVfxNegativeEffect(damageToPlayer.typeOfTickDamage, true);
+        float elapsed = 0f;
+
+        while (elapsed < damageToPlayer.duration)
+        {
+
+            ApplyDamage(damageToPlayer.baseDamageAmount);
+
+            yield return new WaitForSeconds(damageToPlayer.tickInterval);
+
+            elapsed += damageToPlayer.tickInterval;
+        }
+
+        // Al finalizar, quitar el tipo de daño en el tiempo de la lista de activos
+        tickDamageActives.Remove(damageToPlayer.typeOfTickDamage);
+        this.EnableDisableVfxNegativeEffect(damageToPlayer.typeOfTickDamage, false);
+    }
+
+    private void EnableDisableVfxNegativeEffect(TypeOfTickDamage typeOfTickDamage, bool active)
+    {
+        if(typeOfTickDamage == TypeOfTickDamage.Poison)
+        {
+            PoisonVFX.SetActive(active);
+        }
+    }
+
+    private void ApplyDamage(int damage)
     {
         DamageNumberSpawner.Spawn(
             transform.position + Vector3.up * 1.2f,
@@ -195,8 +255,6 @@ public class PlayerController : MonoBehaviour
         );
 
         PlayerUtilities.Instance.RegisterDamageToPlayer(damage);
-        return damage;
-
     }
 
     void OnDestroy()

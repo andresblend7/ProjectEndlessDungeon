@@ -153,3 +153,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AcidSplash
   lifeTime: 7
   shrinkDuration: 0.8
+  damagePerTick: 1
+  tickInterval: 1
+  damageDuration: 4

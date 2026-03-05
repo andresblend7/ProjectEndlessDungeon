@@ -338,7 +338,10 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
     // Método que se llama desde el hitbox de ataque cuando detecta que golpeó al jugador, para que el padre pueda decidir qué hacer (ej: mostrar daño, aplicar knockback, etc)
     public void ApplyDamageToPlayer()
     {
-        playerController.ProcessDamageToPlayer(TypeOfDamage.Melee, damage);
+        playerController.ProcessDamageToPlayer(new DamageToPlayer {
+             typeOfDamage =TypeOfDamage.Melee,
+            baseDamageAmount = damage
+        });
     }
 
     #endregion

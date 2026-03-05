@@ -114,7 +114,17 @@ public class PlayerUtilities : MonoBehaviour
 public enum Direction { Forward, Backward, Left, Right }
 public enum EnumActualToolSelected { None, Pickaxe, Melee, Ranged }
 
-public enum TypeOfDamage { Melee, Range, Trap }
+public enum TypeOfDamage { Melee, Range, Trap, TickOverTime }
+public enum TypeOfTickDamage { Poison, Burn, Bleed, electro }
+public class DamageToPlayer
+{
+    public TypeOfDamage typeOfDamage;
+    public int baseDamageAmount;
+    public bool isCriticalHit; 
+    public float duration; // Solo relevante para daño en el tiempo
+    public float tickInterval;
+    public TypeOfTickDamage typeOfTickDamage; 
+}
 public static class SaveSystem
 {
     private static string path = Application.persistentDataPath + "/savedata.json";

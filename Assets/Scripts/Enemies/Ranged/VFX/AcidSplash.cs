@@ -11,6 +11,10 @@ public class AcidSplash : MonoBehaviour
     Material materialInstance;
     Color originalColor;
 
+    public int damagePerTick = 2;
+    public float tickInterval = 1f;
+    public float damageDuration = 3f;
+
     void Start()
     {
         originalScale = transform.localScale;
@@ -51,5 +55,27 @@ public class AcidSplash : MonoBehaviour
         }
 
         Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {          
+            other.gameObject.GetComponent<PlayerController>()
+                        .ProcessDamageToPlayer(new DamageToPlayer
+                        {
+                            typeOfDamage = TypeOfDamage.TickOverTime,
+                            baseDamageAmount = damagePerTick,
+                            tickInterval = tickInterval,
+                            duration = damageDuration,
+                            typeOfTickDamage = TypeOfTickDamage.Poison
+                        });
+        }
+    }
+
+    private void AcidRoutine()
+    {
+
+       
     }
 }
