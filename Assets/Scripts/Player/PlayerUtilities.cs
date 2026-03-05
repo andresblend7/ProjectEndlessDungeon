@@ -133,7 +133,7 @@ public static class SaveSystem
     {
         string json = JsonUtility.ToJson(data, true); // 'true' para que sea legible
         File.WriteAllText(path, json);
-        Debug.Log("Juego Guardado en: " + path);
+        //Debug.Log("Juego Guardado en: " + path);
     }
 
     public static PlayerInGameData Load()

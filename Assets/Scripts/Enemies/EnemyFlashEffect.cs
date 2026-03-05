@@ -51,6 +51,7 @@ public class EnemyFlashEffect : MonoBehaviour
 
     IEnumerator FlashCoroutine()
     {
+        Debug.Log("EnemyFlashEffect: Flashing enemy"+renderers.Length);
         // FLASH BLANCO
         for (int i = 0; i < renderers.Length; i++)
         {

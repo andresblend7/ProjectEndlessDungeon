@@ -1,7 +1,10 @@
 using UnityEngine;
 
-public class WormAcidShooter : MonoBehaviour
+public class WormAcidShooter : MonoBehaviour, IDamageable
 {
+    [Header("Stats")]
+    public int maxHealth = 18;
+
     [Header("Referencias")]
     public Transform player;
     public Transform shootPoint;
@@ -20,8 +23,20 @@ public class WormAcidShooter : MonoBehaviour
     [Header("Rotación")]
     public float rotationSpeed = 180f;
 
+    [Header("Effects")]
+    public EnemyFlashEffect flashEffect;
+
     float cooldownTimer;
 
+    private void Awake()
+    {
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+                player = playerObj.transform;
+        }
+    }
 
     void Update()
     {
@@ -127,6 +142,26 @@ public class WormAcidShooter : MonoBehaviour
         );
     }
 
+    public void TakeDamage(TypeOfDamage typeOfDamage, int amount)
+    {
+        if (flashEffect != null)
+        {
+            flashEffect.Flash();
+        }
 
-   
+        DamageNumberSpawner.Spawn(
+              transform.position + Vector3.up * 1,
+              amount,
+              false,
+              false
+          );
+
+        maxHealth -= amount;
+
+        if(maxHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
+
+    }
 }
