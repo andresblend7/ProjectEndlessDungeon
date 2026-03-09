@@ -25,6 +25,7 @@ public class WormAcidShooter : MonoBehaviour, IDamageable
 
     [Header("Effects")]
     public EnemyFlashEffect flashEffect;
+    public EnemySqashEfect enemySqashEfect;
 
     float cooldownTimer;
 
@@ -147,6 +148,10 @@ public class WormAcidShooter : MonoBehaviour, IDamageable
         if (flashEffect != null)
         {
             flashEffect.Flash();
+        }
+        if(enemySqashEfect != null)
+        {
+            enemySqashEfect.PlaySquash();
         }
 
         DamageNumberSpawner.Spawn(

@@ -78,6 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84f7849bb2eeef2419068c058eec668c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WormAcidShooter
+  maxHealth: 21
   player: {fileID: 0}
   shootPoint: {fileID: 1748227443311998799}
   projectilePrefab: {fileID: 7573309365536183996, guid: 4bde94896f2eb39428e09e594698234b,
@@ -88,6 +89,7 @@ MonoBehaviour:
   shootAngleThreshold: 5
   rotationSpeed: 90
   flashEffect: {fileID: 7085817601052800008}
+  enemySqashEfect: {fileID: 2297800462019462337}
 --- !u!65 &3828474638543261648
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -121,6 +123,7 @@ GameObject:
   - component: {fileID: 8808507960435555671}
   - component: {fileID: 8856106170339529550}
   - component: {fileID: 7085817601052800008}
+  - component: {fileID: 2297800462019462337}
   m_Layer: 0
   m_Name: Worm_1
   m_TagString: Untagged
@@ -215,3 +218,17 @@ MonoBehaviour:
   flashColor: {r: 1, g: 1, b: 1, a: 1}
   flashDuration: 0.08
   flashIntensity: 2
+--- !u!114 &2297800462019462337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8174995262768557527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fde91a7f42223ca479697695d5d8abb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySqashEfect
+  intensity: 0.4
+  duration: 0.1
