@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,6 +13,9 @@ public class CameraController : MonoBehaviour
     [Header("Objetivo")]
     [Tooltip("Transform del jugador (o cualquier objetivo a seguir)")]
     public Transform target;
+    public bool followPlayer = true;
+    private Coroutine moveCoroutine;    
+
 
     [Header("Posición")]
     [Tooltip("Offset respecto al objetivo. Y = altura de la cámara sobre el suelo.")]
@@ -49,7 +53,6 @@ public class CameraController : MonoBehaviour
     [Header("Shake Damge")]
     public float shakeDuration = 0.3f;
     public float shakeMagnitude = 0.2f;
-
     private Vector3 originalPosition;
     private bool isShaking = false;
 
@@ -62,13 +65,13 @@ public class CameraController : MonoBehaviour
     private Vector3 _lookAheadVelocity = Vector3.zero;
     private Vector3 _previousTargetPos;
 
-    // ─────────────────────────────────────────
-    //  UNITY LIFECYCLE
-    // ─────────────────────────────────────────
+    
+    // ----------------- Timer CONTROLLER REFERENCE
+    private RoomTimerController roomTimerController;
 
     private void Awake()
     {
-
+        roomTimerController = FindFirstObjectByType<RoomTimerController>();
     }
 
     private void OnEnable()
@@ -136,7 +139,7 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
-        if (target == null) return;
+        if (!followPlayer) return;
 
         Vector3 targetPos = target.position;
 
@@ -168,6 +171,38 @@ public class CameraController : MonoBehaviour
         transform.position = Vector3.SmoothDamp(transform.position, desiredPos, ref _velocity, smoothTime, speed);
 
         _previousTargetPos = targetPos;
+    }
+
+
+    public void MoveCameraTo(Vector3 newPosition, float duration = 1f, bool pauseTimer = true)
+    {
+
+        if (pauseTimer)
+            roomTimerController.PauseTimer();
+
+        followPlayer = false; // Desactivamos el seguimiento para mover la cámara a una posición fija
+
+        if (moveCoroutine != null)
+            StopCoroutine(moveCoroutine);
+
+        moveCoroutine = StartCoroutine(MoveCameraSmooth(newPosition, duration));
+    }
+
+    private IEnumerator MoveCameraSmooth(Vector3 targetPosition, float duration)
+    {
+        Vector3 startPosition = transform.position;
+        float time = 0f;
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            float t = time / duration;
+
+            transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            yield return null;
+        }
+
+        transform.position = targetPosition;
     }
 
     // ─────────────────────────────────────────

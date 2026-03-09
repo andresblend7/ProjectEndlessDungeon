@@ -106,7 +106,7 @@ public class RoomTimerController : MonoBehaviour
         currentTime += amount;
     }
 
-    public void StopTimer()
+    public void PauseTimer()
     {
         isRunning = false;
     }
