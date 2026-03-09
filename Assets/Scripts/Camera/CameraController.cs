@@ -14,7 +14,7 @@ public class CameraController : MonoBehaviour
     [Tooltip("Transform del jugador (o cualquier objetivo a seguir)")]
     public Transform target;
     public bool followPlayer = true;
-    private Coroutine moveCoroutine;    
+    private Coroutine moveCoroutine;
 
 
     [Header("Posición")]
@@ -65,7 +65,7 @@ public class CameraController : MonoBehaviour
     private Vector3 _lookAheadVelocity = Vector3.zero;
     private Vector3 _previousTargetPos;
 
-    
+
     // ----------------- Timer CONTROLLER REFERENCE
     private RoomTimerController roomTimerController;
 
@@ -85,6 +85,25 @@ public class CameraController : MonoBehaviour
         {
             StartCoroutine(ShakeCoroutine());
         }
+    }
+
+    public void ShakeCamera(float customMagnitude = 0, float customDuration = 0)
+    {
+
+        var previousMagnitude = shakeMagnitude;
+        var previousDuration = shakeDuration;
+
+        if (!isShaking && this != null)
+        {
+            if (customMagnitude > 0)
+                shakeMagnitude = customMagnitude;
+            if (customDuration > 0)
+                shakeDuration = customDuration;
+            StartCoroutine(ShakeCoroutine());
+        }
+
+        shakeMagnitude = previousMagnitude;
+        shakeDuration = previousDuration;
     }
 
     private void OnDisable()

@@ -13,9 +13,12 @@ public class GigantSlime : MonoBehaviour, IDamageable
     public EnemySqashEfect enemySqashEfect;
     public EnemyFlashEffect enemyFlashEffect;
     public float markerWarningTime = 0.8f;
+    private BossHealthBar bossHealthBar;
     //Player    
     private Transform player;
     private PlayerController playerController;
+    // Camera
+    private CameraController cameraController;
 
 
     [Header("Behaviour Jump Attack Settings")]
@@ -23,9 +26,10 @@ public class GigantSlime : MonoBehaviour, IDamageable
     public float timeBetweenJumbs = 0.5f;
     public float jumpHeight = 6f;
     public float jumpDuration = 1.2f;
-    public float landingRadius = 2f;
-    private float HeightBase = 0f;
+    public float trackingTime = 0.35f;   // tiempo que puede corregir la trayectoria
+    public float trackingStrength = 6f;  // velocidad de corrección
 
+    private float HeightBase = 0f;
     private bool isPerformingAction;
 
     //STATES
@@ -34,10 +38,22 @@ public class GigantSlime : MonoBehaviour, IDamageable
 
     private void Awake()
     {
+        bossHealthBar = GetComponent<BossHealthBar>();
+        if(bossHealthBar == null)
+        {
+            Debug.LogError("BossHealthBar component not found on GigantSlime.");
+        }
+
         var playerObj = GameObject.FindGameObjectWithTag("Player");
         player = playerObj.transform;
         playerController = playerObj.GetComponent<PlayerController>();
+
+        // Altura máxima parra el lookAt
         HeightBase = transform.position.y;
+
+        cameraController = Camera.main.GetComponent<CameraController>();
+
+
     }
 
     private void Start()
@@ -105,7 +121,6 @@ public class GigantSlime : MonoBehaviour, IDamageable
         Vector3 start = transform.position;
         Vector3 target = new Vector3(player.position.x, HeightBase, player.position.z);
 
-        // Crear indicador en el suelo
         GameObject markerObj = Instantiate(hitJumpMarker, start, Quaternion.identity);
         HitJumpMarker marker = markerObj.GetComponent<HitJumpMarker>();
 
@@ -113,7 +128,7 @@ public class GigantSlime : MonoBehaviour, IDamageable
         marker.maxHeight = jumpHeight;
 
         float timer = 0f;
-        lookAtPlayer = false;
+       
 
         while (timer < jumpDuration)
         {
@@ -121,18 +136,32 @@ public class GigantSlime : MonoBehaviour, IDamageable
 
             float progress = timer / jumpDuration;
 
+            // ----- CORRECCIÓN DE TRAYECTORIA -----
+            if (timer < trackingTime)
+            {
+                Vector3 playerPos = new Vector3(player.position.x, HeightBase, player.position.z);
+                target = Vector3.Lerp(
+                    target,
+                    playerPos,
+                    trackingStrength * Time.deltaTime
+                );
+            }else
+                lookAtPlayer = false;
+            // -------------------------------------
+
             Vector3 horizontal = Vector3.Lerp(start, target, progress);
-
             float height = Mathf.Sin(progress * Mathf.PI) * jumpHeight;
-
             transform.position = horizontal + Vector3.up * height;
-
             yield return null;
         }
 
+
+
         transform.position = target;
 
-        // Destruir marcador al aterrizar
+        //shake camera
+        cameraController.ShakeCamera(0.18f, 0.1f);
+
         Destroy(markerObj);
         StartCoroutine(LookAtOverTime(player, timeBetweenJumbs));
     }
@@ -161,7 +190,7 @@ public class GigantSlime : MonoBehaviour, IDamageable
             enemySqashEfect.PlaySquash();
         }
         currentHealth -= amount;
-
+        bossHealthBar.SetHealth((float)currentHealth / maxHealth);
         if (currentHealth <= 0)
         {
             Die();
