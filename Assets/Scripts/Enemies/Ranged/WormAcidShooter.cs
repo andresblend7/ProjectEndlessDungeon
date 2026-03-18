@@ -19,9 +19,7 @@ public class WormAcidShooter : MonoBehaviour, IDamageable
     [Header("Disparo")]
     public float shootCooldown = 3f;
     public float shootAngleThreshold = 5f;
-
-    [Header("Rotación")]
-    public float rotationSpeed = 180f;
+    private EnemyLookAtPlayerSlow lookAtPlayerSlow;
 
     [Header("Effects")]
     public EnemyFlashEffect flashEffect;
@@ -37,6 +35,8 @@ public class WormAcidShooter : MonoBehaviour, IDamageable
             if (playerObj != null)
                 player = playerObj.transform;
         }
+
+        lookAtPlayerSlow  = GetComponent<EnemyLookAtPlayerSlow>();
     }
 
     void Update()
@@ -45,9 +45,9 @@ public class WormAcidShooter : MonoBehaviour, IDamageable
 
         if (!IsPlayerInsideDetectionBox())
             return;
-    
 
-        RotateTowardsPlayer();
+
+        lookAtPlayerSlow.RotateTowardsPlayer();
 
         cooldownTimer -= Time.deltaTime;
 
@@ -66,23 +66,6 @@ public class WormAcidShooter : MonoBehaviour, IDamageable
             Mathf.Abs(localPos.x) <= detectionBox.x * 0.5f &&
             Mathf.Abs(localPos.y) <= detectionBox.y * 0.5f &&
             Mathf.Abs(localPos.z) <= detectionBox.z * 0.5f;
-    }
-
-
-    void RotateTowardsPlayer()
-    {
-        Vector3 direction = player.position - transform.position;
-        direction.y = 0;
-
-        if (direction.sqrMagnitude < 0.001f) return;
-
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-        transform.rotation = Quaternion.RotateTowards(
-            transform.rotation,
-            targetRotation,
-            rotationSpeed * Time.deltaTime
-        );
     }
 
     bool IsFacingPlayer()

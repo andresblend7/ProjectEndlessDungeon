@@ -1,16 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerFreeMovement : MonoBehaviour
 {
-
     [Header("References")]
-    ActionsController actionsController;
+    public ModelController modelController;
+    private ActionsController actionsController;
+    private Rigidbody rb;
 
-    [Header("Movement Settings")]
+    [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotationSpeed = 10f;
 
@@ -18,144 +16,80 @@ public class PlayerFreeMovement : MonoBehaviour
     [SerializeField] private float dodgeDistance = 4f;
     [SerializeField] private float dodgeDuration = 0.2f;
     [SerializeField] private float dodgeCooldown = 1f;
-    private bool isDodging = false;
+
+    private bool isDodging;
     private float dodgeTimer;
     private float dodgeCooldownTimer;
     private Vector3 dodgeDirection;
 
-
-
-    // Stick derecho para atacar y girar a la vez
     [Header("Attack")]
-    [SerializeField] private float attackInterval = 0.4f;
-    [SerializeField] private bool isHoldingAttack;
-    private float attackTimer;
-
-
+    private bool isHoldingAttack;
 
     private Vector2 moveVector;
-    private bool isFirstMove = true;
-    private Rigidbody rb;
-
     private Vector2 lookVector;
 
-    private void Awake()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        actionsController= FindFirstObjectByType<ActionsController>();
+        actionsController = FindFirstObjectByType<ActionsController>();
+
     }
 
-    public void InputPlayer(InputAction.CallbackContext _context)
+    void FixedUpdate()
     {
-        moveVector = _context.ReadValue<Vector2>();
+        HandleRotation();
+        MoveCharacter();
+        HandleDodge();
 
-        if (_context.canceled)
+        if(isHoldingAttack)
+            HandleAttack();
+    }
+
+    #region INPUT
+
+    public void InputPlayer(InputAction.CallbackContext context)
+    {
+        moveVector = context.ReadValue<Vector2>();
+        modelController.SetIsWalking(moveVector.sqrMagnitude > 0.01f);
+
+        if (context.canceled)
         {
-            isFirstMove = true;
             moveVector = Vector2.zero;
+            modelController.SetIsWalking(false);
         }
     }
-
-    #region Action Joystick
 
     public void InputLook(InputAction.CallbackContext context)
     {
         lookVector = context.ReadValue<Vector2>();
-        //var magnitude = lookVector.magnitude;
-
-        //if (magnitude < 0.0001f)
-        //    return;
-
-
-        if (context.started)
-        {
-            isHoldingAttack = true;
-        }
-
-        if (context.canceled)
-        {
-            Debug.Log("InputLook Canceled");
-            isHoldingAttack = false;
-        }
-    }
-    private void TryAttackImmediate()
-    {
-        if (attackTimer <= 0f)
-        {
-            Debug.Log("Attack!");
-            actionsController.HandleActionPressed(true);
-            attackTimer = attackInterval;
-        }
     }
 
-    // --- NUEVO MÉTODO PARA DETECTAR EL TOQUE ---
     public void InputLookTouch(InputAction.CallbackContext context)
     {
-        //Debug.Log("InputLookTouched ");
         if (context.started)
-        {
-
             isHoldingAttack = true;
-        }
 
         if (context.canceled)
-        {
-            Debug.Log("InputLookTouch Canceled");
             isHoldingAttack = false;
-        }
     }
 
     #endregion
 
+    #region ATTACK
 
-    private void FixedUpdate()
+    private void HandleAttack()
     {
-
-
-        HandleRotation();
-        MoveCharacter();
-
-        if (isDodging)
-        {
-            float dodgeSpeed = dodgeDistance / dodgeDuration;
-
-            Vector3 velocity = dodgeDirection * dodgeSpeed;
-            velocity.y = rb.linearVelocity.y; // mantener gravedad
-
-            rb.linearVelocity = velocity;
-
-            dodgeTimer -= Time.fixedDeltaTime;
-
-            if (dodgeTimer <= 0f)
-            {
-                isDodging = false;
-            }
-        }
-
-
-        // -------------------------------------- GESTION DEL ACTION TIMER --------------------------------------
-        if (dodgeCooldownTimer > 0f)
-            dodgeCooldownTimer -= Time.fixedDeltaTime;
-
-        if (attackTimer > 0f)
-            attackTimer -= Time.deltaTime;
-
-        if (isHoldingAttack)
-        {
-            TryAttackImmediate();
-
-            if (attackTimer <= 0f)
-            {
-                attackTimer = attackInterval;
-                
-            }
-        }
-
+        actionsController.HandleActionPressed(true);
     }
+
+    #endregion
+
+    #region MOVEMENT
 
     private void MoveCharacter()
     {
-        if (isDodging) return;
+        if (isDodging)
+            return;
 
         Vector3 movementDir = new Vector3(moveVector.x, 0f, moveVector.y);
 
@@ -163,18 +97,11 @@ public class PlayerFreeMovement : MonoBehaviour
         {
             movementDir.Normalize();
 
-            // Dirección hacia donde mira el personaje
             Vector3 forward = transform.forward;
             forward.y = 0f;
             forward.Normalize();
 
-            // Dot product (-1 a 1)
             float dot = Vector3.Dot(forward, movementDir);
-
-            // Convertimos de (-1,1) a (0.4,1)
-            // 1   → 1 (velocidad completa)
-            // 0   → 0.7
-            // -1  → 0.4
             float speedMultiplier = Mathf.Lerp(0.4f, 1f, (dot + 1f) / 2f);
 
             float finalSpeed = moveSpeed * speedMultiplier;
@@ -197,11 +124,14 @@ public class PlayerFreeMovement : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region ROTATION
+
     private void HandleRotation()
     {
         Vector2 rotationInput = lookVector;
 
-        // Fallback opcional: si no usa el stick derecho, usar movimiento
         if (rotationInput.sqrMagnitude < 0.01f)
             rotationInput = moveVector;
 
@@ -219,15 +149,38 @@ public class PlayerFreeMovement : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region DODGE
+
+    private void HandleDodge()
+    {
+        if (dodgeCooldownTimer > 0f)
+            dodgeCooldownTimer -= Time.fixedDeltaTime;
+
+        if (!isDodging)
+            return;
+
+        float dodgeSpeed = dodgeDistance / dodgeDuration;
+
+        Vector3 velocity = dodgeDirection * dodgeSpeed;
+        velocity.y = rb.linearVelocity.y;
+
+        rb.linearVelocity = velocity;
+
+        dodgeTimer -= Time.fixedDeltaTime;
+
+        if (dodgeTimer <= 0f)
+            isDodging = false;
+    }
 
     public void TryDodge()
     {
-        if (isDodging) return;
-        if (dodgeCooldownTimer > 0f) return;
+        if (isDodging || dodgeCooldownTimer > 0f)
+            return;
 
-        // Dirección basada en hacia donde está mirando
         Vector3 forwardDirection = transform.forward;
-        forwardDirection.y = 0f; // evitar inclinaciones raras
+        forwardDirection.y = 0f;
 
         if (forwardDirection.sqrMagnitude < 0.01f)
             return;
@@ -238,9 +191,8 @@ public class PlayerFreeMovement : MonoBehaviour
         dodgeTimer = dodgeDuration;
         dodgeCooldownTimer = dodgeCooldown;
 
-        // Cancelar velocidad horizontal actual
         rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
     }
 
-
+    #endregion
 }

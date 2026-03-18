@@ -9,13 +9,19 @@ public class HitJumpMarker : MonoBehaviour
     public float maxScale = 3f;
     public float maxHeight = 6f; // altura máxima esperada del salto
 
+    private float ypos=0f;
+    private void Start()
+    {
+       ypos= transform.position.y;
+    }
+
     void Update()
     {
-        if (boss == null) return;
+        if (boss == null) Destroy(gameObject);
 
         // Mantener marcador debajo del boss
         Vector3 pos = boss.position;
-        pos.y = transform.position.y;
+        pos.y = ypos;
         transform.position = pos;
 
         // Calcular altura del boss respecto al marcador

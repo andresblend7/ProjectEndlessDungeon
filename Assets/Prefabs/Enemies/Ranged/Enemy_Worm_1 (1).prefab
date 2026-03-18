@@ -40,8 +40,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1863710721264924493}
-  - component: {fileID: 293074827702726609}
   - component: {fileID: 3828474638543261648}
+  - component: {fileID: 293074827702726609}
+  - component: {fileID: 7626100883773440150}
   m_Layer: 0
   m_Name: Enemy_Worm_1 (1)
   m_TagString: Untagged
@@ -66,30 +67,6 @@ Transform:
   - {fileID: 7639192138343794630}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &293074827702726609
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6215075396831427998}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84f7849bb2eeef2419068c058eec668c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WormAcidShooter
-  maxHealth: 21
-  player: {fileID: 0}
-  shootPoint: {fileID: 1748227443311998799}
-  projectilePrefab: {fileID: 7573309365536183996, guid: 4bde94896f2eb39428e09e594698234b,
-    type: 3}
-  detectionBox: {x: 8.02, y: 3.29, z: 18.1}
-  arcHeight: 0.8
-  shootCooldown: 2.3
-  shootAngleThreshold: 5
-  rotationSpeed: 90
-  flashEffect: {fileID: 7085817601052800008}
-  enemySqashEfect: {fileID: 2297800462019462337}
 --- !u!65 &3828474638543261648
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -111,6 +88,42 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.55394155, y: 1, z: 0.68018615}
   m_Center: {x: -0.00420776, y: 0, z: 0.092577726}
+--- !u!114 &293074827702726609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6215075396831427998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84f7849bb2eeef2419068c058eec668c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WormAcidShooter
+  maxHealth: 21
+  player: {fileID: 0}
+  shootPoint: {fileID: 1748227443311998799}
+  projectilePrefab: {fileID: 7573309365536183996, guid: 4bde94896f2eb39428e09e594698234b,
+    type: 3}
+  detectionBox: {x: 8.02, y: 3.29, z: 18.1}
+  arcHeight: 0.8
+  shootCooldown: 2.3
+  shootAngleThreshold: 5
+  flashEffect: {fileID: 7085817601052800008}
+  enemySqashEfect: {fileID: 2297800462019462337}
+--- !u!114 &7626100883773440150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6215075396831427998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18777d7853e555d4fa34c3226dc0cc98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyLookAtPlayerSlow
+  rotationSpeed: 100
 --- !u!1 &8174995262768557527
 GameObject:
   m_ObjectHideFlags: 0

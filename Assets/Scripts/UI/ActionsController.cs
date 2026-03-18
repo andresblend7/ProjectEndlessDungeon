@@ -13,7 +13,7 @@ public class ActionsController : MonoBehaviour, IPointerDownHandler, IPointerUpH
 
     [Header("Configuración de Ataque Continuo")]
     [Tooltip("Velocidad de ataque (ataques por segundo)")]
-    [SerializeField] private float attackSpeed = 1f; // 2 ataques por segundo por defecto
+    [SerializeField] public float attackSpeed = 2.5f; // 2 ataques por segundo por defecto
 
     [Header("Referencias UI")]
     [SerializeField] private RawImage actionImage;
@@ -256,14 +256,7 @@ public class ActionsController : MonoBehaviour, IPointerDownHandler, IPointerUpH
         }
     }
 
-    /// <summary>
-    /// Actualiza la velocidad de ataque del jugador
-    /// </summary>
-    public void SetAttackSpeed(float newAttackSpeed)
-    {
-        attackSpeed = Mathf.Max(0.1f, newAttackSpeed); // Mínimo 0.1 para evitar divisiones por cero
-    }
-
+ 
     /// <summary>
     /// Obtiene la velocidad de ataque actual
     /// </summary>

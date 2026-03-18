@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class GigantSlime : MonoBehaviour, IDamageable
+public class GigantSlime : MonoBehaviour, IDamageable, ITimeFreezable
 {
     [Header("Stats")]
     public int maxHealth = 500;
@@ -14,6 +14,11 @@ public class GigantSlime : MonoBehaviour, IDamageable
     public EnemyFlashEffect enemyFlashEffect;
     public float markerWarningTime = 0.8f;
     private BossHealthBar bossHealthBar;
+    private EnemyLookAtPlayerSlow lookAtPlayerSlow;
+    // minions
+    public GameObject minionPrefab;
+
+
     //Player    
     private Transform player;
     private PlayerController playerController;
@@ -51,8 +56,11 @@ public class GigantSlime : MonoBehaviour, IDamageable
         // Altura máxima parra el lookAt
         HeightBase = transform.position.y;
 
+        // Camera
         cameraController = Camera.main.GetComponent<CameraController>();
 
+        // LookAt
+        lookAtPlayerSlow = GetComponent<EnemyLookAtPlayerSlow>();
 
     }
 
@@ -67,9 +75,7 @@ public class GigantSlime : MonoBehaviour, IDamageable
     {
         if (lookAtPlayer){
             //Mantener el mismo nivel de altura para mirar al jugador
-            Vector3 targetPosition = player.position;
-            targetPosition.y = transform.position.y;
-            transform.LookAt(targetPosition);
+            lookAtPlayerSlow.RotateTowardsPlayer();
         }
     }
 
@@ -121,11 +127,11 @@ public class GigantSlime : MonoBehaviour, IDamageable
         Vector3 start = transform.position;
         Vector3 target = new Vector3(player.position.x, HeightBase, player.position.z);
 
-        GameObject markerObj = Instantiate(hitJumpMarker, start, Quaternion.identity);
-        HitJumpMarker marker = markerObj.GetComponent<HitJumpMarker>();
+        //GameObject markerObj = Instantiate(hitJumpMarker, start, Quaternion.identity);
+        //HitJumpMarker marker = markerObj.GetComponent<HitJumpMarker>();
 
-        marker.boss = transform;
-        marker.maxHeight = jumpHeight;
+        //marker.boss = transform;
+        //marker.maxHeight = jumpHeight;
 
         float timer = 0f;
        
@@ -162,7 +168,10 @@ public class GigantSlime : MonoBehaviour, IDamageable
         //shake camera
         cameraController.ShakeCamera(0.18f, 0.1f);
 
-        Destroy(markerObj);
+        var minion = Instantiate(minionPrefab, target, Quaternion.identity);
+        minion.SetActive(true);
+
+        //Destroy(markerObj);
         StartCoroutine(LookAtOverTime(player, timeBetweenJumbs));
     }
 

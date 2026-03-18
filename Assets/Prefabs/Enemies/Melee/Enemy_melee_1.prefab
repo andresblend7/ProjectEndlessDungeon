@@ -595,7 +595,7 @@ MonoBehaviour:
   isChasingEnemy: 0
   txtDamage: {fileID: 2408346907339514223}
   canBeNockbacked: 1
-  knockbackForce: 6
+  knockbackForce: 10
   haveSquashEffect: 1
   heightTextDamage: 1
 --- !u!114 &8569586959348347781
