@@ -595,7 +595,7 @@ MonoBehaviour:
   isChasingEnemy: 0
   txtDamage: {fileID: 2408346907339514223}
   canBeNockbacked: 1
-  knockbackForce: 10
+  knockbackForce: 14
   haveSquashEffect: 1
   heightTextDamage: 1
 --- !u!114 &8569586959348347781
@@ -735,9 +735,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6518fadceeb0d054d83bd3e02823043a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyFlashEffect
-  flashColor: {r: 1, g: 0.9858491, b: 0.9858491, a: 1}
-  flashDuration: 0.1
-  flashIntensity: 2
+  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.15
+  flashIntensity: 1
 --- !u!4 &6851111672533926830 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c028ee5dfbfdf0c458cc5970d3ecc005,

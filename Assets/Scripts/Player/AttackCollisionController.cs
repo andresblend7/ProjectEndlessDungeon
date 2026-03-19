@@ -12,13 +12,13 @@ public class AttackCollisionController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //Debug.Log("OnTriggerEnter: " + other.gameObject.name);
-        var damage = PlayerUtilities.Instance.GetActualMeleeDamage();
-        IDamageable damageable = other.GetComponent<IDamageable>();
 
+       
+        IDamageable damageable = other.GetComponent<IDamageable>();
         if (damageable != null)
         {
-            damageable.TakeDamage(TypeOfDamage.Melee, damage);
-
+            var damageCalculated = PlayerUtilities.Instance.GetDamageAfterCriticalCalculation();
+            damageable.TakeDamage(TypeOfDamage.Melee, damageCalculated.Damage, damageCalculated.IsCritical);
             ITimeFreezable timeFreezable = other.GetComponent<ITimeFreezable>();
             if (timeFreezable != null) {
                 StartCoroutine(HitStopRoutine());

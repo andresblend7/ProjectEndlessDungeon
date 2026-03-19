@@ -126,7 +126,7 @@ public class WormAcidShooter : MonoBehaviour, IDamageable
         );
     }
 
-    public void TakeDamage(TypeOfDamage typeOfDamage, int amount)
+    public void TakeDamage(TypeOfDamage typeOfDamage, int amount, bool isCritic)
     {
         if (flashEffect != null)
         {
@@ -141,7 +141,7 @@ public class WormAcidShooter : MonoBehaviour, IDamageable
               transform.position + Vector3.up * 1,
               amount,
               false,
-              false
+              isCritic
           );
 
         maxHealth -= amount;

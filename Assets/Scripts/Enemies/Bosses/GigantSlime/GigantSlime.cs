@@ -188,7 +188,7 @@ public class GigantSlime : MonoBehaviour, IDamageable, ITimeFreezable
         }
     }
 
-    public void TakeDamage(TypeOfDamage typeOfDamage, int amount)
+    public void TakeDamage(TypeOfDamage typeOfDamage, int amount, bool isCritic)
     {
         if (enemyFlashEffect != null)
         {

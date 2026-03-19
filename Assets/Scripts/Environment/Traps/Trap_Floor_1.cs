@@ -58,7 +58,7 @@ public class Trap_Floor_1 : MonoBehaviour
 
                 if (damageable != null)
                 {
-                    damageable.TakeDamage(TypeOfDamage.Trap, 10);
+                    damageable.TakeDamage(TypeOfDamage.Trap, 10, false);
                 }
                 else if (hitCollider.CompareTag("Player"))
                 {

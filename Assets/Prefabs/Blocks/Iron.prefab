@@ -60,6 +60,12 @@ MonoBehaviour:
   lifePoints: 6
   crackPlaneTop: {fileID: 5371741629409665826}
   crackPlaneFront: {fileID: 7390106111591837441}
+  dropTable:
+  - resourceType: 2
+    dropChance: 1
+    dropDecrementalChance: 0.4
+    minCountDrop: 1
+    maxAditionalUnitDrop: 3
   shrinkDuration: 0.3
   targetScale: 0
   shrinkCurve:

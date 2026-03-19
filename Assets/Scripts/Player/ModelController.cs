@@ -57,7 +57,7 @@ public class ModelController : MonoBehaviour
     public void ExecuteAnimation(PlayerAnimation animation)
     {
 
-        Debug.Log("ExecuteAnimation");
+        //Debug.Log("ExecuteAnimation");
 
         if (animation == PlayerAnimation.Dodge)
         {
@@ -83,7 +83,7 @@ public class ModelController : MonoBehaviour
     {
         isExecutingAction = true;
 
-        Debug.Log("Empezó la animación");
+        //Debug.Log("Empezó la animación");
 
         // Forzar que deje de caminar
         animator.SetBool("Walk", false);
@@ -91,7 +91,7 @@ public class ModelController : MonoBehaviour
 
     public void StopExecutingAction()
     {
-        Debug.Log("Terminó la animación");
+        //Debug.Log("Terminó la animación");
 
         isExecutingAction = false;
     }

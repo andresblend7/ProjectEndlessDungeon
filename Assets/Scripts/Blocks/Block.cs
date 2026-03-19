@@ -19,6 +19,11 @@ public class Block : MonoBehaviour
     [Header("Effectss")]
     private HitShake hitShakeEffect;
 
+    /*----------------------------------------------*/
+    [Header("Drops")]
+    public ResourceDropTable[] dropTable;
+    private CoinSpawner coinSpawner;
+    public TMPro.TextMeshProUGUI txt_debugDrop;
     /* ----------------------------------------------*/
 
     [Header("Animación de Destrucción")]
@@ -60,6 +65,7 @@ public class Block : MonoBehaviour
     void Awake()
     {
         uniqueID = GenerateID();
+        coinSpawner = FindFirstObjectByType<CoinSpawner>();
     }
     private void Start()
     {
@@ -99,9 +105,20 @@ public class Block : MonoBehaviour
 
     }
 
-
     public void TakeHit()
     {
+
+        try
+        {
+
+            coinSpawner.SpawnCoins(1, transform.position);
+
+        }
+        catch (System.Exception e)
+        {
+            txt_debugDrop.text = e.ToString();
+        }
+
 
         crackPlaneTop.SetActive(true);
         crackPlaneFront.SetActive(true);
@@ -113,7 +130,7 @@ public class Block : MonoBehaviour
 
         int damage = PlayerUtilities.Instance.GetActualToolDamage();
         currentHP = currentHP - damage;
-        var actualPercentHP = currentHP * 100 /  lifePoints ;
+        var actualPercentHP = currentHP * 100 / lifePoints;
 
         var idxDamage = 4;
         if (actualPercentHP >= 80)
@@ -146,6 +163,21 @@ public class Block : MonoBehaviour
         {
             crackPlaneTop.SetActive(false);
             crackPlaneFront.SetActive(false);
+            foreach (var table in dropTable)
+            {
+                int dropCount = CalculateDrop(table);
+                if (dropCount > 0)
+                {
+                    if(table.resourceType == ResourceType.Coin && coinSpawner != null)
+                    {
+                        coinSpawner.SpawnCoins(dropCount, transform.position);
+                    }
+
+                    ResourceManager.Instance.Add(table.resourceType, dropCount);
+                    Debug.Log($"Dropped {dropCount} of {table.resourceType}");
+                }
+            }
+
             StartCoroutine(ShrinkAndDestroy());
         }
 
@@ -202,8 +234,6 @@ public class Block : MonoBehaviour
         Destroy(gameObject);
     }
 
-
-
     private void OnCollisionEnter(Collision collision)
     {
         //Debug.Log("Block collided with " + collision.gameObject.name);
@@ -227,6 +257,53 @@ public class Block : MonoBehaviour
         if (collider != null)
             collider.enabled = true;
     }
+
+    #region Drop Logic
+    public static int CalculateDrop(ResourceDropTable table)
+    {
+        float currentChance = table.dropChance;
+        int count = 0;
+
+        // primer drop (minCountDrop) = n cantidad
+        int dropNumber = 1;
+        float fRoll = Random.Range(0f, 1f);
+        if (fRoll <= currentChance)
+        {
+            count = table.minCountDrop;
+            currentChance -= table.dropDecrementalChance;
+            dropNumber = 2;
+        }
+        else
+        {   
+            dropNumber = table.maxAditionalUnitDrop;
+            currentChance = 0 ;
+        }
+
+        // Segundo intento en adelante
+        int remainingAttempts = table.maxAditionalUnitDrop;
+        for (int i = dropNumber; i < remainingAttempts; i++)
+        {
+            float roll = Random.Range(0f, 1f);
+
+            //Debug.Log($"Drop roll: {roll} | Current Chance: {currentChance} | Count: {count}");
+            if (roll <= currentChance)
+            {
+                count++;
+                currentChance -= table.dropDecrementalChance;
+
+                if (currentChance <= 0f)
+                    break;
+            }
+            else
+            {
+                break;
+            }
+        } 
+
+        return count;
+    }
+
+    #endregion
 }
 
 public enum EnumBlockType

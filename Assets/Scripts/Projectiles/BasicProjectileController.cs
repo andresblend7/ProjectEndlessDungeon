@@ -30,7 +30,7 @@ public class BasicProjectileController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        actualRangeDamage = PlayerUtilities.Instance.GetActualRangeDamage();
+        var damageCalculated = PlayerUtilities.Instance.GetDamageAfterCriticalCalculation(isRanged : true);
 
         if (hasCollided) return; // evita doble ejecución
         hasCollided = true;
@@ -39,7 +39,7 @@ public class BasicProjectileController : MonoBehaviour
 
         if (damageable != null)
         {
-            damageable.TakeDamage( TypeOfDamage.Range, actualRangeDamage);
+            damageable.TakeDamage( TypeOfDamage.Range, damageCalculated.Damage, damageCalculated.IsCritical);
         }
 
         ShowImpactEffect(collision);

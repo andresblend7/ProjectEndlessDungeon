@@ -371,7 +371,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
         }
     }
 
-    public void TakeDamage(TypeOfDamage typeOfDamage, int amount)
+    public void TakeDamage(TypeOfDamage typeOfDamage, int amount, bool isCritic)
     {
 
         //Si no ve al enemigo pero recibe daño lo marca como detectado para que empiece a perseguirlo
@@ -384,7 +384,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
             transform.position + Vector3.up * heightTextDamage,
             damage,
             false,
-            false
+            isCrit : isCritic
         );
         //txtDamage.text = $"{damage}";
         OnReceibeDamage.Invoke(damage);

@@ -73,6 +73,8 @@ public class PlayerUtilities : MonoBehaviour
         actualStats.ActualToolDamage = 1;
         actualStats.ActualMeleeDamage = 4;
         actualStats.ActualRangeDamage = 3;
+        actualStats.CriticalChance = 0.15f;
+        actualStats.CriticalDamageMultiplier = 1.5f;
     }
     public PlayerInGameData GetActualStats()
     {
@@ -81,7 +83,24 @@ public class PlayerUtilities : MonoBehaviour
     public int GetActualMeleeDamage()
     {
         return actualStats.ActualMeleeDamage;
-    }   
+    }
+    public float GetActualCriticalChance()
+    {
+        return actualStats.CriticalChance;
+    }
+
+    public PlayerDamageCalculated  GetDamageAfterCriticalCalculation(bool isRanged = false)
+    {
+        int baseDamage = !isRanged ? actualStats.ActualMeleeDamage : actualStats.ActualRangeDamage;
+        bool wasCritic = false;
+        if (Random.value < actualStats.CriticalChance)
+        {
+            wasCritic = true;
+            baseDamage = Mathf.RoundToInt(baseDamage * actualStats.CriticalDamageMultiplier); // Daño crítico
+        }
+        return new PlayerDamageCalculated { Damage = baseDamage, IsCritical = wasCritic };
+    }
+
 
     public int GetActualRangeDamage()
     {
@@ -96,6 +115,7 @@ public class PlayerUtilities : MonoBehaviour
     {
         return actualStats.ActualToolDamage;
     }
+
 
     public void RegisterDamageToPlayer(int damage)
     {
@@ -144,8 +164,8 @@ public static class SaveSystem
             return JsonUtility.FromJson<PlayerInGameData>(json);
         }
         return new PlayerInGameData(); // Retorna stats vacíos si no hay archivo
-    }
-
-    
+    }    
 }
+
+
 
