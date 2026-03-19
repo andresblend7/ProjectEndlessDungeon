@@ -31,6 +31,8 @@ public class CoinBehaviour : MonoBehaviour
 
     public void Play(Transform player)
     {
+
+        Debug.Log($"Coin spawned targeting player at {player.position}");
         target = player;
         timer = 0f;
         isHoming = false;
@@ -71,7 +73,12 @@ public class CoinBehaviour : MonoBehaviour
         else
         {
             // FASE HOMING: Hacia el jugador
-            if (target == null) { Despawn(); return; }
+            if (target == null) { 
+                Debug.LogWarning("Coin lost its target! Despawning.");
+                Despawn(); return; 
+            }
+
+            Debug.Log($"Coin homing towards player at {target.position}");
 
             currentSpeed += homingAcceleration * dt;
             Vector3 dir = (target.position - transform.position).normalized;

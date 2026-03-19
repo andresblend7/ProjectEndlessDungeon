@@ -17,6 +17,7 @@ public  class CoinSpawner : MonoBehaviour
     IEnumerator SpawnRoutine(int amount, Vector3 origin)
     {
         var playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        Debug.Log($"Spawning {amount} coins at {origin} with spread {spread} and delay {spawnDelay}");
 
         for (int i = 0; i < amount; i++)
         {
