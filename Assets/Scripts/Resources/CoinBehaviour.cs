@@ -32,7 +32,7 @@ public class CoinBehaviour : MonoBehaviour
     public void Play(Transform player)
     {
 
-        Debug.Log($"Coin spawned targeting player at {player.position}");
+        //Debug.Log($"Coin spawned targeting player at {player.position}");
         target = player;
         timer = 0f;
         isHoming = false;
@@ -55,7 +55,7 @@ public class CoinBehaviour : MonoBehaviour
         timer += dt;
 
         // 1. Rotación estilo moneda
-        transform.Rotate(Vector3.up * rotationSpeed * dt, Space.World);
+        transform.Rotate(Vector3.left * rotationSpeed * dt, Space.World);
 
         // 2. Animación de Escala (Usando tu Curve)
         // Tip: En el Inspector, haz que la curva empiece en 0, suba a 1.2 (overshoot) y termine en 0.
@@ -74,11 +74,8 @@ public class CoinBehaviour : MonoBehaviour
         {
             // FASE HOMING: Hacia el jugador
             if (target == null) { 
-                Debug.LogWarning("Coin lost its target! Despawning.");
                 Despawn(); return; 
             }
-
-            Debug.Log($"Coin homing towards player at {target.position}");
 
             currentSpeed += homingAcceleration * dt;
             Vector3 dir = (target.position - transform.position).normalized;

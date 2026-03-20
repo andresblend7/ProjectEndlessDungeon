@@ -23,7 +23,6 @@ public class Block : MonoBehaviour
     [Header("Drops")]
     public ResourceDropTable[] dropTable;
     private CoinSpawner coinSpawner;
-    public TMPro.TextMeshProUGUI txt_debugDrop;
     /* ----------------------------------------------*/
 
     [Header("Animación de Destrucción")]
@@ -108,18 +107,6 @@ public class Block : MonoBehaviour
     public void TakeHit()
     {
 
-        try
-        {
-
-            coinSpawner.SpawnCoins(1, transform.position);
-
-        }
-        catch (System.Exception e)
-        {
-            txt_debugDrop.text = e.ToString();
-        }
-
-
         crackPlaneTop.SetActive(true);
         crackPlaneFront.SetActive(true);
 
@@ -156,16 +143,13 @@ public class Block : MonoBehaviour
             // renderer.material.mainTexture = newBaseMapTexture; // Use .mainTexture for built-in render pipeline
         }
 
-
-
-
         if (currentHP <= 0)
         {
             crackPlaneTop.SetActive(false);
             crackPlaneFront.SetActive(false);
             foreach (var table in dropTable)
             {
-                int dropCount = CalculateDrop(table);
+                int dropCount = PlayerUtilities.Instance.CalculateDrop(table);
                 if (dropCount > 0)
                 {
                     if(table.resourceType == ResourceType.Coin && coinSpawner != null)
@@ -257,53 +241,6 @@ public class Block : MonoBehaviour
         if (collider != null)
             collider.enabled = true;
     }
-
-    #region Drop Logic
-    public static int CalculateDrop(ResourceDropTable table)
-    {
-        float currentChance = table.dropChance;
-        int count = 0;
-
-        // primer drop (minCountDrop) = n cantidad
-        int dropNumber = 1;
-        float fRoll = Random.Range(0f, 1f);
-        if (fRoll <= currentChance)
-        {
-            count = table.minCountDrop;
-            currentChance -= table.dropDecrementalChance;
-            dropNumber = 2;
-        }
-        else
-        {   
-            dropNumber = table.maxAditionalUnitDrop;
-            currentChance = 0 ;
-        }
-
-        // Segundo intento en adelante
-        int remainingAttempts = table.maxAditionalUnitDrop;
-        for (int i = dropNumber; i < remainingAttempts; i++)
-        {
-            float roll = Random.Range(0f, 1f);
-
-            //Debug.Log($"Drop roll: {roll} | Current Chance: {currentChance} | Count: {count}");
-            if (roll <= currentChance)
-            {
-                count++;
-                currentChance -= table.dropDecrementalChance;
-
-                if (currentChance <= 0f)
-                    break;
-            }
-            else
-            {
-                break;
-            }
-        } 
-
-        return count;
-    }
-
-    #endregion
 }
 
 public enum EnumBlockType

@@ -127,6 +127,50 @@ public class PlayerUtilities : MonoBehaviour
         SaveSystem.Save(actualStats);
     }
 
+    public int CalculateDrop(ResourceDropTable table)
+    {
+        float currentChance = table.dropChance;
+        int count = 0;
+
+        // primer drop (minCountDrop) = n cantidad
+        int dropNumber = 1;
+        float fRoll = Random.Range(0f, 1f);
+        if (fRoll <= currentChance)
+        {
+            count = table.minCountDrop;
+            currentChance -= table.dropDecrementalChance;
+            dropNumber = 2;
+        }
+        else
+        {
+            dropNumber = table.maxAditionalUnitDrop;
+            currentChance = 0;
+        }
+
+        // Segundo intento en adelante
+        int remainingAttempts = table.maxAditionalUnitDrop;
+        for (int i = dropNumber; i < remainingAttempts; i++)
+        {
+            float roll = Random.Range(0f, 1f);
+
+            //Debug.Log($"Drop roll: {roll} | Current Chance: {currentChance} | Count: {count}");
+            if (roll <= currentChance)
+            {
+                count++;
+                currentChance -= table.dropDecrementalChance;
+
+                if (currentChance <= 0f)
+                    break;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return count;
+    }
+
     #endregion
 
 }
