@@ -49,6 +49,8 @@ public class GigantSlime : MonoBehaviour, IDamageable, ITimeFreezable
             Debug.LogError("BossHealthBar component not found on GigantSlime.");
         }
 
+        bossHealthBar.gameObject.SetActive(true);
+
         var playerObj = GameObject.FindGameObjectWithTag("Player");
         player = playerObj.transform;
         playerController = playerObj.GetComponent<PlayerController>();

@@ -330,6 +330,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6385735631336696142}
+  - component: {fileID: 3881756926801171629}
   m_Layer: 0
   m_Name: model
   m_TagString: Untagged
@@ -346,13 +347,29 @@ Transform:
   m_GameObject: {fileID: 6385735631336696143}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6851111672533926830}
   m_Father: {fileID: 6385735631695587126}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &3881756926801171629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6385735631336696143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6541d8d4a3b9b3478f073776061f971, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IdleBreathingAnimation
+  amplitude: 0.2
+  frequency: 4
+  affectY: 1
+  inverseXZ: 1
 --- !u!1 &6385735631425729580
 GameObject:
   m_ObjectHideFlags: 0
@@ -491,6 +508,7 @@ GameObject:
   - component: {fileID: 6385735631695587125}
   - component: {fileID: 2724784245171510663}
   - component: {fileID: 1016324193}
+  - component: {fileID: 8849244933471067359}
   - component: {fileID: 8569586959348347781}
   m_Layer: 0
   m_Name: Enemy_melee_1
@@ -557,7 +575,7 @@ NavMeshAgent:
   m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 1.8
-  m_BaseOffset: 0.42
+  m_BaseOffset: 0.49
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &1016324193
@@ -598,6 +616,25 @@ MonoBehaviour:
   knockbackForce: 14
   haveSquashEffect: 1
   heightTextDamage: 1
+--- !u!114 &8849244933471067359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6385735631695587127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5a19292bb94eb0419c9466fdf16883d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NavMeshPatrol
+  patrolPoints: []
+  waitTime: 1.5
+  moveSpeed: 3.5
+  useEaseInOut: 1
+  rotateBeforeMove: 1
+  rotationSpeed: 5
+  rotationThreshold: 5
 --- !u!114 &8569586959348347781
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,6 +10,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
     [Header("── Movimiento ──────────────────────────────────────")]
     [Tooltip("Velocidad de desplazamiento en el plano XZ.")]
     public float moveSpeed = 3.5f;
+    private NavMeshPatrol navMeshPatrol; // referencia al script de patrulla, para poder decirle que deje de patrullar cuando empiece a perseguir al jugador
 
     [Tooltip("Segundos de espera tras detectar al jugador antes de perseguirlo.")]
     public float chaseDelay = 0.5f;
@@ -98,6 +99,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
     // ---------------------------------------------- EVENTS TO CHILDRENS -------------------------------------------
     // evento que dice si el player está en el rango de visión o no, para que el hijo pueda decidir qué hacer (ej: empezar a perseguirlo)
     public event Action OnPlayerDetected;
+    private bool playerWasDetectedFirstTime = false;
     // Evento que indica si el jugador está dentro del rango de ataque, para que el hijo pueda decidir qué hacer (ej: activar hitbox de ataque)
     public event Action<bool> OnPlayerInAttackRange;
     public event Action<int> OnReceibeDamage;
@@ -108,6 +110,11 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        navMeshPatrol = GetComponent<NavMeshPatrol>();
+        if (navMeshPatrol == null)
+        {
+            Debug.LogError($"[{name}] No se encontró un componente NavMeshPatrol en el mismo GameObject.");
+        }
 
 
         // ── Estado inicial ─────────────────────────────────────
@@ -139,6 +146,14 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
         if (playerDetected)
         {
             OnPlayerDetected.Invoke();
+            if (!playerWasDetectedFirstTime)
+            {
+                playerWasDetectedFirstTime = true;
+                agent.updateRotation = true;
+                agent.speed= moveSpeed;
+                navMeshPatrol.StopPatrol();
+                Debug.Log("speed: "+ agent.speed);
+            }
         }
 
         if (canChasePlayer)
@@ -338,8 +353,9 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
     // Método que se llama desde el hitbox de ataque cuando detecta que golpeó al jugador, para que el padre pueda decidir qué hacer (ej: mostrar daño, aplicar knockback, etc)
     public void ApplyDamageToPlayer()
     {
-        playerController.ProcessDamageToPlayer(new DamageToPlayer {
-             typeOfDamage =TypeOfDamage.Melee,
+        playerController.ProcessDamageToPlayer(new DamageToPlayer
+        {
+            typeOfDamage = TypeOfDamage.Melee,
             baseDamageAmount = damage
         });
     }
@@ -384,7 +400,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
             transform.position + Vector3.up * heightTextDamage,
             damage,
             false,
-            isCrit : isCritic
+            isCrit: isCritic
         );
         //txtDamage.text = $"{damage}";
         OnReceibeDamage.Invoke(damage);

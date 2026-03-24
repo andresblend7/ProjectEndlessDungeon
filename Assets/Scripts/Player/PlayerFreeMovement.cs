@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerFreeMovement : MonoBehaviour
@@ -41,7 +41,7 @@ public class PlayerFreeMovement : MonoBehaviour
         MoveCharacter();
         HandleDodge();
 
-        if(isHoldingAttack)
+        if (isHoldingAttack)
             HandleAttack();
     }
 
@@ -50,12 +50,10 @@ public class PlayerFreeMovement : MonoBehaviour
     public void InputPlayer(InputAction.CallbackContext context)
     {
         moveVector = context.ReadValue<Vector2>();
-        modelController.SetIsWalking(moveVector.sqrMagnitude > 0.01f);
 
         if (context.canceled)
         {
             moveVector = Vector2.zero;
-            modelController.SetIsWalking(false);
         }
     }
 
@@ -91,10 +89,16 @@ public class PlayerFreeMovement : MonoBehaviour
         if (isDodging)
             return;
 
-        Vector3 movementDir = new Vector3(moveVector.x, 0f, moveVector.y);
+        //Vector3 movementDir = new Vector3(moveVector.x, 0f, moveVector.y);
+
+        //Soporte para teclado si no hay input del joystick
+        Vector2 input = GetFinalMoveInput();
+        Vector3 movementDir = new Vector3(input.x, 0f, input.y);
 
         if (movementDir.sqrMagnitude > 0.01f)
         {
+            modelController.SetIsWalking(true);
+
             movementDir.Normalize();
 
             Vector3 forward = transform.forward;
@@ -116,6 +120,8 @@ public class PlayerFreeMovement : MonoBehaviour
         }
         else
         {
+            modelController.SetIsWalking(false);
+
             rb.linearVelocity = new Vector3(
                 0f,
                 rb.linearVelocity.y,
@@ -132,8 +138,9 @@ public class PlayerFreeMovement : MonoBehaviour
     {
         Vector2 rotationInput = lookVector;
 
+        // 🔥 Si no hay look, usar input combinado (joystick + teclado)
         if (rotationInput.sqrMagnitude < 0.01f)
-            rotationInput = moveVector;
+            rotationInput = GetFinalMoveInput();
 
         if (rotationInput.sqrMagnitude > 0.01f)
         {
@@ -192,6 +199,34 @@ public class PlayerFreeMovement : MonoBehaviour
         dodgeCooldownTimer = dodgeCooldown;
 
         rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
+    }
+
+    #endregion
+
+    #region PC controls
+    private Vector2 GetKeyboardInput()
+    {
+        float h = 0f;
+        float v = 0f;
+
+        if (Input.GetKey(KeyCode.A)) h -= 1f;
+        if (Input.GetKey(KeyCode.D)) h += 1f;
+        if (Input.GetKey(KeyCode.S)) v -= 1f;
+        if (Input.GetKey(KeyCode.W)) v += 1f;
+
+        Vector2 dir = new Vector2(h, v);
+
+        return dir.sqrMagnitude > 1f ? dir.normalized : dir;
+    }
+
+    private Vector2 GetFinalMoveInput()
+    {
+        // Si hay input del joystick, usarlo
+        if (moveVector.sqrMagnitude > 0.01f)
+            return moveVector;
+
+        // Si no, usar teclado
+        return GetKeyboardInput();
     }
 
     #endregion
