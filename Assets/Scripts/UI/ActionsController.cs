@@ -98,7 +98,7 @@ public class ActionsController : MonoBehaviour, IPointerDownHandler, IPointerUpH
             HandleWeapon2Action();
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             HandleDodgeAction();
         }

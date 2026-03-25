@@ -60,7 +60,7 @@ MonoBehaviour:
   lifePoints: 6
   crackPlaneTop: {fileID: 5371741629409665826}
   crackPlaneFront: {fileID: 7390106111591837441}
-  hitSound: {fileID: 8300000, guid: 6f0c06622528eca43acc5f39c00de4a8, type: 3}
+  hitSound: {fileID: 8300000, guid: b15734e5a5388f6409e350d11549b4d0, type: 3}
   destroySound: {fileID: 8300000, guid: 445869c1fc42dca419a97d43478445bb, type: 3}
   dropTable:
   - resourceType: 2

@@ -40,12 +40,17 @@ public class PlayerController : MonoBehaviour
     private RaycastHit debugHit;
     private bool hasHit;
 
-    // Estados negativos
+    // ---------------------------- Estados negativos ----------------------------
     [Header("Negative Effects VFX")]
     public GameObject PoisonVFX;
     private List<TypeOfTickDamage> tickDamageActives = new List<TypeOfTickDamage>();
 
     public ModelController modelController;
+
+
+    // --------------------------- EVENTOS ---------------------------
+    public Action<int> OnPlayerTakeDamage;
+
 
     private void Awake()
     {
@@ -215,8 +220,6 @@ public class PlayerController : MonoBehaviour
         return damageToPlayer.baseDamageAmount;
     }
 
-
-
     private IEnumerator ProcessDamagePerTick(DamageToPlayer damageToPlayer)
     {
         this.EnableDisableVfxNegativeEffect(damageToPlayer.typeOfTickDamage, true);
@@ -247,6 +250,8 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyDamage(int damage)
     {
+        modelController.TakeDamage();
+        OnPlayerTakeDamage.Invoke(damage);
         DamageNumberSpawner.Spawn(
             transform.position + Vector3.up * 1.2f,
             damage,

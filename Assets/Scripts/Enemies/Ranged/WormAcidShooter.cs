@@ -26,6 +26,10 @@ public class WormAcidShooter : MonoBehaviour, IDamageable
     public EnemySqashEfect enemySqashEfect;
 
     float cooldownTimer;
+    private bool playerWasDetected = false;
+
+
+    private Animator animator;
 
     private void Awake()
     {
@@ -37,6 +41,7 @@ public class WormAcidShooter : MonoBehaviour, IDamageable
         }
 
         lookAtPlayerSlow  = GetComponent<EnemyLookAtPlayerSlow>();
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -46,6 +51,12 @@ public class WormAcidShooter : MonoBehaviour, IDamageable
         if (!IsPlayerInsideDetectionBox())
             return;
 
+        if (!playerWasDetected)
+        {
+            playerWasDetected = true;
+            animator.SetTrigger("DettectPlayer");
+            cooldownTimer = shootCooldown;
+        }
 
         lookAtPlayerSlow.RotateTowardsPlayer();
 
@@ -80,6 +91,8 @@ public class WormAcidShooter : MonoBehaviour, IDamageable
 
     void Shoot()
     {
+        animator.SetTrigger("Shoot");
+
         GameObject proj = Instantiate(projectilePrefab, shootPoint.position, Quaternion.identity);
 
         Rigidbody rb = proj.GetComponent<Rigidbody>();

@@ -12,6 +12,7 @@ public class ModelController : MonoBehaviour
     public AudioClip swordSlash;
     public AudioClip bowShot;
     public AudioClip dash;
+    public AudioClip takeDamageSound;
     private AudioSource stepsSounds;
 
     [Header("References")]
@@ -59,6 +60,11 @@ public class ModelController : MonoBehaviour
         }
 
         isExecutingAction = false;
+    }
+
+    public void TakeDamage()
+    {
+        AudioSource.PlayClipAtPoint(takeDamageSound, transform.position);
     }
 
     public void ExecuteAnimation(PlayerAnimation animation)
