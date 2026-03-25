@@ -19,6 +19,11 @@ public class Block : MonoBehaviour
     [Header("Effectss")]
     private HitShake hitShakeEffect;
 
+    //*----------------------------------------------*/
+    [Header("Sounds")]
+    public AudioClip hitSound;
+    public AudioClip destroySound;
+
     /*----------------------------------------------*/
     [Header("Drops")]
     public ResourceDropTable[] dropTable;
@@ -106,6 +111,7 @@ public class Block : MonoBehaviour
 
     public void TakeHit()
     {
+        AudioSource.PlayClipAtPoint(hitSound, transform.position);
 
         crackPlaneTop.SetActive(true);
         crackPlaneFront.SetActive(true);
@@ -176,6 +182,8 @@ public class Block : MonoBehaviour
         Vector3 endScale = initialScale * targetScale;
         Vector3 startPosition = transform.position;
         playerTransform = GameObject.FindGameObjectWithTag(playerTag)?.transform;
+
+        AudioSource.PlayClipAtPoint(destroySound, playerTransform.position);
 
         while (elapsedTime < shrinkDuration)
         {

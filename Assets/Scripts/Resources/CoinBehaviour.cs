@@ -19,6 +19,9 @@ public class CoinBehaviour : MonoBehaviour
     public AnimationCurve scaleCurve; // Diseñala de 0 a 1 y luego a 0 (0 -> 1.2 -> 0)
     public float totalLife = 1.2f;
 
+    [Header("Sounds")]  
+    public AudioClip collectSound;
+
     private Vector3 velocity;
     private float timer;
     private bool isHoming;
@@ -95,6 +98,7 @@ public class CoinBehaviour : MonoBehaviour
 
     void Collect()
     {
+        AudioSource.PlayClipAtPoint(collectSound, transform.position);
         // Tu lógica de puntos aquí
         Despawn();
     }

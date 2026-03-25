@@ -8,6 +8,11 @@ public class ModelController : MonoBehaviour
     public GameObject ranged;
 
     public ParticleSystem slashEffect;
+    [Header("Sounds")]
+    public AudioClip swordSlash;
+    public AudioClip bowShot;
+    public AudioClip dash;
+    private AudioSource stepsSounds;
 
     [Header("References")]
     private PlayerUtilities playerUtilities;
@@ -19,6 +24,8 @@ public class ModelController : MonoBehaviour
     {
         playerUtilities = FindFirstObjectByType<PlayerUtilities>();
         animator = GetComponent<Animator>();
+
+        stepsSounds = GetComponent<AudioSource>();
     }
 
     public void ChangeSelectTool(EnumActualToolSelected actualToolSelected)
@@ -62,6 +69,7 @@ public class ModelController : MonoBehaviour
         if (animation == PlayerAnimation.Dodge)
         {
             animator.SetTrigger("Dodge");
+            AudioSource.PlayClipAtPoint(dash, transform.position);
             return;
         }
 
@@ -76,6 +84,12 @@ public class ModelController : MonoBehaviour
 
             slashEffect.gameObject.SetActive(true);
             slashEffect.Play();
+            AudioSource.PlayClipAtPoint(swordSlash, transform.position);
+        }
+
+        if (playerUtilities.GetActualToolSelected() == EnumActualToolSelected.Ranged)
+        {
+            AudioSource.PlayClipAtPoint(bowShot, transform.position);
         }
     }
 
@@ -102,10 +116,18 @@ public class ModelController : MonoBehaviour
         if (isExecutingAction)
         {
             animator.SetBool("Walk", false);
+            stepsSounds.Stop();
             return;
         }
 
         animator.SetBool("Walk", isWalking);
+
+        if(isWalking && !isExecutingAction)
+        {
+            if (!stepsSounds.isPlaying)
+                stepsSounds.Play();
+        }
+      
     }
 }
 

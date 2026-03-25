@@ -154,6 +154,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   totalLife: 1.35
+  collectSound: {fileID: 8300000, guid: 7626a28ec44ae254cbd7df327a8f07e5, type: 3}
 --- !u!114 &6548699247686667790
 MonoBehaviour:
   m_ObjectHideFlags: 0
