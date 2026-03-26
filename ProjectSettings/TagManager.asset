@@ -10,6 +10,7 @@ TagManager:
   - Enemy
   - AttackPlayer
   - Limits
+  - Interactive
   layers:
   - Default
   - TransparentFX

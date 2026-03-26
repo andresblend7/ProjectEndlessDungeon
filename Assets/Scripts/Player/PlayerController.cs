@@ -12,29 +12,31 @@ public class PlayerController : MonoBehaviour
 
     private bool isMoving = false;
     private Vector3 targetPosition;
-  
+
     [Header("GameObjects")]
     public GameObject playerModel;
     public GameObject arrow;
     public GameObject arrowSpawner;
-   
+
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
-   
+
     [Header("Colliders")]
     public BoxCollider attackCollider;
-    
+
     [Tooltip("Duración del hitbox activo para acciones y ataques (en segundos)")]
     public float hitboxActiveDuration = 0.05f;
-   
+
     [Header("RayCast para la colisión del hitbox de accion  (picar/accionar)")]
     public GameObject actionCollider;
     [SerializeField] private Transform origin;
+    [Tooltip("Mantener activa la HitBox (para interactuar siempre)")]
+    public bool alwaysActiveHitbox = false;
     [SerializeField] public float distanceMaxAction = 5f;
     [SerializeField] public float offsetTomaxDistance = 0.2f;
     [SerializeField] private LayerMask hitMask;
     [SerializeField] private Transform hitboxAction; // El objeto que quieres posicionar
-   
+
     [Tooltip("Radio del SphereCast para detectar colisiones")]
     [SerializeField] private float castRadius = 0.25f;
     private RaycastHit debugHit;
@@ -61,11 +63,11 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //REFERERENCES
-      
-
         // Suscribirse al evento de movimiento
         InputManager.OnActionSelectedCommand += HandleActionSelectedCommand;
+
+        if (alwaysActiveHitbox)
+            actionCollider.SetActive(true);
     }
 
     /// <summary>
@@ -85,11 +87,11 @@ public class PlayerController : MonoBehaviour
         {
             case EnumActionType.Action:
                 modelController.ExecuteAnimation(PlayerAnimation.Action);
-                if(playerUtilities.GetActualToolSelected() == EnumActualToolSelected.Pickaxe)
+                if (playerUtilities.GetActualToolSelected() == EnumActualToolSelected.Pickaxe)
                     StartCoroutine(ActiveHitboxAction());
                 if (playerUtilities.GetActualToolSelected() == EnumActualToolSelected.Melee)
                     StartCoroutine(ActiveAttackHitBox());
-                if( playerUtilities.GetActualToolSelected() == EnumActualToolSelected.Ranged)
+                if (playerUtilities.GetActualToolSelected() == EnumActualToolSelected.Ranged)
                     StartCoroutine(ShootProjectile());
                 break;
             case EnumActionType.Tool:
@@ -125,13 +127,14 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.15f);
         actionCollider.SetActive(true);
         yield return new WaitForSeconds(hitboxActiveDuration); // Duración del hitbox activo
-        actionCollider.SetActive(false);
+        if (!alwaysActiveHitbox)
+            actionCollider.SetActive(false);
     }
 
     private IEnumerator ActiveAttackHitBox()
     {
 
-       yield return new WaitForSeconds(0.15f);
+        yield return new WaitForSeconds(0.15f);
         attackCollider.enabled = (true);
         yield return new WaitForSeconds(0.06f); // Duración del hitbox activo
         attackCollider.enabled = (false);
@@ -206,10 +209,10 @@ public class PlayerController : MonoBehaviour
         if (damageToPlayer.typeOfDamage == TypeOfDamage.TickOverTime)
         {
             // solo aplicar si no hay otro del mismo tipo de daño en el tiempo activo
-            if(!tickDamageActives.Contains(damageToPlayer.typeOfTickDamage))
+            if (!tickDamageActives.Contains(damageToPlayer.typeOfTickDamage))
             {
-                 tickDamageActives.Add(damageToPlayer.typeOfTickDamage);
-                 StartCoroutine(ProcessDamagePerTick(damageToPlayer));
+                tickDamageActives.Add(damageToPlayer.typeOfTickDamage);
+                StartCoroutine(ProcessDamagePerTick(damageToPlayer));
             }
 
         }
@@ -242,7 +245,7 @@ public class PlayerController : MonoBehaviour
 
     private void EnableDisableVfxNegativeEffect(TypeOfTickDamage typeOfTickDamage, bool active)
     {
-        if(typeOfTickDamage == TypeOfTickDamage.Poison)
+        if (typeOfTickDamage == TypeOfTickDamage.Poison)
         {
             PoisonVFX.SetActive(active);
         }
