@@ -3467,7 +3467,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.53729963, y: 0, z: 0, w: 0.8433915}
-  m_LocalPosition: {x: 0.6, y: 14.37, z: -36.3}
+  m_LocalPosition: {x: -18.26, y: 14.37, z: -15.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5328,7 +5328,7 @@ PrefabInstance:
     - target: {fileID: 27731977150826896, guid: 091285e95d86634449e55c241814ccfc,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -25
+      value: -27
       objectReference: {fileID: 0}
     - target: {fileID: 27731977150826896, guid: 091285e95d86634449e55c241814ccfc,
         type: 3}
@@ -11236,6 +11236,11 @@ PrefabInstance:
     - target: {fileID: 4708709261402983860, guid: d7fca4bc125eb554fb164b6ab9376580,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6172628320738776315, guid: d7fca4bc125eb554fb164b6ab9376580,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -23155,7 +23160,7 @@ PrefabInstance:
     - target: {fileID: 2126042712206859100, guid: 65ce1e9fc1587814a850fd0683a77877,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.13999939
+      value: -19
       objectReference: {fileID: 0}
     - target: {fileID: 2126042712206859100, guid: 65ce1e9fc1587814a850fd0683a77877,
         type: 3}
@@ -23165,7 +23170,7 @@ PrefabInstance:
     - target: {fileID: 2126042712206859100, guid: 65ce1e9fc1587814a850fd0683a77877,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -30.5
+      value: -9.7
       objectReference: {fileID: 0}
     - target: {fileID: 2126042712206859100, guid: 65ce1e9fc1587814a850fd0683a77877,
         type: 3}
@@ -23201,6 +23206,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8284712899327653326, guid: 65ce1e9fc1587814a850fd0683a77877,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8284712899327653326, guid: 65ce1e9fc1587814a850fd0683a77877,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 112
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -48,6 +48,11 @@ public class WormAcidShooter : MonoBehaviour, IDamageable
     {
         if (player == null) return;
 
+        if(playerWasDetected)
+        {
+            lookAtPlayerSlow.RotateTowardsPlayer();
+        }
+
         if (!IsPlayerInsideDetectionBox())
             return;
 
@@ -58,7 +63,6 @@ public class WormAcidShooter : MonoBehaviour, IDamageable
             cooldownTimer = shootCooldown;
         }
 
-        lookAtPlayerSlow.RotateTowardsPlayer();
 
         cooldownTimer -= Time.deltaTime;
 

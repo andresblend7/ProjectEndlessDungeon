@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class AcidProjectile : MonoBehaviour
@@ -5,6 +6,9 @@ public class AcidProjectile : MonoBehaviour
     [Header("Impacto")]
     public GameObject acidPoolPrefab;
     private AcidSplash acidSplashScript;
+
+    [Header("Daño")]
+    public int baseDamageAmount = 4;
 
     [Header("Configuración")]
     public LayerMask floorLayer;
@@ -45,7 +49,7 @@ public class AcidProjectile : MonoBehaviour
         if (((1 << collision.gameObject.layer) & floorLayer) != 0)
         {
             ContactPoint contact = collision.contacts[0];
-        
+
             if (acidPoolPrefab != null)
             {
                 Quaternion randomY = Quaternion.Euler(
@@ -64,20 +68,31 @@ public class AcidProjectile : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if(collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            collision.gameObject.GetComponent<PlayerController>()
-                      .ProcessDamageToPlayer(new DamageToPlayer
-                      {
-                          typeOfDamage = TypeOfDamage.TickOverTime,
-                          baseDamageAmount = acidSplashScript.damagePerTick,
-                          tickInterval = acidSplashScript.tickInterval,
-                          duration = acidSplashScript.damageDuration,
-                          typeOfTickDamage = TypeOfTickDamage.Poison
-                      });
-
-            Destroy(gameObject);
+            StartCoroutine(HitEnemy(collision.gameObject.GetComponent<PlayerController>()));
         }
 
+    }
+    public IEnumerator HitEnemy(PlayerController playerController)
+    {
+        playerController.ProcessDamageToPlayer(new DamageToPlayer
+        {
+            typeOfDamage = TypeOfDamage.Range,
+            baseDamageAmount = baseDamageAmount,
+            isCriticalHit = true
+        });
+
+        yield return new WaitForSeconds(0.3f);
+
+        playerController.ProcessDamageToPlayer(new DamageToPlayer
+        {
+            typeOfDamage = TypeOfDamage.TickOverTime,
+            baseDamageAmount = acidSplashScript.damagePerTick,
+            tickInterval = acidSplashScript.tickInterval,
+            duration = acidSplashScript.damageDuration,
+            typeOfTickDamage = TypeOfTickDamage.Poison
+        });
+        Destroy(gameObject);
     }
 }
