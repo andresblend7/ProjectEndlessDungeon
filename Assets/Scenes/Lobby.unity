@@ -1265,7 +1265,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.53729963, y: 0, z: 0, w: 0.8433915}
-  m_LocalPosition: {x: 0.6, y: 14.37, z: -36.3}
+  m_LocalPosition: {x: 0.23999941, y: 14.37, z: -41.78}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1533,11 +1533,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1944e5f0c7dcf94385f9fb25ffb7f28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIModalController
-  modalContainer: {fileID: 1539392709}
+  modalContainer: {fileID: 1539392713}
   furnacePanel: {fileID: 848838140}
   shopPanel: {fileID: 120378759}
   SharpeningStone: {fileID: 1690118955}
   modalTitle: {fileID: 2025505454}
+  fadeTime: 0.4
 --- !u!1 &359294084
 GameObject:
   m_ObjectHideFlags: 0
@@ -5830,6 +5831,7 @@ GameObject:
   - component: {fileID: 1539392710}
   - component: {fileID: 1539392712}
   - component: {fileID: 1539392711}
+  - component: {fileID: 1539392713}
   m_Layer: 5
   m_Name: modal_container
   m_TagString: Untagged
@@ -5899,6 +5901,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1539392709}
   m_CullTransparentMesh: 1
+--- !u!225 &1539392713
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539392709}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1539464716
 GameObject:
   m_ObjectHideFlags: 0
@@ -8040,7 +8054,7 @@ PrefabInstance:
     - target: {fileID: 2126042712206859100, guid: 65ce1e9fc1587814a850fd0683a77877,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.13999939
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2126042712206859100, guid: 65ce1e9fc1587814a850fd0683a77877,
         type: 3}
@@ -8050,7 +8064,7 @@ PrefabInstance:
     - target: {fileID: 2126042712206859100, guid: 65ce1e9fc1587814a850fd0683a77877,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -30.5
+      value: -35.98
       objectReference: {fileID: 0}
     - target: {fileID: 2126042712206859100, guid: 65ce1e9fc1587814a850fd0683a77877,
         type: 3}

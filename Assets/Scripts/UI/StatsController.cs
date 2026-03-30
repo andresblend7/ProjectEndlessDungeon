@@ -16,7 +16,13 @@ public class StatsController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if(playerUtilities == null)
+        {
+            playerUtilities = PlayerUtilities.Instance;
+        }
+
         playerInGameData = playerUtilities.GetActualStats();
+        Debug.Log($"Player actual health: {playerInGameData.ActualHealth}");
         SubscribeToPlayerUtilitiesEvents();
         ShowUiStats();
     }
