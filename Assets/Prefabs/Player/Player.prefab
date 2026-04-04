@@ -95,6 +95,7 @@ MonoBehaviour:
   hitboxActiveDuration: 0.02
   actionCollider: {fileID: 8922425484474697153}
   origin: {fileID: 2126042712206859100}
+  alwaysActiveHitbox: 0
   distanceMaxAction: 0.9
   offsetTomaxDistance: 0.2
   hitMask:

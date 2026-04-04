@@ -28,6 +28,7 @@ public class Block : MonoBehaviour
     [Header("Drops")]
     public ResourceDropTable[] dropTable;
     private CoinSpawner coinSpawner;
+    private ExperienceReward experienceReward;
     /* ----------------------------------------------*/
 
     [Header("Animación de Destrucción")]
@@ -70,6 +71,7 @@ public class Block : MonoBehaviour
     {
         uniqueID = GenerateID();
         coinSpawner = FindFirstObjectByType<CoinSpawner>();
+        experienceReward = GetComponent<ExperienceReward>();
     }
     private void Start()
     {
@@ -83,6 +85,10 @@ public class Block : MonoBehaviour
             gameObject.SetActive(false);
         }
 
+        if(experienceReward == null)
+        { 
+            Debug.LogWarning("ExperienceReward component not found on the block.");
+        }
     }
 
     int GenerateID()
@@ -111,6 +117,8 @@ public class Block : MonoBehaviour
 
     public void TakeHit()
     {
+
+
         AudioSource.PlayClipAtPoint(hitSound, transform.position);
 
         crackPlaneTop.SetActive(true);
@@ -168,6 +176,7 @@ public class Block : MonoBehaviour
                 }
             }
 
+            experienceReward.GrantExperiencePublic();
             StartCoroutine(ShrinkAndDestroy());
         }
 
@@ -222,6 +231,7 @@ public class Block : MonoBehaviour
         transform.localScale = endScale;
 
         BlockSaveManager.Instance.RegisterMined(uniqueID);
+
         // Destruir el objeto
         Destroy(gameObject);
     }

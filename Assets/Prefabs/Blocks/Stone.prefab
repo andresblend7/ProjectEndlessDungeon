@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 27731977150826896}
   - component: {fileID: 27731977150826895}
   - component: {fileID: 27731977150826894}
+  - component: {fileID: 6703445255702746346}
   - component: {fileID: 27731977150826897}
   - component: {fileID: 4614119394861384205}
   m_Layer: 6
@@ -138,6 +139,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 0.1
   strength: 0.09
+--- !u!114 &6703445255702746346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27731977150826893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcf3dc92c5a3a3049b7ffe1dbf582b74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExperienceReward
+  experienceAmount: 2
+  rewardOnDisable: 0
+  rewardOnDestroy: 0
+  OnExperienceGranted:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!65 &27731977150826897
 BoxCollider:
   m_ObjectHideFlags: 0

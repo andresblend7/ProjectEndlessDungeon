@@ -18,7 +18,7 @@ public class StatsController : MonoBehaviour
     {
         if(playerUtilities == null)
         {
-            Debug.Log("PlayerUtilities reference not set in StatsController, trying to find it in the scene...");
+            Debug.Log("OLE = PlayerUtilities reference not set in StatsController, trying to find it in the scene...");
             playerUtilities = PlayerUtilities.Instance;
         }
 
