@@ -58,10 +58,12 @@ public class ResourceManager : MonoBehaviour
     public void Add(ResourceType type, int amount)
     {
         resources[type] += amount;
-
         OnResourceChanged?.Invoke(type, resources[type]);
-
         Save();
+
+        //Floating Text
+        if (type != ResourceType.Coin) // Evitar mostrar texto para monedas, ya que se muestra con el spawner
+            FloatingTextPool.Instance.SpawnText($"+{amount} {type}", FloatingTextType.Resource);
     }
 
     public bool Remove(ResourceType type, int amount)
@@ -141,6 +143,7 @@ public class ResourceDropTable
 
 public enum ResourceType
 {
+    Stone,
     Soul,
     Coin,
     // Minerals

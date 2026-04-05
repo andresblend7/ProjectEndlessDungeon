@@ -65,7 +65,12 @@ MonoBehaviour:
   hitSound: {fileID: 8300000, guid: b15734e5a5388f6409e350d11549b4d0, type: 3}
   destroySound: {fileID: 8300000, guid: 445869c1fc42dca419a97d43478445bb, type: 3}
   dropTable:
-  - resourceType: 1
+  - resourceType: 0
+    dropChance: 0.95
+    dropDecrementalChance: 0.6
+    minCountDrop: 1
+    maxAditionalUnitDrop: 2
+  - resourceType: 2
     dropChance: 0.85
     dropDecrementalChance: 0.4
     minCountDrop: 1
@@ -98,7 +103,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   rotateWhileShrinking: 1
   rotationSpeed: {x: 0, y: 720, z: 0}
-  moveTowardsPlayer: 0
+  moveTowardsPlayer: 1
   playerTag: Player
   movementCurve:
     serializedVersion: 2

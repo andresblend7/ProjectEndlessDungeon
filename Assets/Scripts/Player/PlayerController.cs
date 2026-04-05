@@ -218,7 +218,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            ApplyDamage(damageToPlayer.baseDamageAmount);
+            ApplyDamage(damageToPlayer.baseDamageAmount, damageToPlayer.isCriticalHit);
         }
         return damageToPlayer.baseDamageAmount;
     }
@@ -251,7 +251,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void ApplyDamage(int damage)
+    private void ApplyDamage(int damage, bool wasCritic=false)
     {
         modelController.TakeDamage();
         OnPlayerTakeDamage.Invoke(damage);
@@ -259,7 +259,7 @@ public class PlayerController : MonoBehaviour
             transform.position + Vector3.up * 1.2f,
             damage,
             false,
-            false
+            isCrit: wasCritic
         );
 
         PlayerUtilities.Instance.RegisterDamageToPlayer(damage);

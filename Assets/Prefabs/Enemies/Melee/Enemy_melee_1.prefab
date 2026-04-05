@@ -510,6 +510,7 @@ GameObject:
   - component: {fileID: 1016324193}
   - component: {fileID: 8849244933471067359}
   - component: {fileID: 8569586959348347781}
+  - component: {fileID: 1806375461003585679}
   m_Layer: 0
   m_Name: Enemy_melee_1
   m_TagString: Enemy
@@ -653,6 +654,24 @@ MonoBehaviour:
   timeToRecoveryAttack: 0.6
   attackDuration: 0.2
   flashEffect: {fileID: 5061520801277738303}
+--- !u!114 &1806375461003585679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6385735631695587127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcf3dc92c5a3a3049b7ffe1dbf582b74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExperienceReward
+  experienceAmount: 5
+  rewardOnDisable: 1
+  rewardOnDestroy: 0
+  OnExperienceGranted:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &6385735630463673413
 PrefabInstance:
   m_ObjectHideFlags: 0

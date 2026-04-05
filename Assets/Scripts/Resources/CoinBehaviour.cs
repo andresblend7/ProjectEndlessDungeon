@@ -99,6 +99,8 @@ public class CoinBehaviour : MonoBehaviour
     void Collect()
     {
         AudioSource.PlayClipAtPoint(collectSound, transform.position);
+        FloatingTextPool.Instance.SpawnText($"+{1} coin", FloatingTextType.Resource);
+
         // Tu lógica de puntos aquí
         Despawn();
     }

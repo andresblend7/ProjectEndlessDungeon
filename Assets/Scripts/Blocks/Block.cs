@@ -166,11 +166,11 @@ public class Block : MonoBehaviour
                 int dropCount = PlayerUtilities.Instance.CalculateDrop(table);
                 if (dropCount > 0)
                 {
-                    if(table.resourceType == ResourceType.Coin && coinSpawner != null)
+                    if (table.resourceType == ResourceType.Coin && coinSpawner != null)
                     {
                         coinSpawner.SpawnCoins(dropCount, transform.position);
                     }
-
+                  
                     ResourceManager.Instance.Add(table.resourceType, dropCount);
                     Debug.Log($"Dropped {dropCount} of {table.resourceType}");
                 }

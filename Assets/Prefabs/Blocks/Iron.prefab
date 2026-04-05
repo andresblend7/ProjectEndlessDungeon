@@ -64,11 +64,16 @@ MonoBehaviour:
   hitSound: {fileID: 8300000, guid: b15734e5a5388f6409e350d11549b4d0, type: 3}
   destroySound: {fileID: 8300000, guid: 445869c1fc42dca419a97d43478445bb, type: 3}
   dropTable:
-  - resourceType: 2
+  - resourceType: 3
     dropChance: 1
     dropDecrementalChance: 0.4
     minCountDrop: 1
     maxAditionalUnitDrop: 3
+  - resourceType: 0
+    dropChance: 0.25
+    dropDecrementalChance: 1
+    minCountDrop: 1
+    maxAditionalUnitDrop: 1
   shrinkDuration: 0.3
   targetScale: 0
   shrinkCurve:

@@ -32,6 +32,7 @@ public class ExperienceReward : MonoBehaviour
 
         // Aquí llamas a tu sistema de experiencia global
         FloatingTextPool.Instance.SpawnText($"+{experienceAmount} XP", FloatingTextType.Experience);
+        PlayerExpManager.Instance.AddExperience(experienceAmount);
 
         OnExperienceGranted?.Invoke();
     }

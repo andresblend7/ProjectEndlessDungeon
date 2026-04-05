@@ -2,21 +2,28 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class StatsController : MonoBehaviour
 {
 
     public TMPro.TextMeshProUGUI healthText;
+    public TMPro.TextMeshProUGUI txtCoinsCounter;
 
     public PlayerUtilities playerUtilities;
     private PlayerInGameData playerInGameData;
     void Awake()
     {
+
     }
     // Start is called before the first frame update
     void Start()
     {
-        if(playerUtilities == null)
+
+        ResourceManager.Instance.OnResourceChanged += OnResourceChanged;
+        LoadResources();
+
+        if (playerUtilities == null)
         {
             Debug.Log("OLE = PlayerUtilities reference not set in StatsController, trying to find it in the scene...");
             playerUtilities = PlayerUtilities.Instance;
@@ -27,6 +34,26 @@ public class StatsController : MonoBehaviour
         SubscribeToPlayerUtilitiesEvents();
         ShowUiStats();
     }
+
+    #region ------------------- COINS -------------------
+
+    private void LoadResources()
+    {
+        UpdateCoins(ResourceManager.Instance.Get(ResourceType.Coin));
+    }
+
+    private void UpdateCoins(int value)
+    {
+        txtCoinsCounter.text= value.ToString();
+    }
+
+    private void OnResourceChanged(ResourceType changedType, int value)
+    {
+        if (changedType == ResourceType.Coin)
+            UpdateCoins(value);
+    }
+
+    #endregion ------------------------------------
 
     private void SubscribeToPlayerUtilitiesEvents()
     {

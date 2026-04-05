@@ -83,7 +83,8 @@ public class AcidProjectile : MonoBehaviour
             isCriticalHit = true
         });
 
-        yield return new WaitForSeconds(0.3f);
+
+        //yield return new WaitForSeconds(0.3f);
 
         playerController.ProcessDamageToPlayer(new DamageToPlayer
         {
@@ -93,6 +94,8 @@ public class AcidProjectile : MonoBehaviour
             duration = acidSplashScript.damageDuration,
             typeOfTickDamage = TypeOfTickDamage.Poison
         });
+
         Destroy(gameObject);
+        yield return null;
     }
 }

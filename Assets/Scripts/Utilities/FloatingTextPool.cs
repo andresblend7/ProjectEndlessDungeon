@@ -1,9 +1,13 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FloatingTextPool : MonoBehaviour
 {
     public static FloatingTextPool Instance { get; private set; }
+
+    private Queue<FloatingTextRequest> requestQueue = new Queue<FloatingTextRequest>();
+    private bool isProcessingQueue = false;
 
     [System.Serializable]
     public class Settings
@@ -14,12 +18,14 @@ public class FloatingTextPool : MonoBehaviour
 
         [Header("Colors")]
         public Color expColor = new Color(1f, 0.5f, 0f);
+        public Color eventColor = new Color(1f, 0.5f, 0f);
         public Color resourceColor = new Color(1f, 0.5f, 0f);
         public Color crystalColor = new Color(1f, 0.5f, 0f);
         public Color keyColor = new Color(1f, 0.5f, 0f);
 
         [Header("Animation")]
         public float duration = 1.2f;
+        public float delayBetweenSpawns = 0.3f;
         public Vector3 offset = new Vector3(0, 2f, 0);
 
         public float startScale = 1f;
@@ -64,7 +70,7 @@ public class FloatingTextPool : MonoBehaviour
     {
         for (int i = 0; i < settings.poolSize; i++)
         {
-            var obj = Instantiate(prefab, prefab.transform.position , prefab.transform.rotation, transform);
+            var obj = Instantiate(prefab, prefab.transform.position, prefab.transform.rotation, transform);
             obj.gameObject.SetActive(false);
             pool.Enqueue(obj);
         }
@@ -77,7 +83,8 @@ public class FloatingTextPool : MonoBehaviour
             { FloatingTextType.Resource,  settings.resourceColor },
             { FloatingTextType.Experience, settings.expColor},
             { FloatingTextType.Crystal, settings.crystalColor},
-            { FloatingTextType.Key, settings.keyColor }
+            { FloatingTextType.Key, settings.keyColor },
+            { FloatingTextType.Event, settings.eventColor  }
         };
     }
 
@@ -99,12 +106,35 @@ public class FloatingTextPool : MonoBehaviour
 
     public void SpawnText(string content, FloatingTextType type)
     {
-        if(settings.PLAYER == null)
+        if (settings.PLAYER == null)
         {
             Debug.LogError("[SpawnText] Player reference is missing in FloatingTextPool settings.");
             return;
         }
+        requestQueue.Enqueue(new FloatingTextRequest(content, type));
 
+        if (!isProcessingQueue)
+            StartCoroutine(ProcessQueue());
+    }
+
+    IEnumerator ProcessQueue()
+    {
+        isProcessingQueue = true;
+
+        while (requestQueue.Count > 0)
+        {
+            var request = requestQueue.Dequeue();
+
+            ShowText(request);
+
+            yield return new WaitForSeconds(settings.delayBetweenSpawns);
+        }
+
+        isProcessingQueue = false;
+    }
+
+    void ShowText(FloatingTextRequest request)
+    {
         var target = settings.PLAYER.transform;
 
         var text = Get();
@@ -114,15 +144,13 @@ public class FloatingTextPool : MonoBehaviour
         text.transform.rotation = text.transform.rotation;
 
         text.gameObject.SetActive(true);
-
-        Color color = colorMap[type];
-
-        text.Play(content, color, settings);
+        Color color = colorMap[request.type];
+        text.Play(request.content, color, settings);
 
         StartCoroutine(ReturnAfterTime(text));
     }
 
-    System.Collections.IEnumerator ReturnAfterTime(FloatingText text)
+    IEnumerator ReturnAfterTime(FloatingText text)
     {
         yield return new WaitForSeconds(settings.duration);
         ReturnToPool(text);
@@ -133,5 +161,18 @@ public enum FloatingTextType
     Resource,
     Experience,
     Crystal,
-    Key
+    Key,
+    Event
+}
+
+class FloatingTextRequest
+{
+    public string content;
+    public FloatingTextType type;
+
+    public FloatingTextRequest(string content, FloatingTextType type)
+    {
+        this.content = content;
+        this.type = type;
+    }
 }
