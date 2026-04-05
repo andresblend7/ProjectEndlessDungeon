@@ -2810,6 +2810,7 @@ MonoBehaviour:
     PLAYER: {fileID: 883610308}
     poolSize: 20
     expColor: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 1}
+    eventColor: {r: 1, g: 0, b: 0.7464504, a: 1}
     resourceColor: {r: 1, g: 0.6757429, b: 0.033018887, a: 1}
     crystalColor: {r: 1, g: 0.8598864, b: 0.1745283, a: 1}
     keyColor: {r: 0, g: 0.26271227, b: 0.5566038, a: 1}
@@ -5698,12 +5699,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 748582146}
+  m_Father: {fileID: 1376531313}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -12}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &498788776
 MonoBehaviour:
@@ -9679,13 +9680,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1376531313}
-  - {fileID: 498788775}
   - {fileID: 786084487}
   m_Father: {fileID: 409371822}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1211, y: -40}
+  m_AnchoredPosition: {x: 1213, y: -25}
   m_SizeDelta: {x: 267.2, y: 36}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &749290657
@@ -11685,6 +11685,38 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 877418702}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &879831688
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 879831689}
+  m_Layer: 0
+  m_Name: LootingBag
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &879831689
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879831688}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -30}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1754235853}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &883610308 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1242204988839916635, guid: 65ce1e9fc1587814a850fd0683a77877,
@@ -11696,6 +11728,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 27731977150826896, guid: 091285e95d86634449e55c241814ccfc,
     type: 3}
   m_PrefabInstance: {fileID: 1541135122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &926504426 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: fe84e132737a43e429fc93440ae35478,
+    type: 3}
+  m_PrefabInstance: {fileID: 1754235852}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &930179599
 GameObject:
@@ -16257,13 +16295,14 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 498788775}
   m_Father: {fileID: 748582146}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -12}
+  m_SizeDelta: {x: 0, y: -16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1376531314
 MonoBehaviour:
@@ -19744,6 +19783,124 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CoinSpawner
   spawnDelay: 0.05
   spread: 0.4
+--- !u!1001 &1754235852
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 879831689}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.26
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.26
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.26
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.406
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5f0ef3ebfc33c8243aba83efbcc14c3f, type: 2}
+    - target: {fileID: 919132149155446097, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      propertyPath: m_Name
+      value: LootBag
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fe84e132737a43e429fc93440ae35478,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1754235856}
+  m_SourcePrefab: {fileID: 100100000, guid: fe84e132737a43e429fc93440ae35478, type: 3}
+--- !u!4 &1754235853 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fe84e132737a43e429fc93440ae35478,
+    type: 3}
+  m_PrefabInstance: {fileID: 1754235852}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1754235856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926504426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fc738ffe729a8141b8a1a9e6440e99b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DropItem
+  floatSpeed: 1.8
+  floatHeight: 0.21
+  rotationSpeed: 45
+  rotationAxis: {x: 0, y: 1, z: 0}
+  lifetime: 10
+  blinkDuration: 4
+  blinkInterval: 0.2
+  restoreOriginalColor: 1
 --- !u!1 &1759880972
 GameObject:
   m_ObjectHideFlags: 0
@@ -25277,3 +25434,4 @@ SceneRoots:
   - {fileID: 466735564}
   - {fileID: 1492967747}
   - {fileID: 2081447920}
+  - {fileID: 879831689}

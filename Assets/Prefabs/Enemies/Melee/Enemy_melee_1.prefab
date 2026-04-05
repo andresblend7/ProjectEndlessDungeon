@@ -507,10 +507,11 @@ GameObject:
   - component: {fileID: 6385735631695587126}
   - component: {fileID: 6385735631695587125}
   - component: {fileID: 2724784245171510663}
-  - component: {fileID: 1016324193}
   - component: {fileID: 8849244933471067359}
+  - component: {fileID: 1016324193}
   - component: {fileID: 8569586959348347781}
   - component: {fileID: 1806375461003585679}
+  - component: {fileID: 2594139890764028261}
   m_Layer: 0
   m_Name: Enemy_melee_1
   m_TagString: Enemy
@@ -579,6 +580,25 @@ NavMeshAgent:
   m_BaseOffset: 0.49
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &8849244933471067359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6385735631695587127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5a19292bb94eb0419c9466fdf16883d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NavMeshPatrol
+  patrolPoints: []
+  waitTime: 1.5
+  moveSpeed: 3.5
+  useEaseInOut: 1
+  rotateBeforeMove: 1
+  rotationSpeed: 5
+  rotationThreshold: 5
 --- !u!114 &1016324193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -617,25 +637,6 @@ MonoBehaviour:
   knockbackForce: 14
   haveSquashEffect: 1
   heightTextDamage: 1
---- !u!114 &8849244933471067359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6385735631695587127}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5a19292bb94eb0419c9466fdf16883d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NavMeshPatrol
-  patrolPoints: []
-  waitTime: 1.5
-  moveSpeed: 3.5
-  useEaseInOut: 1
-  rotateBeforeMove: 1
-  rotationSpeed: 5
-  rotationThreshold: 5
 --- !u!114 &8569586959348347781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -672,6 +673,27 @@ MonoBehaviour:
   OnExperienceGranted:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2594139890764028261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6385735631695587127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d57e6a2f505feb84f8445ba3f90b12e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DropCoinsEnemy
+  experienceAmount: 3
+  rewardOnDisable: 1
+  rewardOnDestroy: 1
+  coinsDropTable:
+    resourceType: 2
+    dropChance: 1
+    dropDecrementalChance: 0.758
+    minCountDrop: 3
+    maxAditionalUnitDrop: 2
 --- !u!1001 &6385735630463673413
 PrefabInstance:
   m_ObjectHideFlags: 0

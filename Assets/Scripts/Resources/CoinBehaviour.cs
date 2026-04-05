@@ -19,7 +19,7 @@ public class CoinBehaviour : MonoBehaviour
     public AnimationCurve scaleCurve; // Diseñala de 0 a 1 y luego a 0 (0 -> 1.2 -> 0)
     public float totalLife = 1.2f;
 
-    [Header("Sounds")]  
+    [Header("Sounds")]
     public AudioClip collectSound;
 
     private Vector3 velocity;
@@ -76,8 +76,9 @@ public class CoinBehaviour : MonoBehaviour
         else
         {
             // FASE HOMING: Hacia el jugador
-            if (target == null) { 
-                Despawn(); return; 
+            if (target == null)
+            {
+                Despawn(); return;
             }
 
             currentSpeed += homingAcceleration * dt;
