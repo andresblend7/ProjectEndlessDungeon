@@ -27,6 +27,9 @@ public class ResourceManager : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log(" ResourceManager 1");
+
+
         if (Instance == null)
             Instance = this;
         else
@@ -34,10 +37,13 @@ public class ResourceManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        Debug.Log(" ResourceManager 2");
 
         DontDestroyOnLoad(gameObject);
 
         InitializeResources();
+        Debug.Log(" ResourceManager 3");
+
         Load();
     }
 

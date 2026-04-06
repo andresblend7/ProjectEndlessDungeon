@@ -11,6 +11,14 @@ public class ExperienceReward : MonoBehaviour
     // Opcional: evento por si quieres hacer algo extra además de dar experiencia
     public UnityEvent OnExperienceGranted;
 
+    private static bool isQuitting = false;
+
+    void OnApplicationQuit()
+    {
+        isQuitting = true;
+    }
+
+
     private void OnDisable()
     {
         if (rewardOnDisable)
@@ -29,6 +37,8 @@ public class ExperienceReward : MonoBehaviour
 
     private void GrantExperience()
     {
+        // Evitar que se ejecuten las acciones de drop al cerrar la aplicación
+        if (isQuitting) return;
 
         // Aquí llamas a tu sistema de experiencia global
         FloatingTextPool.Instance.SpawnText($"+{experienceAmount} XP", FloatingTextType.Experience);

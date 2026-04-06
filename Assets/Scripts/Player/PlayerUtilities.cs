@@ -35,14 +35,21 @@ public class PlayerUtilities : MonoBehaviour
             return;
         }
 
+        Debug.Log("PlayerUtilities Awake: Singleton instance set.");
+        InitStatsOfRoom();
+        Debug.Log("PlayerUtilities Awake: Singleton instance ENDS.");
+
     }
-    private void Start()
+
+    private void InitStatsOfRoom()
     {
         actualStats = SaveSystem.Load();
-       
+
         this.SetStatsToInitRoom();
+        Debug.Log($"PlayerUtilities Start: Actual Health = {actualStats.ActualHealth}, Melee Damage = {actualStats.ActualMeleeDamage}, Range Damage = {actualStats.ActualRangeDamage}");
+
         //DEV
-        SaveSystem.Save(actualStats); 
+        SaveSystem.Save(actualStats);
     }
 
     public  Vector3 GetActualPosition()

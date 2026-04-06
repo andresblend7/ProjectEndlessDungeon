@@ -11,6 +11,15 @@ public class DropCoinsEnemy : MonoBehaviour
 
     private CoinSpawner coinSpawner;
 
+
+    private static bool isQuitting = false;
+
+    void OnApplicationQuit()
+    {
+        isQuitting = true;
+    }
+
+
     private void Awake()
     {
         coinSpawner = FindFirstObjectByType<CoinSpawner>();
@@ -34,7 +43,10 @@ public class DropCoinsEnemy : MonoBehaviour
     }
 
     private void DropCoin()
-    {  
+    {
+        // Evitar que se ejecuten las acciones de drop al cerrar la aplicación
+        if (isQuitting) return;
+
         var drops= PlayerUtilities.Instance.CalculateDrop(coinsDropTable);
         coinSpawner.SpawnCoins(drops , transform.position);
     }

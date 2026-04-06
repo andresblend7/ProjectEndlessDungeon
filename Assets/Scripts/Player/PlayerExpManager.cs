@@ -39,7 +39,7 @@ public class PlayerExpManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
         Load();
         ForceUpdateUI();
