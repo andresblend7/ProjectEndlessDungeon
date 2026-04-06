@@ -45,7 +45,7 @@ public class DropCoinsEnemy : MonoBehaviour
     private void DropCoin()
     {
         // Evitar que se ejecuten las acciones de drop al cerrar la aplicación
-        if (isQuitting) return;
+        if (PlayerUtilities.Instance == null|| coinSpawner ==null) return;
 
         var drops= PlayerUtilities.Instance.CalculateDrop(coinsDropTable);
         coinSpawner.SpawnCoins(drops , transform.position);

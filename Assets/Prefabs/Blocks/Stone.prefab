@@ -71,8 +71,8 @@ MonoBehaviour:
     minCountDrop: 1
     maxAditionalUnitDrop: 2
   - resourceType: 2
-    dropChance: 0.85
-    dropDecrementalChance: 0.4
+    dropChance: 0.35
+    dropDecrementalChance: 1
     minCountDrop: 1
     maxAditionalUnitDrop: 3
   shrinkDuration: 0.3

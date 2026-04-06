@@ -171,7 +171,7 @@ public class Block : MonoBehaviour
                         coinSpawner.SpawnCoins(dropCount, transform.position);
                     }
                   
-                    ResourceManager.Instance.Add(table.resourceType, dropCount);
+                    //ResourceManager.Instance.Add(table.resourceType, dropCount);
                     Debug.Log($"Dropped {dropCount} of {table.resourceType}");
                 }
             }

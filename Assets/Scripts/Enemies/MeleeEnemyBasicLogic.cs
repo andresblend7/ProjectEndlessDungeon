@@ -152,7 +152,7 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
                 agent.updateRotation = true;
                 agent.speed= moveSpeed;
                 navMeshPatrol.StopPatrol();
-                Debug.Log("speed: "+ agent.speed);
+                //Debug.Log("speed: "+ agent.speed);
             }
         }
 

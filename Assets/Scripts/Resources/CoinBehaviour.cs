@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class CoinBehaviour : MonoBehaviour
 {
@@ -100,6 +101,7 @@ public class CoinBehaviour : MonoBehaviour
     void Collect()
     {
         AudioSource.PlayClipAtPoint(collectSound, transform.position);
+        ResourceManager.Instance.Add(ResourceType.Coin, 1);
         FloatingTextPool.Instance.SpawnText($"+{1} coin", FloatingTextType.Resource);
 
         // Tu lógica de puntos aquí

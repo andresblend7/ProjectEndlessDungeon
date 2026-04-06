@@ -155,5 +155,6 @@ public enum ResourceType
     // Minerals
     Iron,
     Gold,
-    Copper
+    Copper,
+    Key
 }
