@@ -511,6 +511,7 @@ GameObject:
   - component: {fileID: 1016324193}
   - component: {fileID: 8569586959348347781}
   - component: {fileID: 1806375461003585679}
+  - component: {fileID: 5937151337675743021}
   - component: {fileID: 2594139890764028261}
   m_Layer: 0
   m_Name: Enemy_melee_1
@@ -673,7 +674,7 @@ MonoBehaviour:
   OnExperienceGranted:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &2594139890764028261
+--- !u!114 &5937151337675743021
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -681,6 +682,26 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6385735631695587127}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ee353ad5cb08324ba73529f352e1c6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DropItems
+  itemDropList:
+  - item: 0
+    dropChance: 1
+    dropDecrementalChance: 1
+    minCountDrop: 3
+    maxAditionalUnitDrop: 5
+  rewardOnDisable: 1
+  rewardOnDestroy: 0
+--- !u!114 &2594139890764028261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6385735631695587127}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d57e6a2f505feb84f8445ba3f90b12e3, type: 3}
   m_Name: 

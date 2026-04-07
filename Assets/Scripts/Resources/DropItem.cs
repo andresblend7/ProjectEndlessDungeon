@@ -2,115 +2,163 @@ using UnityEngine;
 
 public class DropItem : MonoBehaviour
 {
-    [Header("Movimiento flotante")]
-    [Tooltip("Velocidad del movimiento arriba/abajo")]
+    [Header("Animación de caída")]
+    public float upForce = 6f;
+    public float horizontalForce = 2f;
+    public float gravity = 18f;
+    public float groundOffset = 0.05f;
+
+    [Header("Flotado")]
     public float floatSpeed = 1.5f;
-    [Tooltip("Altura máxima del flotado (desde la posición inicial)")]
     public float floatHeight = 0.3f;
 
     [Header("Rotación")]
-    [Tooltip("Velocidad de rotación (grados por segundo)")]
     public float rotationSpeed = 45f;
-    [Tooltip("Eje de rotación (normalmente Vector3.up)")]
     public Vector3 rotationAxis = Vector3.up;
 
-    [Header("Tiempo de vida")]
-    [Tooltip("Segundos hasta que empiece a parpadear")]
+    [Header("Lifetime")]
     public float lifetime = 10f;
-    [Tooltip("Duración del parpadeo antes de destruirse")]
     public float blinkDuration = 2f;
-    [Tooltip("Velocidad del parpadeo (intervalo en segundos entre cambios de visibilidad)")]
     public float blinkInterval = 0.2f;
 
-    [Header("Opcional: cambio de color al parpadear")]
-    //[Tooltip("Color que tomará durante el parpadeo (si se asigna material)")]
-    //public Color blinkColor = Color.red;
-    [Tooltip("Si es true, restaura el color original al destruir (si tiene material)")]
-    public bool restoreOriginalColor = true;
-
-    // Variables privadas
     private Vector3 startPosition;
-    private Renderer objectRenderer;
-    private Material originalMaterial;
-    private Color originalColor;
-    private bool isBlinking = false;
-    private float blinkTimer = 0f;
+    private Vector3 velocity;
+
+    private bool isJumping;
+    private bool isBlinking;
+
+    private float timer;
+    private float blinkTimer;
     private bool visible = true;
 
-    void Start()
+    private Renderer objectRenderer;
+
+    void Awake()
     {
-        // Guardar posición inicial para el flotado
+        objectRenderer = GetComponent<Renderer>();
+    }
+
+    // -------------------------
+    // IMPORTANTE: llamado por el pool
+    // -------------------------
+    public void Play()
+    {
+        timer = 0f;
+        blinkTimer = 0f;
+
+        isJumping = true;
+        isBlinking = false;
+
+        visible = true;
+
+        if (objectRenderer != null)
+            objectRenderer.enabled = true;
+
+        // IMPORTANTE: resetear posición base
         startPosition = transform.position;
 
-        // Obtener el renderer (SpriteRenderer, MeshRenderer, etc.)
-        objectRenderer = GetComponent<Renderer>();
-        if (objectRenderer != null)
-        {
-            originalMaterial = objectRenderer.material;
-            originalColor = originalMaterial.color;
-        }
-
-        // Programar el inicio del parpadeo después de 'lifetime' segundos
-        Invoke("StartBlinking", lifetime);
-        // Programar la destrucción total después de lifetime + blinkDuration
-        Destroy(gameObject, lifetime + blinkDuration);
+        velocity = new Vector3(
+            Random.Range(-horizontalForce, horizontalForce),
+            upForce,
+            Random.Range(-horizontalForce, horizontalForce)
+        );
     }
+
+ 
 
     void Update()
     {
-        // Movimiento flotante (seno suave)
-        float newY = startPosition.y + Mathf.Sin(Time.time * floatSpeed) * floatHeight;
-        transform.position = new Vector3(startPosition.x, newY, startPosition.z);
+        float dt = Time.deltaTime;
+        timer += dt;
 
-        // Rotación lenta
-        transform.Rotate(rotationAxis, rotationSpeed * Time.deltaTime);
+        // -------------------------
+        // FASE 1: SALTO
+        // -------------------------
+        if (isJumping)
+        {
+            Vector3 prevPosition = transform.position;
 
-        // Si está parpadeando, manejar el toggle de visibilidad
+            // aplicar gravedad
+            velocity.y -= gravity * dt;
+
+            Vector3 nextPosition = prevPosition + velocity * dt;
+
+            // detectar cruce del suelo (y = 0)
+            if (nextPosition.y <= groundOffset)
+            {
+                if (Mathf.Abs(velocity.y) > 2f)
+                {
+                    velocity.y *= -0.3f; // rebote pequeño
+                    transform.position = new Vector3(nextPosition.x, groundOffset, nextPosition.z);
+                }
+                else
+                {
+                    transform.position = new Vector3(nextPosition.x, groundOffset, nextPosition.z);
+
+                    isJumping = false;
+                    startPosition = transform.position;
+                    velocity = Vector3.zero;
+                }
+
+                return;
+            }
+
+            transform.position = nextPosition;
+        }
+        // -------------------------
+        // FASE 2: IDLE
+        // -------------------------
+        else
+        {
+            float newY = startPosition.y + Mathf.Sin(Time.time * floatSpeed) * floatHeight;
+
+            transform.position = new Vector3(
+                startPosition.x,
+                newY,
+                startPosition.z
+            );
+        }
+
+        // Rotación siempre
+        transform.Rotate(rotationAxis, rotationSpeed * dt);
+
+        // -------------------------
+        // BLINK
+        // -------------------------
+        if (!isBlinking && timer >= lifetime)
+        {
+            isBlinking = true;
+            blinkTimer = 0f;
+        }
+
         if (isBlinking)
         {
-            blinkTimer += Time.deltaTime;
+            blinkTimer += dt;
+
             if (blinkTimer >= blinkInterval)
             {
                 blinkTimer = 0f;
                 ToggleVisibility();
             }
+
+            if (timer >= lifetime + blinkDuration)
+            {
+                Despawn();
+            }
         }
-    }
-
-    void StartBlinking()
-    {
-        if (isBlinking) return;
-        isBlinking = true;
-        blinkTimer = 0f;
-
-        // Cambiar el color si el objeto tiene material
-        //if (objectRenderer != null && blinkColor != null)
-        //{
-        //    objectRenderer.material.color = blinkColor;
-        //}
     }
 
     void ToggleVisibility()
     {
         visible = !visible;
+
         if (objectRenderer != null)
-        {
             objectRenderer.enabled = visible;
-        }
-        else
-        {
-            // Fallback: activar/desactivar el GameObject hijo del mesh? 
-            // Simplemente desactivamos el propio renderer.
-            Debug.LogWarning("DropItem: No se encontró Renderer en " + gameObject.name);
-        }
     }
 
-    // Opcional: restaurar color original si se desactiva antes de destruir (por si lo reciclas)
-    void OnDestroy()
+    void Despawn()
     {
-        if (restoreOriginalColor && objectRenderer != null && originalMaterial != null)
-        {
-            objectRenderer.material.color = originalColor;
-        }
+        // regresar al pool (ajusta según tu pool real)
+        gameObject.SetActive(false);
     }
 }

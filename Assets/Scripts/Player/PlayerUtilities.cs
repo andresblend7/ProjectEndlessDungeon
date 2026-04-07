@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerUtilities : MonoBehaviour
 {
@@ -178,6 +179,54 @@ public class PlayerUtilities : MonoBehaviour
         return count;
     }
 
+    /// <summary>
+    /// Cálculo de drop para items, similar al de recursos pero con la posibilidad de que el primer drop sea 0 (minCountDrop) y con un máximo de drops adicionales (maxAditionalUnitDrop) que se intentan calcular con la misma lógica de probabilidad decreciente. El método devuelve la cantidad total de items a dropear según la tabla proporcionada.
+    /// </summary>
+    /// <param name="table"></param>
+    /// <returns></returns>
+    public int CalculateItemDrop(ItemDropTable table)
+    {
+        float currentChance = table.dropChance;
+        int count = 0;
+
+        // primer drop (minCountDrop) = n cantidad
+        int dropNumber = 1;
+        float fRoll = Random.Range(0f, 1f);
+        if (fRoll <= currentChance)
+        {
+            count = table.minCountDrop;
+            currentChance -= table.dropDecrementalChance;
+            dropNumber = 2;
+        }
+        else
+        {
+            dropNumber = table.maxAditionalUnitDrop;
+            currentChance = 0;
+        }
+
+        // Segundo intento en adelante
+        int remainingAttempts = table.maxAditionalUnitDrop;
+        for (int i = dropNumber; i < remainingAttempts; i++)
+        {
+            float roll = Random.Range(0f, 1f);
+
+            //Debug.Log($"Drop roll: {roll} | Current Chance: {currentChance} | Count: {count}");
+            if (roll <= currentChance)
+            {
+                count++;
+                currentChance -= table.dropDecrementalChance;
+
+                if (currentChance <= 0f)
+                    break;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return count;
+    }
     #endregion
 
 }
