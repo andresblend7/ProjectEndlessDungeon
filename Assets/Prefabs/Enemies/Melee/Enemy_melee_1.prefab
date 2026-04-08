@@ -701,20 +701,19 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6385735631695587127}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d57e6a2f505feb84f8445ba3f90b12e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DropCoinsEnemy
-  experienceAmount: 3
   rewardOnDisable: 1
   rewardOnDestroy: 1
   coinsDropTable:
     resourceType: 2
     dropChance: 1
-    dropDecrementalChance: 0.758
+    dropDecrementalChance: 0.441
     minCountDrop: 3
-    maxAditionalUnitDrop: 2
+    maxAditionalUnitDrop: 10
 --- !u!1001 &6385735630463673413
 PrefabInstance:
   m_ObjectHideFlags: 0

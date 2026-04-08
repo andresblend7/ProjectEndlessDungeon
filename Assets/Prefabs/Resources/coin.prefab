@@ -11,17 +11,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 0c12b317ce8d03d4fa22b76b3f697367,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.12
+      value: 0.18
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0c12b317ce8d03d4fa22b76b3f697367,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.12
+      value: 0.18
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0c12b317ce8d03d4fa22b76b3f697367,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.12
+      value: 0.18
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0c12b317ce8d03d4fa22b76b3f697367,
         type: 3}
@@ -31,37 +31,37 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 0c12b317ce8d03d4fa22b76b3f697367,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.016473653
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0c12b317ce8d03d4fa22b76b3f697367,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -28
+      value: -28.016153
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0c12b317ce8d03d4fa22b76b3f697367,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0c12b317ce8d03d4fa22b76b3f697367,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0c12b317ce8d03d4fa22b76b3f697367,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0c12b317ce8d03d4fa22b76b3f697367,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0c12b317ce8d03d4fa22b76b3f697367,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0c12b317ce8d03d4fa22b76b3f697367,
         type: 3}
@@ -95,6 +95,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6548699247686667790}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0c12b317ce8d03d4fa22b76b3f697367,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 802549627095979199}
   m_SourcePrefab: {fileID: 100100000, guid: 0c12b317ce8d03d4fa22b76b3f697367, type: 3}
 --- !u!1 &5843718719914423853 stripped
 GameObject:
@@ -119,13 +123,20 @@ MonoBehaviour:
   gravity: 25
   launchDuration: 0.4
   homingAcceleration: 50
-  rotationSpeed: 1600
+  dropHorizontalRandom: 1.5
+  dropBounceDamping: 0.4
+  dropPickupRadius: 1.2
+  dropLifetime: 8
+  dropHoverHeight: 0.2
+  dropBobAmplitude: 0.08
+  dropBobSpeed: 2
+  rotationSpeed: 250
   scaleCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: -0.00030899048
-      value: 0.9333191
+      time: -0.010978699
+      value: 0.8685608
       inSlope: 2
       outSlope: 2
       tangentMode: 0
@@ -133,17 +144,17 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.4885525
-      value: 1.5200636
-      inSlope: 0.3810806
-      outSlope: 0.3810806
+      time: 0.5285703
+      value: 1.1502409
+      inSlope: 0.056724295
+      outSlope: 0.056724295
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.33333334
+      outWeight: 0.0909128
     - serializedVersion: 3
-      time: 1.1905212
-      value: 1.147522
+      time: 1.0931702
+      value: 0.97084045
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -167,3 +178,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c5dbbb1030d96d438905b0e01caa8d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: AllIn1VfxAssmebly::AllIn1VfxToolkit.AllIn1VfxComponent
+--- !u!65 &802549627095979199
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5843718719914423853}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 0.26936173, z: 2.0000005}
+  m_Center: {x: 0, y: -0.13468087, z: 0}

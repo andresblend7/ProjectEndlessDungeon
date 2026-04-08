@@ -3,7 +3,6 @@ using UnityEngine;
 public class DropCoinsEnemy : MonoBehaviour
 {
 
-    [SerializeField] private int experienceAmount = 10;
     [SerializeField] private bool rewardOnDisable = true;  // también al desactivar?
     [SerializeField] private bool rewardOnDestroy = true;  // al destruir?
     [Header("Configurar únicamente monedas aquí:")]
@@ -48,7 +47,7 @@ public class DropCoinsEnemy : MonoBehaviour
         if (PlayerUtilities.Instance == null|| coinSpawner ==null) return;
 
         var drops= PlayerUtilities.Instance.CalculateDrop(coinsDropTable);
-        coinSpawner.SpawnCoins(drops , transform.position);
+        coinSpawner.SpawnCoins(drops , transform.position, false);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

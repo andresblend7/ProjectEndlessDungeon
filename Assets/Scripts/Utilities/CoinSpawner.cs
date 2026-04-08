@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public  class CoinSpawner : MonoBehaviour
+public class CoinSpawner : MonoBehaviour
 {
     public float spawnDelay = 0.04f;
     public float spread = 0.4f;
@@ -9,12 +9,12 @@ public  class CoinSpawner : MonoBehaviour
 
 
 
-    public void SpawnCoins(int amount, Vector3 origin)
+    public void SpawnCoins(int amount, Vector3 origin, bool goToPlayer = true)
     {
-        StartCoroutine(SpawnRoutine(amount, origin));
+        StartCoroutine(SpawnRoutine(amount, origin, goToPlayer));
     }
 
-    IEnumerator SpawnRoutine(int amount, Vector3 origin)
+    IEnumerator SpawnRoutine(int amount, Vector3 origin, bool goToPlayer)
     {
         var playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         //Debug.Log($"Spawning {amount} coins at {origin} with spread {spread} and delay {spawnDelay}");
@@ -28,7 +28,10 @@ public  class CoinSpawner : MonoBehaviour
             );
 
             var coin = CoinPool.Instance.Get(origin + offset);
-            coin.Play(playerTransform);
+            if (goToPlayer)
+                coin.GoToPlayer(playerTransform);
+            else
+                coin.DropAndWait(origin);
 
             yield return new WaitForSeconds(spawnDelay);
         }
