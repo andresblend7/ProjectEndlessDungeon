@@ -32,7 +32,8 @@ public class DoorsController : MonoBehaviour
     private Quaternion pressurePlateinitialRotation;
     private Quaternion pressurePlateTargetRotation;
 
-    [Header("Settings")]
+    [Header("Requirements Sign")]
+    public GameObject sign;
     public TextMeshPro requirementsText;
     public float timeToOpen = 2f;
     public float pivotRotateAngle = 90f;
@@ -192,6 +193,8 @@ public class DoorsController : MonoBehaviour
         if (mistPlane != null)
             mistPlane.SetActive(false);
 
+        sign.SetActive(false);
+
         // ---- GUARDAR ESTADO ----
         if (persistState)
         {
@@ -209,6 +212,9 @@ public class DoorsController : MonoBehaviour
 
         if (mistPlane != null)
             mistPlane.SetActive(false);
+
+        sign.SetActive(false);
+
     }
 
     private void OnTriggerEnter(Collider other)

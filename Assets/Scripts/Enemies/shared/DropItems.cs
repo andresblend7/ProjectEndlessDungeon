@@ -33,7 +33,7 @@ public class DropItems : MonoBehaviour
 
     public void DropItemBag()
     {
-        Debug.Log("Dropping items...");
+        //Debug.Log("Dropping items...");
 
         if (PlayerUtilities.Instance == null || ItemBagPool.Instance ==null) return;
 

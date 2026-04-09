@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 4714094039990511490}
   - component: {fileID: 1385954512832311692}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: RequirementsSign
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -450,6 +450,7 @@ MonoBehaviour:
   pressDepth: 0.091
   pressSpeed: 5
   rotateSpeed: 360
+  sign: {fileID: 484225386614359630}
   requirementsText: {fileID: 696297062661077741}
   timeToOpen: 0.6
   pivotRotateAngle: -120
@@ -457,6 +458,7 @@ MonoBehaviour:
   shakeDuration: 0.25
   shakeStrength: 5
   shakeSpeed: 40
+  timeBetweenFailedAttempts: 1
   openDoorSound: {fileID: 8300000, guid: 77770413e937ff344809eea7e513158d, type: 3}
   cantOpenDoorSound: {fileID: 8300000, guid: 112fe2ef91d622643ace78b6c0b16564, type: 3}
 --- !u!1 &6371635076029374924

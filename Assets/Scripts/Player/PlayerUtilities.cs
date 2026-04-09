@@ -36,9 +36,7 @@ public class PlayerUtilities : MonoBehaviour
             return;
         }
 
-        Debug.Log("PlayerUtilities Awake: Singleton instance set.");
         InitStatsOfRoom();
-        Debug.Log("PlayerUtilities Awake: Singleton instance ENDS.");
 
     }
 

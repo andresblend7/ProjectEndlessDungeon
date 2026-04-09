@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 7626100883773440150}
   - component: {fileID: 2023865344007517414}
   - component: {fileID: 3341225807669274615}
+  - component: {fileID: 7605013647255561964}
   m_Layer: 0
   m_Name: Enemy_Worm_1 (1)
   m_TagString: Untagged
@@ -257,6 +258,26 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7605013647255561964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6215075396831427998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d57e6a2f505feb84f8445ba3f90b12e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DropCoinsEnemy
+  rewardOnDisable: 0
+  rewardOnDestroy: 1
+  coinsDropTable:
+    resourceType: 2
+    dropChance: 1
+    dropDecrementalChance: 0.604
+    minCountDrop: 4
+    maxAditionalUnitDrop: 6
 --- !u!1 &8174995262768557527
 GameObject:
   m_ObjectHideFlags: 0

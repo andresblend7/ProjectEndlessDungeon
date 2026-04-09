@@ -39,6 +39,7 @@ public class ExperienceReward : MonoBehaviour
     {
         // Evitar que se ejecuten las acciones de drop al cerrar la aplicación
         if (isQuitting) return;
+        if(FloatingTextPool.Instance == null || PlayerExpManager.Instance == null) return;  
 
         // Aquí llamas a tu sistema de experiencia global
         FloatingTextPool.Instance.SpawnText($"+{experienceAmount} XP", FloatingTextType.Experience);

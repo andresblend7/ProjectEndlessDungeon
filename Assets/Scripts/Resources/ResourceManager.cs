@@ -27,7 +27,6 @@ public class ResourceManager : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log(" ResourceManager 1");
 
 
         if (Instance == null)
@@ -37,12 +36,10 @@ public class ResourceManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        Debug.Log(" ResourceManager 2");
 
         DontDestroyOnLoad(gameObject);
 
         InitializeResources();
-        Debug.Log(" ResourceManager 3");
 
         Load();
     }
@@ -56,8 +53,12 @@ public class ResourceManager : MonoBehaviour
         }
     }
 
-    public int Get(ResourceType type)
+    public int Get(ResourceType type, bool reload = false)
     {
+        if(reload)
+        {
+            Load();
+        }
         return resources[type];
     }
 
@@ -116,8 +117,12 @@ public class ResourceManager : MonoBehaviour
 
     void Load()
     {
-        if (!PlayerPrefs.HasKey(SAVE_KEY))
+
+        if (!PlayerPrefs.HasKey(SAVE_KEY)) { 
+            resources.Clear();
+            InitializeResources();
             return;
+        }
 
         string json = PlayerPrefs.GetString(SAVE_KEY);
 

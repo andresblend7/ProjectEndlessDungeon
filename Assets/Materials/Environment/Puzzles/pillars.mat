@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: IronCartoon
+  m_Name: pillars
   m_Shader: {fileID: 4800000, guid: 313fcf3aebc04cf4ab4f8c5f2850be7f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -24,20 +24,20 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: fb388a7d9debc204f82c1444c74fa298, type: 3}
+        m_Texture: {fileID: 2800000, guid: 4f114bd2179a7d441b20f44aded6bd5a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - Step1: 1
     - _Gloss: 5.37
-    - _OutlineWidth: 0.392
+    - _OutlineWidth: 0.578
     - _RimPower: 2.2
     - _RimStep: 0.917
     - _RimStepSmooth: 0.662
-    - _ShadowStep: 0.305
-    - _ShadowStepSmooth: 0.066
-    - _SpecularStep: 0
+    - _ShadowStep: 0.366
+    - _ShadowStepSmooth: 0.223
+    - _SpecularStep: 0.028
     - _SpecularStepSmooth: 0
     - _Step: 0.432
     - _Step1: 0.537
@@ -45,10 +45,10 @@ Material:
     - _Step3: 0.97
     - _Step4: 0.025
     m_Colors:
-    - _BaseColor: {r: 0.754717, g: 0.754717, b: 0.754717, a: 1}
+    - _BaseColor: {r: 0.8773585, g: 0.8773585, b: 0.8773585, a: 1}
     - _HighColor: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecularColor: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

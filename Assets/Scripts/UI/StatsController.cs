@@ -43,7 +43,7 @@ public class StatsController : MonoBehaviour
             Debug.LogError("PlayerInGameData is null after fetching from PlayerUtilities!");
         }
 
-        Debug.Log($"Player actual health: {playerInGameData.ActualHealth}");
+        //Debug.Log($"Player actual health: {playerInGameData.ActualHealth}");
         SubscribeToPlayerUtilitiesEvents();
 
         ShowUiStats();
@@ -54,7 +54,7 @@ public class StatsController : MonoBehaviour
     private void LoadResources()
     {
 
-        UpdateCoins(ResourceManager.Instance.Get(ResourceType.Coin));
+        UpdateCoins(ResourceManager.Instance.Get(ResourceType.Coin, true));
     }
 
     private void UpdateCoins(int value)
