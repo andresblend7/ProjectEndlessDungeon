@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -6,12 +7,33 @@ public class Pillar : MonoBehaviour
     public PillarActivation activationType;
     public GameObject activeLigth;
     public GameObject crystal;
+
     [Header("Ligth Settings")]
     public float initialLightIntensity = 1;
     public float activeLightIntensity = 8;
     private bool isActive = false;
     private Material ligthMaterial;
     private Color emisionColor;
+    private Color endEmisionColor;
+    private Color initialEmisionColor;
+    private Color maxEmisionColor;
+    public Pillars_puzle puzzleManager;
+
+    private bool puzzleCompleted = false;
+
+    void Awake()
+    {
+        puzzleManager.OnPillarFailed += () =>
+        {
+            isActive = false;
+            AlternateLights(false);
+        };
+        puzzleManager.OnPuzzleCompleted += () =>
+        {
+            puzzleCompleted = true;
+            StartCoroutine(BlindEffect());
+        };
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -19,28 +41,50 @@ public class Pillar : MonoBehaviour
         ligthMaterial = activeLigth.GetComponent<Renderer>().material;
         ligthMaterial.EnableKeyword("_EMISSION");
         emisionColor = ligthMaterial.GetColor("_EmissionColor");
+
+        endEmisionColor = emisionColor * Mathf.Pow(2f, activeLightIntensity);
+        initialEmisionColor = emisionColor * Mathf.Pow(1f, initialLightIntensity);
+        maxEmisionColor = emisionColor * Mathf.Pow(2f, 8.5f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    public IEnumerator BlindEffect()
+    {
+
+        for (int i = 0; i < 6; i++)
+        {
+            ligthMaterial.SetColor("_EmissionColor", maxEmisionColor);
+            yield return new WaitForSecondsRealtime(0.3f);
+            ligthMaterial.SetColor("_EmissionColor", initialEmisionColor);
+            yield return new WaitForSecondsRealtime(0.3f);
+
+        }
+
+        AlternateLights(false);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(activationType.Equals(PillarActivation.Range))
+        if (puzzleCompleted) return;
+
+
+        if (collision.collider.CompareTag("RangeAttackPlayer"))
         {
-            if (collision.collider.CompareTag("RangeAttackPlayer"))
+            if (activationType.Equals(PillarActivation.Range))
             {
                 isActive = true;
-                AlternateLights(activeLightIntensity);
             }
             else
             {
                 isActive = false;
-                AlternateLights(initialLightIntensity);
             }
+            AlternateLights();
+
         }
 
     }
@@ -48,48 +92,66 @@ public class Pillar : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        switch (activationType){
+        if (puzzleCompleted) return;
+
+        switch (activationType)
+        {
             case PillarActivation.Sword:
                 if (other.CompareTag("AttackPlayer"))
                 {
                     isActive = true;
-                    AlternateLights(activeLightIntensity);
-                }else
+                    AlternateLights();
+                }
+                else if (other.CompareTag("AttackPlayer") || other.CompareTag("ActionPlayer"))
                 {
                     isActive = false;
-                    AlternateLights(initialLightIntensity);
+                    AlternateLights();
                 }
-            break;
+                break;
             case PillarActivation.Pickaxe:
                 if (other.CompareTag("ActionPlayer"))
                 {
                     isActive = true;
-                    AlternateLights(activeLightIntensity);
+                    AlternateLights();
                 }
-                else
+                else if (other.CompareTag("AttackPlayer") || other.CompareTag("RangeAttackPlayer"))
                 {
                     isActive = false;
-                    AlternateLights(initialLightIntensity);
+                    AlternateLights();
+                }
+                break;
+            case PillarActivation.Range:
+                if (other.CompareTag("RangeAttackPlayer"))
+                {
+                    isActive = true;
+                    AlternateLights();
+                }
+                else if (other.CompareTag("AttackPlayer") || other.CompareTag("ActionPlayer"))
+                {
+                    isActive = false;
+                    AlternateLights();
                 }
                 break;
         }
-       
+
     }
 
-    public void AlternateLights(float intensity)
+    public void AlternateLights(bool invokeParentEvent = true)
     {
-        if(isActive)
+        if (isActive)
         {
-            // HDR: multiplicas el color base por la intensidad (en escala lineal)
-            Color finalColor = emisionColor * Mathf.Pow(2f, activeLightIntensity);
-            ligthMaterial.SetColor("_EmissionColor", finalColor);
+            ligthMaterial.SetColor("_EmissionColor", endEmisionColor);
+            if (invokeParentEvent)
+                puzzleManager.ActivePillar(activationType);
+
         }
         else
         {
-            Color finalColor = emisionColor * Mathf.Pow(1f, initialLightIntensity);
-            ligthMaterial.SetColor("_EmissionColor", finalColor);
+            ligthMaterial.SetColor("_EmissionColor", initialEmisionColor);
+            if (invokeParentEvent)
+                puzzleManager.InActivePillar(activationType);
         }
-    
+
     }
 }
 public enum PillarActivation
