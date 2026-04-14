@@ -19,6 +19,10 @@ public class Pillar : MonoBehaviour
     private Color maxEmisionColor;
     public Pillars_puzle puzzleManager;
 
+    [Header("Sounds Settings")]
+    public AudioClip errorSound;
+    public AudioClip correctSound;
+
     private bool puzzleCompleted = false;
 
     void Awake()
@@ -140,6 +144,7 @@ public class Pillar : MonoBehaviour
     {
         if (isActive)
         {
+            AudioSource.PlayClipAtPoint(correctSound, transform.position);
             ligthMaterial.SetColor("_EmissionColor", endEmisionColor);
             if (invokeParentEvent)
                 puzzleManager.ActivePillar(activationType);
@@ -147,6 +152,7 @@ public class Pillar : MonoBehaviour
         }
         else
         {
+            AudioSource.PlayClipAtPoint(errorSound, transform.position);
             ligthMaterial.SetColor("_EmissionColor", initialEmisionColor);
             if (invokeParentEvent)
                 puzzleManager.InActivePillar(activationType);

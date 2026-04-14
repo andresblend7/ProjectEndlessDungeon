@@ -1071,6 +1071,7 @@ MonoBehaviour:
   widthMin: 0.001
   widthMax: 0.005
   widthPulseDuration: 1.2
+  successPuzzleSound: {fileID: 8300000, guid: f840bbd69c84246488c7241744220630, type: 3}
   chestReward: {fileID: 759586077}
   isPuzzleCompleted: 0
   swordPillarActive: 0
@@ -1127,6 +1128,8 @@ MonoBehaviour:
   initialLightIntensity: 1
   activeLightIntensity: 6.5
   puzzleManager: {fileID: 69141912}
+  errorSound: {fileID: 8300000, guid: aa54bd0faad257f43a249e7566796e1f, type: 3}
+  correctSound: {fileID: 8300000, guid: bc1e52e0e78d17344b23a678571e9088, type: 3}
 --- !u!1001 &82422935
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8801,7 +8804,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!120 &617049348
 LineRenderer:
   serializedVersion: 3
@@ -15893,6 +15896,8 @@ MonoBehaviour:
   initialLightIntensity: 1
   activeLightIntensity: 6.5
   puzzleManager: {fileID: 69141912}
+  errorSound: {fileID: 8300000, guid: aa54bd0faad257f43a249e7566796e1f, type: 3}
+  correctSound: {fileID: 8300000, guid: bc1e52e0e78d17344b23a678571e9088, type: 3}
 --- !u!1001 &1127443406
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19912,8 +19917,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1016324193, guid: b38ca4d1a11cd76419fbd8f657db259b, type: 3}
+      propertyPath: detectionRange
+      value: 6.69
+      objectReference: {fileID: 0}
+    - target: {fileID: 1016324193, guid: b38ca4d1a11cd76419fbd8f657db259b, type: 3}
       propertyPath: useFieldOfView
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1016324193, guid: b38ca4d1a11cd76419fbd8f657db259b, type: 3}
+      propertyPath: fieldOfViewAngle
+      value: 132
       objectReference: {fileID: 0}
     - target: {fileID: 2408346907339514223, guid: b38ca4d1a11cd76419fbd8f657db259b,
         type: 3}
@@ -24665,6 +24678,8 @@ MonoBehaviour:
   initialLightIntensity: 1
   activeLightIntensity: 6.5
   puzzleManager: {fileID: 69141912}
+  errorSound: {fileID: 8300000, guid: aa54bd0faad257f43a249e7566796e1f, type: 3}
+  correctSound: {fileID: 8300000, guid: bc1e52e0e78d17344b23a678571e9088, type: 3}
 --- !u!65 &1814066995
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29779,6 +29794,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Chest_1
       objectReference: {fileID: 0}
+    - target: {fileID: 3540083155463805438, guid: 6afbb3dd6dd8a4245b133ecca7f1a559,
+        type: 3}
+      propertyPath: gravity
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 3540083155463805438, guid: 6afbb3dd6dd8a4245b133ecca7f1a559,
+        type: 3}
+      propertyPath: openSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 18c5762e93738ec499fc3aec4c307dd3, type: 3}
+    - target: {fileID: 3540083155463805438, guid: 6afbb3dd6dd8a4245b133ecca7f1a559,
+        type: 3}
+      propertyPath: finalHeight
+      value: -0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3540083155463805438, guid: 6afbb3dd6dd8a4245b133ecca7f1a559,
+        type: 3}
+      propertyPath: impactSound
+      value: 
+      objectReference: {fileID: 8300000, guid: de9b7997c91e2134aae64c2ae563429a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

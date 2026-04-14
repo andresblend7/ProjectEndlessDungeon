@@ -10,6 +10,11 @@ public class ChestController : MonoBehaviour
 
     [Header("Caída")]
     public float gravity = 25f;
+    public float finalHeight = 0f;
+
+    [Header("Sounds")]
+    public AudioClip impactSound;
+    public AudioClip openSound;
 
 
     // Camera
@@ -31,6 +36,12 @@ public class ChestController : MonoBehaviour
         StartCoroutine(DropRoutine());
     }
 
+    public void OpenLid()
+    {
+        AudioSource.PlayClipAtPoint(openSound, Camera.main.transform.position);
+        animator.SetTrigger("Open");
+    }
+
     private IEnumerator DropRoutine()
     {
         isPlaying = true;
@@ -41,24 +52,27 @@ public class ChestController : MonoBehaviour
         Debug.Log("Iniciando caída del cofre..."+transform.position.y);
         Debug.Log(basePart.parent.name);
         // -------- CAÍDA CON ACELERACIÓN --------
-        while (transform.position.y > 0f)
+        while (transform.position.y > finalHeight)
         {
             velocity += gravity * Time.deltaTime;
             transform.position -= new Vector3(0, velocity * Time.deltaTime, 0);
 
-            if (transform.position.y <= 0f)
+            if (transform.position.y <= finalHeight)
             {
-                transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+                transform.position = new Vector3(transform.position.x, finalHeight, transform.position.z);
                 break;
             }
 
             yield return null;
         }
+        AudioSource.PlayClipAtPoint(impactSound, Camera.main.transform.position);
         cameraController.ShakeCamera(0.18f, 0.1f);
         animator.SetTrigger("Impact");
-
-
         isPlaying = false;
+
+        yield return new WaitForSecondsRealtime(1.21f);
+        OpenLid();
+
     }
  
 }

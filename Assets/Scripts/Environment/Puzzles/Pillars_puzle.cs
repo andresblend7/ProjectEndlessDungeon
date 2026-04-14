@@ -13,6 +13,10 @@ public class Pillars_puzle : MonoBehaviour
     public float widthPulseDuration = 0.5f;
     private Vector3[] positions;
     private float totalLength;
+
+    [Header("Sounds Settings")]
+    public AudioClip successPuzzleSound;
+
     [Header("Chest Reward")]
     public ChestController chestReward;
 
@@ -52,6 +56,8 @@ public class Pillars_puzle : MonoBehaviour
     {
         if (swordPillarActive && rangePillarActive && pickaxePillarActive)
         {
+            AudioSource.PlayClipAtPoint(successPuzzleSound, Camera.main.transform.position);
+
             isPuzzleCompleted = true;
             OnPuzzleCompleted.Invoke();
             // Aquí puedes agregar cualquier lógica adicional que quieras ejecutar cuando el puzzle se complete
