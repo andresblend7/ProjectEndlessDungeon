@@ -182,7 +182,7 @@ public class PlayerUtilities : MonoBehaviour
     /// </summary>
     /// <param name="table"></param>
     /// <returns></returns>
-    public int CalculateItemDrop(ItemDropTable table)
+    public int CalculateDropOfLootingBags(ItemDropTable table)
     {
         float currentChance = table.dropChance;
         int count = 0;

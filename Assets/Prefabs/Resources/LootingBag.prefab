@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4756336248462973067}
-  - component: {fileID: 7026869697344496671}
   - component: {fileID: 1462958739837528356}
+  - component: {fileID: 5433991160345905455}
   m_Layer: 0
   m_Name: LootingBag
   m_TagString: Untagged
@@ -34,29 +34,6 @@ Transform:
   - {fileID: 4885730600556238507}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7026869697344496671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 644091042798369135}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fc738ffe729a8141b8a1a9e6440e99b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DropItem
-  upForce: 6
-  horizontalForce: 2
-  gravity: 9
-  groundOffset: 0
-  floatSpeed: 1.8
-  floatHeight: 0.21
-  rotationSpeed: 45
-  rotationAxis: {x: 0, y: 1, z: 0}
-  lifetime: 10
-  blinkDuration: 4
-  blinkInterval: 0.2
 --- !u!65 &1462958739837528356
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -78,6 +55,29 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5433991160345905455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 644091042798369135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42b3db08d54878d4087a19a5db14b06e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LootBag
+  upForce: 5.5
+  horizontalForce: 0.5
+  gravity: 9
+  groundOffset: 0
+  floatSpeed: 1.8
+  floatHeight: 0.21
+  rotationSpeed: 45
+  rotationAxis: {x: 0, y: 1, z: 0}
+  lifetime: 10
+  blinkDuration: 2
+  blinkInterval: 0.2
 --- !u!1001 &4919940034839474496
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -5,10 +5,10 @@ public class ItemBagPool : MonoBehaviour
 {
     public static ItemBagPool Instance;
 
-    public DropItem prefab;
+    public LootBag prefab;
     public int initialSize = 30;
 
-    Queue<DropItem> pool = new Queue<DropItem>();
+    Queue<LootBag> pool = new Queue<LootBag>();
 
     void Awake()
     {
@@ -20,7 +20,7 @@ public class ItemBagPool : MonoBehaviour
         }
     }
 
-    DropItem Create()
+    LootBag Create()
     {
         var obj = Instantiate(prefab, transform);
         obj.gameObject.SetActive(false);
@@ -28,19 +28,20 @@ public class ItemBagPool : MonoBehaviour
         return obj;
     }
 
-    public DropItem Get(List<ItemBag> data, Vector3 position)
+    public LootBag Get(List<ItemBagResource> data, Vector3 position)
     {
         if (pool.Count == 0)
             Create();
 
-        DropItem obj = pool.Dequeue();
+        LootBag obj = pool.Dequeue();
         obj.transform.position = position;
         obj.gameObject.SetActive(true);
+        obj.SetResources(data);
         obj.Play();
         return obj;
     }
 
-    public void Return(DropItem obj)
+    public void Return(LootBag obj)
     {
         obj.gameObject.SetActive(false);
         pool.Enqueue(obj);

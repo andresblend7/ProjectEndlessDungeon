@@ -51,6 +51,7 @@ MonoBehaviour:
   gravity: 25
   finalHeight: 0
   impactSound: {fileID: 0}
+  openSound: {fileID: 0}
 --- !u!95 &3423398645579484140
 Animator:
   serializedVersion: 7
@@ -404,17 +405,17 @@ PrefabInstance:
     - target: {fileID: 6672970066802414045, guid: bc51a0999ed6bca4bb752db2eb30149d,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.4419
+      value: 1.4388598
       objectReference: {fileID: 0}
     - target: {fileID: 6672970066802414045, guid: bc51a0999ed6bca4bb752db2eb30149d,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.4419
+      value: 1.4388598
       objectReference: {fileID: 0}
     - target: {fileID: 6672970066802414045, guid: bc51a0999ed6bca4bb752db2eb30149d,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.9811705
+      value: 1.9769933
       objectReference: {fileID: 0}
     - target: {fileID: 6672970066802414045, guid: bc51a0999ed6bca4bb752db2eb30149d,
         type: 3}
@@ -484,17 +485,17 @@ PrefabInstance:
     - target: {fileID: 6672970066821813735, guid: bc51a0999ed6bca4bb752db2eb30149d,
         type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
-      value: 0.36320752
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6672970066821813735, guid: bc51a0999ed6bca4bb752db2eb30149d,
         type: 3}
       propertyPath: InitialModule.startColor.maxColor.g
-      value: 0.89593136
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6672970066821813735, guid: bc51a0999ed6bca4bb752db2eb30149d,
         type: 3}
       propertyPath: InitialModule.startColor.maxColor.r
-      value: 1
+      value: 0.9827944
       objectReference: {fileID: 0}
     - target: {fileID: 6672970066821893681, guid: bc51a0999ed6bca4bb752db2eb30149d,
         type: 3}

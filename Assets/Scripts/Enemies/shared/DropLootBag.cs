@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DropItems : MonoBehaviour
+public class DropLootBag : MonoBehaviour
 {
     [Header("Items to drop")]
     public ItemDropTable[] itemDropList;
@@ -35,17 +35,17 @@ public class DropItems : MonoBehaviour
     {
         //Debug.Log("Dropping items...");
 
-        if (PlayerUtilities.Instance == null || ItemBagPool.Instance ==null) return;
+        if (PlayerUtilities.Instance == null || ItemBagPool.Instance == null) return;
 
-        var itemBags = new List<ItemBag>();
+        var itemBags = new List<ItemBagResource>();
 
-        foreach (var item in itemDropList)
+        foreach (var drop in itemDropList)
         {
-            var dropCount = PlayerUtilities.Instance.CalculateItemDrop(item);
+            var dropCount = PlayerUtilities.Instance.CalculateDropOfLootingBags(drop);
 
             if (dropCount > 0)
             {
-                itemBags.Add(new ItemBag { item = item.item, count = dropCount });
+                itemBags.Add(new ItemBagResource { resourceType = drop.resource, count = dropCount });
             }
         }
 
@@ -57,10 +57,11 @@ public class DropItems : MonoBehaviour
     }
 }
 
+
 [Serializable]
 public class ItemDropTable
 {
-    public ItemDrop item;
+    public ResourceType resource;
     [Range(0f, 1f)]
     public float dropChance; // porcentaje de probabilidad de que caiga el primer item
     [Range(0f, 1f)]
@@ -70,16 +71,8 @@ public class ItemDropTable
     public int maxAditionalUnitDrop;
 }
 
-public class ItemBag
+public class ItemBagResource
 {
-    public ItemDrop item;
+    public ResourceType resourceType;
     public int count;
-}
-
-//!TODO: Mover el enum a un script separado para mantener el código organizado
-public enum ItemDrop
-{
-    Coin,
-    Slime,
-    AcidBag
 }

@@ -46,6 +46,9 @@ public class CoinBehaviour : MonoBehaviour
     private float groundY;        // Altura del suelo donde cayó
     private float dropTimer;      // Cuenta el tiempo de vida en modo drop
 
+
+    private bool useCustomVelocity; // Si se le dio una velocidad personalizada al caer (ej. cofres)
+
     void Awake()
     {
         initialScale = transform.localScale;
@@ -74,7 +77,7 @@ public class CoinBehaviour : MonoBehaviour
     // ─────────────────────────────────────────────
     //  MODO 2: Moneda de enemigo → cae y espera
     // ─────────────────────────────────────────────
-    public void DropAndWait(Vector3 spawnPosition)
+    public void DropAndWait(Vector3 spawnPosition, Vector3? customVelocity)
     {
         mode = CoinMode.DropAndWait;
         timer = 0f;
@@ -86,6 +89,15 @@ public class CoinBehaviour : MonoBehaviour
         // Guardamos la Y del suelo (asumimos que es la Y del spawn; ajusta si usas raycast)
         groundY = spawnPosition.y;
 
+        if (customVelocity.HasValue)
+        {
+            velocity = customVelocity.Value;
+            useCustomVelocity = true;
+            return;
+        }
+
+
+        useCustomVelocity = false;
         // Salto inicial con dispersión configurable
         velocity = new Vector3(
             Random.Range(-dropHorizontalRandom, dropHorizontalRandom),
@@ -161,12 +173,20 @@ public class CoinBehaviour : MonoBehaviour
                 transform.position = pos;
 
                 // Rebote opcional (apaga el vertical, frena el horizontal)
-                velocity.y = Mathf.Abs(velocity.y) * dropBounceDamping;
-                velocity.x *= 0.3f;
-                velocity.z *= 0.3f;
+                if (!useCustomVelocity)
+                {
+                    velocity.y = Mathf.Abs(velocity.y) * dropBounceDamping;
+                    velocity.x *= 0.3f;
+                    velocity.z *= 0.3f;
 
-                // Si el rebote es insignificante, pasamos directo a espera
-                if (velocity.y < 0.5f)
+                    // Si el rebote es insignificante, pasamos directo a espera
+                    if (velocity.y < 0.5f)
+                    {
+                        velocity = Vector3.zero;
+                        isWaiting = true;
+                    }
+                }
+                else
                 {
                     velocity = Vector3.zero;
                     isWaiting = true;

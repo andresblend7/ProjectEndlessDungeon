@@ -7,6 +7,10 @@ public class ChestController : MonoBehaviour
     [Header("Referencias")]
     public Transform basePart;
     public Transform lidPart;
+    private CoinSpawner coinSpawner;
+
+    [Header("Loot")]
+    public int coinsToDrop = 10;
 
     [Header("Caída")]
     public float gravity = 25f;
@@ -27,7 +31,7 @@ public class ChestController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         cameraController = Camera.main.GetComponent<CameraController>();
-     
+        coinSpawner = FindFirstObjectByType<CoinSpawner>();
     }
 
     public void PlayDrop()
@@ -40,6 +44,7 @@ public class ChestController : MonoBehaviour
     {
         AudioSource.PlayClipAtPoint(openSound, Camera.main.transform.position);
         animator.SetTrigger("Open");
+        StartCoroutine(DropCoinsInTime());
     }
 
     private IEnumerator DropRoutine()
@@ -74,5 +79,13 @@ public class ChestController : MonoBehaviour
         OpenLid();
 
     }
- 
+    
+    private IEnumerator DropCoinsInTime()
+    {
+        if (coinSpawner != null)
+        {
+            coinSpawner.SpawnCoinsFromChest(coinsToDrop, transform.position);
+            yield return new WaitForSecondsRealtime(0.3f);
+        }
+    }
 }

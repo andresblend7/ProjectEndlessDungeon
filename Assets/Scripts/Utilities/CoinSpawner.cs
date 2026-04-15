@@ -6,8 +6,42 @@ public class CoinSpawner : MonoBehaviour
     public float spawnDelay = 0.04f;
     public float spread = 0.4f;
 
+    [Header("Chest Settings")]
+    public float chestUpForce = 16f;
+    public float zAxysMaxValue = -0.7f;
+    public float chestHorizontalRandom = 1.1f;
 
 
+
+    public void SpawnCoinsFromChest(int amount, Vector3 origin)
+    {
+        StartCoroutine(SpawnCoinsFromChestRoutine(amount, origin));
+    }
+
+    private IEnumerator SpawnCoinsFromChestRoutine(int amount, Vector3 origin)
+    {
+    
+
+        for (int i = 0; i < amount; i++)
+        {
+            Vector3 offset = new Vector3(
+                Random.Range(-spread, spread),
+                0,
+                Random.Range(-spread, spread)
+            );
+
+            var coin = CoinPool.Instance.Get(origin + offset);
+
+            var velocity = new Vector3(
+                    Random.Range(-chestHorizontalRandom, chestHorizontalRandom),
+                    chestUpForce,
+                    zAxysMaxValue
+                );
+
+            coin.DropAndWait(origin, velocity);
+            yield return new WaitForSeconds(spawnDelay);
+        }
+    }
 
     public void SpawnCoins(int amount, Vector3 origin, bool goToPlayer = true)
     {
@@ -31,7 +65,7 @@ public class CoinSpawner : MonoBehaviour
             if (goToPlayer)
                 coin.GoToPlayer(playerTransform);
             else
-                coin.DropAndWait(origin);
+                coin.DropAndWait(origin, null);
 
             yield return new WaitForSeconds(spawnDelay);
         }

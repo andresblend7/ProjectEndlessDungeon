@@ -1,16 +1,20 @@
+using Mono.Cecil;
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
-public class DropItem : MonoBehaviour
+public class LootBag : MonoBehaviour
 {
     [Header("Animación de caída")]
     public float upForce = 6f;
     public float horizontalForce = 2f;
-    public float gravity = 18f;
-    public float groundOffset = 0.05f;
+    public float gravity = 9f;
+    public float groundOffset = 0f;
 
     [Header("Flotado")]
-    public float floatSpeed = 1.5f;
-    public float floatHeight = 0.3f;
+    public float floatSpeed = 1.8f;
+    public float floatHeight = 0.21f;
 
     [Header("Rotación")]
     public float rotationSpeed = 45f;
@@ -32,6 +36,8 @@ public class DropItem : MonoBehaviour
     private bool visible = true;
 
     private Renderer objectRenderer;
+
+    private List<ItemBagResource> resourcesInBag;
 
     void Awake()
     {
@@ -64,7 +70,6 @@ public class DropItem : MonoBehaviour
         );
     }
 
- 
 
     void Update()
     {
@@ -161,4 +166,22 @@ public class DropItem : MonoBehaviour
         // regresar al pool (ajusta según tu pool real)
         gameObject.SetActive(false);
     }
+
+    public void SetResources(List<ItemBagResource> resources)
+    {
+        resourcesInBag = resources;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Player"))
+        {
+            foreach (var item in resourcesInBag)
+            {
+                ResourceManager.Instance.Add(item.resourceType, item.count);
+            }
+            Despawn();
+        }
+    }
 }
+
