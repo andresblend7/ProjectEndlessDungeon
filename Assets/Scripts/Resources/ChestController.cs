@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro.Examples;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ public class ChestController : MonoBehaviour
 
     [Header("Loot")]
     public int coinsToDrop = 10;
+    public ResourceDropTable[] dropTable;
 
     [Header("Caída")]
     public float gravity = 25f;
@@ -45,6 +47,7 @@ public class ChestController : MonoBehaviour
         AudioSource.PlayClipAtPoint(openSound, Camera.main.transform.position);
         animator.SetTrigger("Open");
         StartCoroutine(DropCoinsInTime());
+        StartCoroutine(DropResourcesInTime());
     }
 
     private IEnumerator DropRoutine()
@@ -54,7 +57,7 @@ public class ChestController : MonoBehaviour
         Vector3 startPos = transform.position;
         float velocity = 0f;
 
-        Debug.Log("Iniciando caída del cofre..."+transform.position.y);
+        Debug.Log("Iniciando caída del cofre..." + transform.position.y);
         Debug.Log(basePart.parent.name);
         // -------- CAÍDA CON ACELERACIÓN --------
         while (transform.position.y > finalHeight)
@@ -79,7 +82,7 @@ public class ChestController : MonoBehaviour
         OpenLid();
 
     }
-    
+
     private IEnumerator DropCoinsInTime()
     {
         if (coinSpawner != null)
@@ -88,4 +91,25 @@ public class ChestController : MonoBehaviour
             yield return new WaitForSecondsRealtime(0.3f);
         }
     }
+
+    public IEnumerator DropResourcesInTime()
+    {
+        yield return new WaitForSecondsRealtime(0.14f);
+
+
+        if (dropTable != null)
+        {
+            var finaResourceList = new List<ItemBagResource>();
+
+            foreach (var drop in dropTable)
+            {
+                finaResourceList.Add( new ItemBagResource { resourceType = drop.resourceType, count = drop.maxAditionalUnitDrop });
+            }
+
+            ItemBagPool.Instance.Get(finaResourceList, transform.position, true);
+            yield return new WaitForSecondsRealtime(0.3f);
+        }
+
+    }
+
 }

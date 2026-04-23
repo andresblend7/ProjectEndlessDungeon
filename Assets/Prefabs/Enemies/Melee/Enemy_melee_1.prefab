@@ -420,7 +420,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6385735631425729580}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -655,6 +655,7 @@ MonoBehaviour:
   timeToStartAttack: 0.3
   timeToRecoveryAttack: 0.6
   attackDuration: 0.2
+  modelAnimator: {fileID: 2676292600518585625}
   flashEffect: {fileID: 5061520801277738303}
 --- !u!114 &1806375461003585679
 MonoBehaviour:
@@ -797,10 +798,40 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: cabcce4020cb5c54badc9f118931d143, type: 2}
+    - target: {fileID: -2181743766629440291, guid: c028ee5dfbfdf0c458cc5970d3ecc005,
+        type: 3}
+      propertyPath: m_Name
+      value: arm
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c028ee5dfbfdf0c458cc5970d3ecc005,
         type: 3}
       propertyPath: m_Name
       value: slime_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1341056751160186723, guid: c028ee5dfbfdf0c458cc5970d3ecc005,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.316747
+      objectReference: {fileID: 0}
+    - target: {fileID: 1341056751160186723, guid: c028ee5dfbfdf0c458cc5970d3ecc005,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.316747
+      objectReference: {fileID: 0}
+    - target: {fileID: 1341056751160186723, guid: c028ee5dfbfdf0c458cc5970d3ecc005,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.316747
+      objectReference: {fileID: 0}
+    - target: {fileID: 1341056751160186723, guid: c028ee5dfbfdf0c458cc5970d3ecc005,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1341056751160186723, guid: c028ee5dfbfdf0c458cc5970d3ecc005,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0000001525879
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -814,6 +845,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 5061520801277738303}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c028ee5dfbfdf0c458cc5970d3ecc005,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2676292600518585625}
   m_SourcePrefab: {fileID: 100100000, guid: c028ee5dfbfdf0c458cc5970d3ecc005, type: 3}
 --- !u!1 &6079817066688977172 stripped
 GameObject:
@@ -836,6 +871,28 @@ MonoBehaviour:
   flashColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 0.15
   flashIntensity: 1
+--- !u!95 &2676292600518585625
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6079817066688977172}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: af14ee67c39147d4fbd2ff62b7448368, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &6851111672533926830 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c028ee5dfbfdf0c458cc5970d3ecc005,

@@ -18,6 +18,7 @@ public class Slime_EnemyController : MonoBehaviour
     [Tooltip("Duración en segundos del hitbox de ataque activo.")]
     public float attackDuration = 0.3f;
 
+    public Animator modelAnimator;
     public EnemyFlashEffect flashEffect;
 
 
@@ -52,11 +53,15 @@ public class Slime_EnemyController : MonoBehaviour
     {
         _logic.LookAtPlayer();
         _logic.CanChasePlayer(false);
+        /// limpiar y activar el trigger de ataque
+        modelAnimator.SetTrigger("Attack");
+
         yield return new WaitForSeconds(timeToStartAttack);
         _logic.EnableDisableAttackHitBox(true);
         yield return new WaitForSeconds(attackDuration);
         _logic.EnableDisableAttackHitBox(false);
         yield return new WaitForSeconds(timeToRecoveryAttack);
+        modelAnimator.ResetTrigger("Attack");
         _logic.CanChasePlayer(true);
     }
 

@@ -28,7 +28,7 @@ public class ItemBagPool : MonoBehaviour
         return obj;
     }
 
-    public LootBag Get(List<ItemBagResource> data, Vector3 position)
+    public LootBag Get(List<ItemBagResource> data, Vector3 position, bool isFromChest = false)
     {
         if (pool.Count == 0)
             Create();
@@ -37,7 +37,17 @@ public class ItemBagPool : MonoBehaviour
         obj.transform.position = position;
         obj.gameObject.SetActive(true);
         obj.SetResources(data);
-        obj.Play();
+
+        var customVelocity = Vector3.zero;
+
+        if (isFromChest)
+            customVelocity = new Vector3(
+                0.5f,
+                3,
+                -0.6f
+            );
+
+        obj.Play(customVelocity);
         return obj;
     }
 
