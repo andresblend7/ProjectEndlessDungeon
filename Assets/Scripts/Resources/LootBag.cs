@@ -47,7 +47,7 @@ public class LootBag : MonoBehaviour
 
     public void Play(Vector3 customVelocity)
     {
-        Debug.Log($"Play() called. transform.position antes de reset: {transform.position}");
+        //Debug.Log($"Play() called. transform.position antes de reset: {transform.position}");
 
         timer = 0f;
         blinkTimer = 0f;
@@ -76,7 +76,7 @@ public class LootBag : MonoBehaviour
                 upForce,
                 Random.Range(-horizontalForce, horizontalForce)
               );
-        Debug.Log($"launchOrigin capturado: {launchOrigin}");
+        //Debug.Log($"launchOrigin capturado: {launchOrigin}");
     }
 
     void Update()
@@ -123,7 +123,7 @@ public class LootBag : MonoBehaviour
                     restPosition = new Vector3(pos.x, groundOffset, pos.z);
                     transform.position = restPosition;
                     isJumping = false;
-                    Debug.Log("LootBag has landed at: " + restPosition);
+                    //Debug.Log("LootBag has landed at: " + restPosition);
                 }
 
                 return;

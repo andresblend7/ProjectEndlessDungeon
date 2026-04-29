@@ -29,6 +29,16 @@ public class EnemyFlashEffect : MonoBehaviour
         originalColors = new Color[renderers.Length];
         originalEmission = new Color[renderers.Length];
 
+        RestartColors();
+    }
+
+    private void OnEnable()
+    {
+        RestartColors();
+    }
+
+    private void RestartColors()
+    {
         for (int i = 0; i < renderers.Length; i++)
         {
             Material mat = renderers[i].sharedMaterial;

@@ -196,9 +196,6 @@ public class CameraController : MonoBehaviour
     public void MoveCameraTo(Vector3 newPosition, float duration = 1f, bool pauseTimer = true)
     {
 
-        if (pauseTimer)
-            roomTimerController.PauseTimer();
-
         followPlayer = false; // Desactivamos el seguimiento para mover la cámara a una posición fija
 
         if (moveCoroutine != null)

@@ -3,14 +3,13 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
+public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable, IPooledObject
 {
     //  ----------------------------------------------  INSPECTOR — MOVIMIENTO ---------------------------------------------- 
 
     [Header("── Movimiento ──────────────────────────────────────")]
     [Tooltip("Velocidad de desplazamiento en el plano XZ.")]
     public float moveSpeed = 3.5f;
-    private NavMeshPatrol navMeshPatrol; // referencia al script de patrulla, para poder decirle que deje de patrullar cuando empiece a perseguir al jugador
 
     [Tooltip("Segundos de espera tras detectar al jugador antes de perseguirlo.")]
     public float chaseDelay = 0.5f;
@@ -104,17 +103,11 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
     public event Action<bool> OnPlayerInAttackRange;
     public event Action<int> OnReceibeDamage;
 
-
-
+    public event Action<GameObject> OnDeactivate;
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        navMeshPatrol = GetComponent<NavMeshPatrol>();
-        if (navMeshPatrol == null)
-        {
-            Debug.LogError($"[{name}] No se encontró un componente NavMeshPatrol en el mismo GameObject.");
-        }
 
 
         // ── Estado inicial ─────────────────────────────────────
@@ -151,7 +144,6 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
                 playerWasDetectedFirstTime = true;
                 agent.updateRotation = true;
                 agent.speed= moveSpeed;
-                navMeshPatrol.StopPatrol();
                 //Debug.Log("speed: "+ agent.speed);
             }
         }
@@ -168,15 +160,15 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
                 // Add your custom logic here (e.g., trigger an animation, change state, etc.)
             }
 
-            //if (playerDetected) // Este if se comenta porque el enemigo puede marcar como seguir siempre al jugador una vez lo ve por primera vez
-            //{
-            repathTimer -= Time.deltaTime;
+            ////if (playerDetected) // Este if se comenta porque el enemigo puede marcar como seguir siempre al jugador una vez lo ve por primera vez
+            ////{
+            //repathTimer -= Time.deltaTime;
 
-            if (repathTimer <= 0f)
-            {
-                agent.SetDestination(player.position);
-                repathTimer = repathRate;
-            }
+            //if (repathTimer <= 0f)
+            //{
+            //    agent.SetDestination(player.position);
+            //    repathTimer = repathRate;
+            //}
             //}
         }
 
@@ -427,6 +419,27 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable
     private void Die()
     {
         gameObject.SetActive(false);
+        // Notificar al pool; él se encarga de desactivar y encolar el objeto
+        OnDeactivate?.Invoke(gameObject);
+        Debug.Log($"[EnemyBase] {name} ha muerto.");
+
+    }
+
+    public void OnSpawn()
+    {
+        // ── Reemplaza con la reinicialización de tu enemigo real ──
+        // Reiniciar animador, agente de navegación, etc.
+        Debug.Log($"[EnemyBase] {name} spawneado con x HP.");
+    }
+
+
+
+    /// <summary>
+    /// Alternativa para devolver el objeto al pool desde fuera (p.ej. al salir del área).
+    /// </summary>
+    public void ForceDeactivate()
+    {
+        OnDeactivate?.Invoke(gameObject);
     }
 
 }

@@ -1,118 +1,187 @@
+using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class RoomTimerController : MonoBehaviour
 {
     [Header("UI")]
     public TextMeshProUGUI timerText;
+    public TextMeshProUGUI debugDifficult;
 
-    [Header("Time Settings")]
-    public float startTime = 180f;
-    public string sceneToLoad = "InitialMenu";
+    #region Singleton
 
-    [Header("Danger Settings")]
-    public float dangerThreshold = 30f; // cuando quedan 30 segundos
-    public float pulseSpeed = 6f;
-    public float pulseAmount = 0.15f;
-
-    [Header("Portal Settings")]
-    private PortalController portalController;
-
-    private float currentTime;
-    private bool isRunning = true;
-
-    private Color normalColor = Color.white;
-    private Color dangerColor = Color.red;
-
-    private Vector3 originalScale;
-
-    private bool portalSpawned = false;
+    public static RoomTimerController Instance { get; private set; }
 
     private void Awake()
     {
-        portalController = GetComponent<PortalController>();
-    }
-
-
-    void Start()
-    {
-        currentTime = startTime;
-        originalScale = timerText.transform.localScale;
-        UpdateUI();
-    }
-
-    void Update()
-    {
-        if (!isRunning) return;
-
-        currentTime -= Time.deltaTime;
-
-        if (currentTime <= 0f)
+        // Singleton seguro
+        if (Instance != null && Instance != this)
         {
-            currentTime = 0f;
-            isRunning = false;
-            UpdateUI();
-            EndGame();
+            Destroy(gameObject);
             return;
         }
 
-        UpdateUI();
-        HandleDangerEffects();
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
-    void UpdateUI()
-    {
-        int minutes = Mathf.FloorToInt(currentTime / 60f);
-        int seconds = Mathf.FloorToInt(currentTime % 60f);
+    #endregion
 
-        timerText.text = $"{minutes:00}:{seconds:00}";
+    #region Configuración
+
+    [Header("Configuración de Dificultad")]
+
+    [Tooltip("Tiempo en segundos durante el cual la dificultad permanece en 0 al inicio")]
+    [SerializeField] private float initialDuration = 10f;
+
+    [Tooltip("Curva que define cómo crece la dificultad en función del tiempo normalizado (0 a 1)")]
+    [SerializeField] private AnimationCurve dificultCurve = AnimationCurve.Linear(0, 0, 1, 1);
+
+    [Tooltip("Factor máximo que escala la dificultad final")]
+    [SerializeField] public float maxDificultfactor = 10f;
+
+    [Tooltip("Tiempo total esperado de una run para normalizar la curva")]
+    [SerializeField] private float maxTimeReference = 600f;
+
+    #endregion
+
+    #region Estado Interno
+
+    private float actualTime = 0f;
+    private bool isPaused = true;
+    public bool isStarted = false;
+
+    private float currentDifficult = 0f;
+
+    #endregion
+
+    #region Eventos
+
+    [Header("Eventos")]
+
+    [Tooltip("Evento invocado cuando cambia la dificultad (envía el nuevo valor)")]
+    public UnityEvent<float> OnDifficultyChanged;
+
+    #endregion
+
+    private void Start()
+    {
+        StartRun();
+        // Corutina para actualizar el texto del timer cada segundo (optimización)  
+        StartCoroutine(UpdateTimerText());
     }
 
-    void HandleDangerEffects()
+    private IEnumerator UpdateTimerText()
     {
-        if (currentTime <= dangerThreshold)
+        while (true)
         {
-            float dangerPercent = 1f - (currentTime / dangerThreshold);
-
-            // Cambio gradual a rojo
-            timerText.color = Color.Lerp(normalColor, dangerColor, dangerPercent);
-
-            // Pulso suave
-            float pulse = 1f + Mathf.Sin(Time.time * pulseSpeed) * pulseAmount * dangerPercent;
-            timerText.transform.localScale = originalScale * pulse;
-
-            if (!portalSpawned)
+            yield return new WaitForSecondsRealtime(1); // Esperar un frame para asegurar que timerText esté asignado
+            if (isPaused)
             {
-                // Aquí podrías llamar a un método para generar el portal
-                portalController.SpawnPortal();
-                portalSpawned = true;
+                timerText.text = "00:00";
+                yield break;
             }
+            timerText.text = TimeSpan.FromSeconds(actualTime).ToString(@"mm\:ss");
+            debugDifficult.text = $"{currentDifficult:F2}";
         }
-        else
+
+    }
+
+    #region Control de Run
+
+    /// <summary>
+    /// Inicia la run desde cero
+    /// </summary>
+    public void StartRun()
+    {
+        actualTime = 0f;
+        currentDifficult = 0f;
+        isPaused = false;
+        isStarted = true;
+
+        OnDifficultyChanged?.Invoke(currentDifficult);
+    }
+
+    /// <summary>
+    /// Pausa la run
+    /// </summary>
+    public void PauseRun()
+    {
+        isPaused = true;
+    }
+
+    /// <summary>
+    /// Reanuda la run
+    /// </summary>
+    public void RestartRun()
+    {
+        isPaused = false;
+    }
+
+    /// <summary>
+    /// Reinicia completamente la run
+    /// </summary>
+    public void ResetRun()
+    {
+        actualTime = 0f;
+        currentDifficult = 0f;
+        isPaused = true;
+
+        OnDifficultyChanged?.Invoke(currentDifficult);
+    }
+
+    #endregion
+
+
+    private void Update()
+    {
+        // Evitar cálculos innecesarios
+        if (isPaused) return;
+
+        // Avanza el tiempo de la run
+        actualTime += Time.deltaTime;
+
+        // Calcula nueva dificultad
+        float newDifficult = CalculateDificulty(actualTime);
+
+        // Solo notifica si cambia significativamente (optimización)
+        if (!Mathf.Approximately(newDifficult, currentDifficult))
         {
-            timerText.color = normalColor;
-            timerText.transform.localScale = originalScale;
+            currentDifficult = newDifficult;
+            OnDifficultyChanged?.Invoke(currentDifficult);
         }
+
     }
 
-    void EndGame()
+
+    #region Cálculo de Dificultad
+
+    /// <summary>
+    /// Calcula la dificultad basada en el tiempo actual
+    /// </summary>
+    /// <param name="_time">Tiempo transcurrido</param>
+    /// <returns>Dificultad resultante</returns>
+    private float CalculateDificulty(float _time)
     {
-        SceneManager.LoadScene(sceneToLoad);
+        // Mantener dificultad en 0 al inicio
+        if (_time < initialDuration)
+            return 0f;
+
+        // Tiempo ajustado (después del delay inicial)
+        float adjustTime = _time - initialDuration;
+
+        // Normalización (0 a 1)
+        float normalizedTime = Mathf.Clamp01(adjustTime / maxTimeReference);
+
+        // Evaluación de la curva
+        float finalCurve = dificultCurve.Evaluate(normalizedTime);
+
+        // Escalado final
+        return finalCurve * maxDificultfactor;
     }
 
-    public void AddTime(float amount)
-    {
-        currentTime += amount;
-    }
-
-    public void PauseTimer()
-    {
-        isRunning = false;
-    }
-
-    public void ResumeTimer()
-    {
-        isRunning = true;
-    }
+    #endregion
 }
