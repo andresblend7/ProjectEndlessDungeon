@@ -91,8 +91,8 @@ public class MeleeEnemyBasicLogic : MonoBehaviour, IDamageable, IPooledObject
 
     protected float _currentHealth;
     protected bool _canMove = true;
-    private Transform player;
     private PlayerController playerController;
+    private Transform player;
 
 
     // ---------------------------------------------- EVENTS TO CHILDRENS -------------------------------------------

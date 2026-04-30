@@ -184,4 +184,14 @@ public class RoomTimerController : MonoBehaviour
     }
 
     #endregion
+
+
+    #region Public API
+
+    public float GetCurrentDifficulty()
+    {
+        return currentDifficult;
+    }
+
+    #endregion
 }

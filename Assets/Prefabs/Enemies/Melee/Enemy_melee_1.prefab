@@ -481,8 +481,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8, y: 0.8, z: 0.8}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.8, y: 0.8, z: 1.006571}
+  m_Center: {x: 0, y: 0, z: 0.10328538}
 --- !u!114 &4078711540785618959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -512,7 +512,6 @@ GameObject:
   - component: {fileID: 1806375461003585679}
   - component: {fileID: 2594139890764028261}
   - component: {fileID: 4568103730100908338}
-  - component: {fileID: 2335261482840396696}
   m_Layer: 0
   m_Name: Enemy_melee_1
   m_TagString: Enemy
@@ -594,12 +593,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMeleeNavMesh
   target: {fileID: 0}
-  moveSpeed: 1.6
-  stoppingDistance: 1.3
+  moveSpeed: 1
+  stoppingDistance: 0.6
   repathRate: 0.2
-  attackRange: 1.6
+  attackRange: 1
   attackCooldown: 1.2
-  damage: 10
 --- !u!114 &8569586959348347781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -613,9 +611,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slime_EnemyController
   auxText: {fileID: 2408346907339514223}
+  attackHitbox: {fileID: 6385735631425729580}
+  statsConfig:
+    baseHealth: 8
+    maxHealth: 16
+    healthFactorByDifficulty: 0.453
+    baseDamage: 1
+    maxDamage: 10
+    damageFactorByDifficulty: 0.542
+    CriticalHitChance: 0.1
+  vfxConfig:
+    heightTextDamage: 1.5
+    canBeNockbacked: 1
+    knockbackForce: 12
+    haveSquashEffect: 1
+    canBeStunned: 1
   timeToStartChase: 2
-  timeToStartAttack: 0.3
-  timeToRecoveryAttack: 0.6
+  timeToStartAttack: 0.16
+  timeToRecoveryAttack: 0.4
   attackDuration: 0.2
   modelAnimator: {fileID: 2676292600518585625}
   flashEffect: {fileID: 5061520801277738303}
@@ -677,44 +690,6 @@ MonoBehaviour:
     maxAditionalUnitDrop: 0
   rewardOnDisable: 1
   rewardOnDestroy: 0
---- !u!114 &2335261482840396696
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6385735631695587127}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a49bbd2f4681438409a6bff09c375f8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MeleeEnemyBasicLogic
-  moveSpeed: 3.5
-  chaseDelay: 0.5
-  eyeHeight: 0.9
-  detectionRange: 8
-  fieldOfViewAngle: 90
-  useFieldOfView: 0
-  playerDetected: 0
-  repathRate: 0.2
-  visionMask:
-    serializedVersion: 2
-    m_Bits: 0
-  attackRange: 1
-  attackCooldown: 1.2
-  attackHitbox: {fileID: 0}
-  maxHealth: 8
-  defense: 5
-  damage: 15
-  criticalChance: 0.1
-  coinDrop: 3
-  canChasePlayer: 0
-  isChasingEnemy: 0
-  txtDamage: {fileID: 0}
-  canBeNockbacked: 1
-  knockbackForce: 6
-  haveSquashEffect: 1
-  heightTextDamage: 1
 --- !u!1001 &6385735630463673413
 PrefabInstance:
   m_ObjectHideFlags: 0

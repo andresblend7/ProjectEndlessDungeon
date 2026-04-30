@@ -5,11 +5,20 @@ using System.Xml.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Slime_EnemyController : MonoBehaviour
+public class Slime_EnemyController : MonoBehaviour, IDamageable, IPooledObject
 {
-    private MeleeEnemyBasicLogic _logic;
     public TMPro.TextMeshPro auxText;
-    private bool enemyHasBeenDetected = false;
+
+    [Tooltip("GameObject hijo con el Collider trigger del hitbox de daño.")]
+    public GameObject attackHitbox;
+
+    [Header("Stats")]
+    public EnemyStatsConfig statsConfig;
+    public EnemyVFXConfig vfxConfig;
+
+    // stats privados
+    private float _currentHealth;
+    private bool isKnockbackActive = false;
 
     public float timeToStartChase = 2f;
     public float timeToStartAttack = 1.5f;
@@ -21,27 +30,33 @@ public class Slime_EnemyController : MonoBehaviour
     public Animator modelAnimator;
     public EnemyFlashEffect flashEffect;
 
+    public event Action<GameObject> OnDeactivate;
 
-
-
+    private PlayerController playerController;
+    private Transform player;
+    private EnemyMeleeNavMesh _navMeshController;
     void Awake()
     {
-        _logic = GetComponent<MeleeEnemyBasicLogic>();
+        _navMeshController = GetComponent<EnemyMeleeNavMesh>();
         auxText.text = "";
 
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            playerController = playerObj.GetComponent<PlayerController>();
+            player = playerObj.transform;
+        }
+
+
+        attackHitbox.GetComponent<EnemyMeleeAttackHitBox>().OnPlayerImpact += HandlePlayerImpact;
+
     }
+
+
 
     private void Start()
     {
-        _logic.OnPlayerDetected += HandlePlayerDetected;
-        _logic.OnPlayerInAttackRange += HandlePlayerInAttackRange;
-        _logic.OnReceibeDamage += HandleReceiveDamage;
-
-    }
-
-    private void HandleReceiveDamage(int obj)
-    {
-        flashEffect.Flash();
+        _navMeshController.OnPlayerInAttackRange += HandlePlayerInAttackRange;
     }
 
     private void HandlePlayerInAttackRange(bool obj)
@@ -51,38 +66,121 @@ public class Slime_EnemyController : MonoBehaviour
 
     public IEnumerator StartAttackToPlayer()
     {
-        _logic.LookAtPlayer();
-        _logic.CanChasePlayer(false);
+        _navMeshController.SetPaused(true);
         /// limpiar y activar el trigger de ataque
         modelAnimator.SetTrigger("Attack");
 
         yield return new WaitForSeconds(timeToStartAttack);
-        _logic.EnableDisableAttackHitBox(true);
+        attackHitbox.SetActive(true);
         yield return new WaitForSeconds(attackDuration);
-        _logic.EnableDisableAttackHitBox(false);
+        attackHitbox.SetActive(false);
         yield return new WaitForSeconds(timeToRecoveryAttack);
         modelAnimator.ResetTrigger("Attack");
-        _logic.CanChasePlayer(true);
+        _navMeshController.SetPaused(false);
     }
 
-    private void HandlePlayerDetected()
+    public void OnSpawn()
     {
-        if (!enemyHasBeenDetected)
+        statsConfig.baseHealth = CommonConfigEnemy.GetHealthByDifficulty(statsConfig, RoomTimerController.Instance.GetCurrentDifficulty());
+        statsConfig.baseDamage = CommonConfigEnemy.GetDamageByDifficulty(statsConfig, RoomTimerController.Instance.GetCurrentDifficulty());
+        _currentHealth = statsConfig.baseHealth;
+
+        // por laguna razon aveces qaparecen en rojo:
+        flashEffect.Flash();
+        modelAnimator.ResetControllerState();
+        _navMeshController.SetPaused(false);
+    }
+
+    public void EnableDisableAttackHitBox(bool enable)
+    {
+        attackHitbox.SetActive(enable);
+    }
+
+
+    public void TakeDamage(TypeOfDamage typeOfDamage, int amount, bool isCritic)
+    {
+
+        int damage = amount;
+
+        DamageNumberSpawner.Spawn(
+            transform.position + Vector3.up * vfxConfig.heightTextDamage,
+            damage,
+            false,
+            isCrit: isCritic
+        );
+
+
+        if (vfxConfig.canBeNockbacked)
         {
-            enemyHasBeenDetected = true;
-            StartCoroutine(StartChaseToPlayer());
-            //Debug.Log("Player in attack range");
+            Vector3 dir = transform.position - player.transform.position;
+            ApplyKnockback(dir, vfxConfig.knockbackForce, 0.15f);
+        }
+
+        flashEffect.Flash();
+
+        //if (vfxConfig.haveSquashEffect)
+        //{
+        //    PlaySquash();
+        //}
+
+
+
+        _currentHealth -= damage;
+        if (_currentHealth <= 0)
+        {
+            Die();
         }
     }
 
-    public IEnumerator StartChaseToPlayer()
-    {   
-        _logic.LookAtPlayer();
-        auxText.text = "EY!";
-        yield return new WaitForSeconds(timeToStartChase);
-        auxText.text = "";
-        _logic.CanChasePlayer(true);
+    public void ApplyKnockback(Vector3 direction, float force, float duration)
+    {
+        if (isKnockbackActive) return;
+
+        StartCoroutine(KnockbackRoutine(direction, force, duration));
     }
 
+    IEnumerator KnockbackRoutine(Vector3 direction, float force, float duration)
+    {
+        isKnockbackActive = true;
 
+        float timer = 0f;
+
+        direction.y = 0f;
+        direction.Normalize();
+
+        while (timer < duration)
+        {
+            float t = timer / duration;
+
+            // curva de desaceleración suave
+            float currentForce = Mathf.Lerp(force, 0f, t);
+
+            Vector3 move = direction * currentForce * Time.deltaTime;
+
+            _navMeshController.ForceMove(move); // 🔥 clave aquí
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        isKnockbackActive = false;
+    }
+
+    private void Die()
+    {
+        // Notificar al pool; él se encarga de desactivar y encolar el objeto
+        OnDeactivate?.Invoke(gameObject);
+        gameObject.SetActive(false);
+        Debug.Log($"[EnemyBase] {name} ha muerto.");
+
+    }
+
+    private void HandlePlayerImpact(bool obj)
+    {
+        playerController.ProcessDamageToPlayer(new DamageToPlayer
+        {
+            typeOfDamage = TypeOfDamage.Melee,
+            baseDamageAmount = statsConfig.baseDamage,
+        });
+    }
 }

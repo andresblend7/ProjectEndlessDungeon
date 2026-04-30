@@ -1,14 +1,12 @@
+using System;
 using UnityEngine;
 
 public class EnemyMeleeAttackHitBox : MonoBehaviour
 {
-    private MeleeEnemyBasicLogic _baseLogic;
     public bool playerHitted = false;
 
-    private void Awake()
-    {
-        _baseLogic = GetComponentInParent<MeleeEnemyBasicLogic>();
-    }
+    public event Action<bool> OnPlayerImpact;
+
 
     private void OnEnable()
     {
@@ -23,7 +21,7 @@ public class EnemyMeleeAttackHitBox : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             if (!playerHitted)
-                _baseLogic.ApplyDamageToPlayer();
+                OnPlayerImpact.Invoke(true);
 
             playerHitted = true;
         }
@@ -38,8 +36,8 @@ public class EnemyMeleeAttackHitBox : MonoBehaviour
     }
     private void OnDisable()
     {
-            playerHitted = false;
+        playerHitted = false;
     }
 
-  
+
 }

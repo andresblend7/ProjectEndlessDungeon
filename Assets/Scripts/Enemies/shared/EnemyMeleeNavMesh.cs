@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,12 +10,11 @@ public class EnemyMeleeNavMesh : MonoBehaviour
     [Header("NavMesh")]
     [SerializeField] private float moveSpeed = 1.6f;
     [SerializeField] private float stoppingDistance = 1.3f;
-    [SerializeField] private float repathRate = 0.2f; // optimizaciÛn
+    [SerializeField] private float repathRate = 0.2f; // optimizaci√≥n
 
     [Header("Combate")]
     [SerializeField] private float attackRange = 1.6f;
     [SerializeField] private float attackCooldown = 1.2f;
-    [SerializeField] private int damage = 10;
 
     private NavMeshAgent agent;
 
@@ -23,6 +22,11 @@ public class EnemyMeleeNavMesh : MonoBehaviour
     private float repathTimer;
 
     private float sqrAttackRange;
+
+    private bool isPaused = false;
+
+    // Evento que indica si el jugador est√° dentro del rango de ataque, para que el hijo pueda decidir qu√© hacer (ej: activar hitbox de ataque)
+    public event Action<bool> OnPlayerInAttackRange;
 
 
     private void Awake()
@@ -56,7 +60,7 @@ public class EnemyMeleeNavMesh : MonoBehaviour
 
     private void Update()
     {
-        if (target == null || !agent.isOnNavMesh)
+        if (target == null || !agent.isOnNavMesh || isPaused)
             return;
 
         repathTimer -= Time.deltaTime;
@@ -73,7 +77,7 @@ public class EnemyMeleeNavMesh : MonoBehaviour
         if (sqrDistance <= sqrAttackRange)
         {
             agent.isStopped = true;
-            TryAttack();
+            PlayerInrange();
         }
         else
         {
@@ -95,21 +99,13 @@ public class EnemyMeleeNavMesh : MonoBehaviour
         }
     }
 
-    private void TryAttack()
+    private void PlayerInrange()
     {
         if (Time.time >= lastAttackTime + attackCooldown)
         {
-            Attack();
+            OnPlayerInAttackRange?.Invoke(true);
             lastAttackTime = Time.time;
         }
-    }
-
-    private void Attack()
-    {
-        // Integrar con tu sistema de daÒo
-        // target.GetComponent<PlayerHealth>()?.TakeDamage(damage);
-
-        Debug.Log($"{name} atacÛ al jugador por {damage}");
     }
 
     private Transform FindPlayer()
@@ -132,5 +128,30 @@ public class EnemyMeleeNavMesh : MonoBehaviour
         target = newTarget;
     }
 
-   
+    public void SetPaused(bool pause)
+    {
+        isPaused = pause;
+
+        if (agent == null || !agent.isOnNavMesh)
+            return;
+
+        if (pause)
+        {
+            agent.isStopped = true;
+            agent.ResetPath(); // importante para que no conserve rutas viejas
+        }
+        else
+        {
+            agent.isStopped = false;
+
+            if (target != null)
+                agent.SetDestination(target.position); // retoma inmediatamente
+        }
+    }
+
+    public void ForceMove(Vector3 target)
+    {
+        agent.Move(target); //  clave aqu√≠
+    }
+  
 }
